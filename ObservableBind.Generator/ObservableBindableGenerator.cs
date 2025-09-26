@@ -153,8 +153,9 @@ public class ObservableBindableGenerator : IIncrementalGenerator
 
                 // 生成唯一的文件名，考虑嵌套类
                 var classNameWithNested = GetFullClassName(classDecl);
+                var classNameSpace = GetFullNamespace(classDecl);
                 context.AddSource(
-                    $"{classNameWithNested}_{PropertyName(variable.Identifier.Text)}.g.cs",
+                    $"{classNameSpace}.{classNameWithNested}_{PropertyName(variable.Identifier.Text)}.g.cs",
                     Microsoft.CodeAnalysis.Text.SourceText.From(source, Encoding.UTF8));
             }
         }
@@ -418,5 +419,55 @@ public class ObservableBindableGenerator : IIncrementalGenerator
         }
 
         return string.Join("_", names);
+    }
+    private static string GetFullNamespace(ClassDeclarationSyntax classDecl)
+    {
+        // 存储命名空间片段
+        var nsParts = new List<string>();
+    
+        // 从类的父节点开始向上查找
+        var current = classDecl.Parent;
+    
+        while (current != null)
+        {
+            // 处理常规命名空间声明
+            if (current is NamespaceDeclarationSyntax namespaceDecl)
+            {
+                // 命名空间可能包含多个部分（如 A.B.C）
+                var nameParts = GetNameParts(namespaceDecl.Name);
+                nsParts.InsertRange(0, nameParts);
+                break; // 命名空间声明的父级不会再有其他命名空间
+            }
+            // 处理文件级命名空间（C# 10+）
+            else if (current is FileScopedNamespaceDeclarationSyntax fileNsDecl)
+            {
+                var nameParts = GetNameParts(fileNsDecl.Name);
+                nsParts.InsertRange(0, nameParts);
+                break;
+            }
+        
+            current = current.Parent;
+        }
+    
+        return string.Join(".", nsParts);
+    }
+
+// 辅助方法：获取名称的所有部分（处理嵌套命名空间）
+    private static IEnumerable<string> GetNameParts(NameSyntax name)
+    {
+        if (name is IdentifierNameSyntax identifier)
+        {
+            yield return identifier.Identifier.Text;
+        }
+        else if (name is QualifiedNameSyntax qualified)
+        {
+            // 递归获取左侧部分
+            foreach (var part in GetNameParts(qualified.Left))
+            {
+                yield return part;
+            }
+            // 添加右侧部分
+            yield return qualified.Right.Identifier.Text;
+        }
     }
 }
