@@ -438,7 +438,7 @@ public class ObservableBindableGenerator : IIncrementalGenerator
                 nsParts.InsertRange(0, nameParts);
                 break; // 命名空间声明的父级不会再有其他命名空间
             }
-            // 处理文件级命名空间（C# 10+）
+            // 处理文件级命名空间
             else if (current is FileScopedNamespaceDeclarationSyntax fileNsDecl)
             {
                 var nameParts = GetNameParts(fileNsDecl.Name);
@@ -451,8 +451,7 @@ public class ObservableBindableGenerator : IIncrementalGenerator
     
         return string.Join(".", nsParts);
     }
-
-// 辅助方法：获取名称的所有部分（处理嵌套命名空间）
+    
     private static IEnumerable<string> GetNameParts(NameSyntax name)
     {
         if (name is IdentifierNameSyntax identifier)
