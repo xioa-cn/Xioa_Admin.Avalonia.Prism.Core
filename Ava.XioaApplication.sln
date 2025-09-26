@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaApplication", "AvaloniaApplication\AvaloniaApplication.csproj", "{9DEA5A20-412F-4A72-8A14-FCBF2B8C531D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{3567710D-E31D-4701-AFB9-650AB895F433}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Common", "Ava.Xioa.Common\Ava.Xioa.Common.csproj", "{D5A16D67-124E-4077-B261-16791E32DB75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableBind.Generator", "ObservableBind.Generator\ObservableBind.Generator.csproj", "{C4B1FD96-5C90-48C9-B285-D964CDE047FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DEA5A20-412F-4A72-8A14-FCBF2B8C531D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DEA5A20-412F-4A72-8A14-FCBF2B8C531D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DEA5A20-412F-4A72-8A14-FCBF2B8C531D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DEA5A20-412F-4A72-8A14-FCBF2B8C531D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5A16D67-124E-4077-B261-16791E32DB75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5A16D67-124E-4077-B261-16791E32DB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5A16D67-124E-4077-B261-16791E32DB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5A16D67-124E-4077-B261-16791E32DB75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4B1FD96-5C90-48C9-B285-D964CDE047FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4B1FD96-5C90-48C9-B285-D964CDE047FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4B1FD96-5C90-48C9-B285-D964CDE047FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4B1FD96-5C90-48C9-B285-D964CDE047FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D5A16D67-124E-4077-B261-16791E32DB75} = {3567710D-E31D-4701-AFB9-650AB895F433}
+		{C4B1FD96-5C90-48C9-B285-D964CDE047FF} = {3567710D-E31D-4701-AFB9-650AB895F433}
+	EndGlobalSection
+EndGlobal
