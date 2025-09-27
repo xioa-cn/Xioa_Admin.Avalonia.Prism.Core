@@ -47,14 +47,21 @@
             HorizontalAlignment="Center"
             Command="{Binding RelayParameterCommand}"
             CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
-            Content="加载消息"
+            Content="RelayCommand"
+            IsEnabled="{Binding !IsLoadingAsync}" />
+        <Button
+            Padding="15,8"
+            HorizontalAlignment="Center"
+            Command="{Binding AsyncRelayCommand}"
+            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
+            Content="AsyncRelayCommand"
             IsEnabled="{Binding !IsLoadingAsync}" />
         <Button
             Padding="15,8"
             HorizontalAlignment="Center"
             Command="{Binding RelayCommand}"
             CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
-            Content="加载消息"
+            Content="Relay{}Command"
             IsEnabled="{Binding !IsLoadingAsync}" />
 
         <ProgressBar

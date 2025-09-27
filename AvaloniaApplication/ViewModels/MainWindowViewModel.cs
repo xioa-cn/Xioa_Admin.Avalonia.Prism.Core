@@ -31,6 +31,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand RelayParameterCommand { get; set; } 
     
     public ICommand RelayCommand { get; set; } 
+    
+    public ICommand AsyncRelayCommand { get; set; }
 
     public MainWindowViewModel(IMessageService messageService)
     {
@@ -40,6 +42,8 @@ public partial class MainWindowViewModel : ViewModelBase
         
         RelayParameterCommand = new RelayCommand<string>(LoadMessageAsync);
         RelayCommand = new RelayCommand(LoadMessageAsync);
+        
+        AsyncRelayCommand = new AsyncRelayCommand(LoadAsyncMessageAsync);
     }
 
     private async Task Test()
@@ -54,12 +58,12 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnNameChanged();
 
    
-    private async void LoadAsyncMessageAsync()
+    private async Task LoadAsyncMessageAsync()
     {
         IsLoadingAsync = true;
         try
         {
-            AsyncMessage = "AsyncRelayCommand";
+            AsyncMessage = await _messageService.GetAsyncMessageAsync();
         }
         finally
         {
