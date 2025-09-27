@@ -8,6 +8,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Common", "Ava.Xioa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableBind.Generator", "ObservableBind.Generator\ObservableBind.Generator.csproj", "{C4B1FD96-5C90-48C9-B285-D964CDE047FF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{23886AB1-E3C9-4CB1-8F0F-B0968C224F10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Infrastructure.Services", "Ava.Xioa.Infrastructure.Services\Ava.Xioa.Infrastructure.Services.csproj", "{720481BA-E7DB-4D95-BE02-B390D787461E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Infrastructure.Impl", "Ava.Xioa.Infrastructure.Impl\Ava.Xioa.Infrastructure.Impl.csproj", "{4B86B402-C529-4EDA-BA3D-A250E1F74F17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Infrastructure", "Ava.Xioa.Infrastructure\Ava.Xioa.Infrastructure.csproj", "{20EA896C-287E-4CD1-B813-E47D70FC29AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Connectlayer", "Ava.Xioa.Connectlayer\Ava.Xioa.Connectlayer.csproj", "{376A6B2F-9589-4E5B-810A-BFAA40492F7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +36,29 @@ Global
 		{C4B1FD96-5C90-48C9-B285-D964CDE047FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4B1FD96-5C90-48C9-B285-D964CDE047FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4B1FD96-5C90-48C9-B285-D964CDE047FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{720481BA-E7DB-4D95-BE02-B390D787461E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{720481BA-E7DB-4D95-BE02-B390D787461E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{720481BA-E7DB-4D95-BE02-B390D787461E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{720481BA-E7DB-4D95-BE02-B390D787461E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B86B402-C529-4EDA-BA3D-A250E1F74F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B86B402-C529-4EDA-BA3D-A250E1F74F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B86B402-C529-4EDA-BA3D-A250E1F74F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B86B402-C529-4EDA-BA3D-A250E1F74F17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20EA896C-287E-4CD1-B813-E47D70FC29AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20EA896C-287E-4CD1-B813-E47D70FC29AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20EA896C-287E-4CD1-B813-E47D70FC29AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20EA896C-287E-4CD1-B813-E47D70FC29AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{376A6B2F-9589-4E5B-810A-BFAA40492F7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{376A6B2F-9589-4E5B-810A-BFAA40492F7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{376A6B2F-9589-4E5B-810A-BFAA40492F7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{376A6B2F-9589-4E5B-810A-BFAA40492F7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D5A16D67-124E-4077-B261-16791E32DB75} = {3567710D-E31D-4701-AFB9-650AB895F433}
 		{C4B1FD96-5C90-48C9-B285-D964CDE047FF} = {3567710D-E31D-4701-AFB9-650AB895F433}
+		{720481BA-E7DB-4D95-BE02-B390D787461E} = {23886AB1-E3C9-4CB1-8F0F-B0968C224F10}
+		{4B86B402-C529-4EDA-BA3D-A250E1F74F17} = {23886AB1-E3C9-4CB1-8F0F-B0968C224F10}
+		{20EA896C-287E-4CD1-B813-E47D70FC29AA} = {23886AB1-E3C9-4CB1-8F0F-B0968C224F10}
+		{376A6B2F-9589-4E5B-810A-BFAA40492F7C} = {3567710D-E31D-4701-AFB9-650AB895F433}
 	EndGlobalSection
 EndGlobal
