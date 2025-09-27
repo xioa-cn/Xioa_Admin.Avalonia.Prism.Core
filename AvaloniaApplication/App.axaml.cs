@@ -2,12 +2,12 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication.Views;
-using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Prism;
 using Prism.Ioc;
 using Prism.Microsoft.DependencyInjection;
 using Ava.Xioa.Common.Extensions;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Prism.Events;
 using Prism.Modularity;
@@ -28,14 +28,14 @@ public partial class App : PrismApplicationBase
 
         return new PrismContainerExtension(services) as IContainerExtension;
     }
-    
+
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<IModuleCatalog, ModuleCatalog>();
         containerRegistry.RegisterSingleton<IModuleInitializer, ModuleInitializer>();
         containerRegistry.RegisterSingleton<IModuleManager, ModuleManager>();
         containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
-        
+
         containerRegistry
             .AddPrismAutoDbContext()
             .AddPrismAutoRepository()
@@ -44,11 +44,21 @@ public partial class App : PrismApplicationBase
             .AddPrismViews();
     }
 
-    protected override Window CreateShell()
+    protected override AvaloniaObject CreateShell()
     {
-        var indexWindow = Container.Resolve<MainWindow>();
-       
-        return indexWindow;
+        var mainView = Container.Resolve<MainView>();
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.MainWindow = new MainWindow(mainView);
+            return desktop.MainWindow;
+        }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
+        {
+            singleView.MainView = mainView;
+            return singleView.MainView;
+        }
+
+        return null;
     }
 
     protected override void OnInitialized()
@@ -61,22 +71,21 @@ public partial class App : PrismApplicationBase
     {
         var dataValidationPluginsToRemove =
             BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
-        
+
         foreach (var plugin in dataValidationPluginsToRemove)
         {
             BindingPlugins.DataValidators.Remove(plugin);
         }
     }
-    
+
     public override void OnFrameworkInitializationCompleted()
     {
         base.OnFrameworkInitializationCompleted();
-    
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // 初始化托盘图标
             InitializeTrayIcon();
         }
     }
-
 }

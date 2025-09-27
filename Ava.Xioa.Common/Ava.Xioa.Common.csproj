@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.3.6" />
+        <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
         <PackageReference Include="Avalonia.Desktop" Version="11.3.6" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.6" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.6" />
@@ -20,6 +21,7 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.20" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.20" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
@@ -28,6 +30,8 @@
         <PackageReference Include="Prism.Avalonia" Version="8.1.97.11073" />
         <PackageReference Include="Prism.Core" Version="8.1.97" />
         <PackageReference Include="Prism.Microsoft.DependencyInjection.Extensions" Version="8.0.62" />
+        <PackageReference Include="SukiUI" Version="6.0.3" />
+        <PackageReference Include="SukiUI.Dock" Version="6.0.3" />
     </ItemGroup>
 
    

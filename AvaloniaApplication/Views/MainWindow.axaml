@@ -8,81 +8,8 @@
     Title="AvaloniaApplication"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:DataType="vm:MainWindowViewModel"
+    x:DataType="vm:MainWindowBindableViewModel"
     Icon="/Assets/avalonia-logo.ico"
     mc:Ignorable="d">
-
-    <StackPanel
-        Margin="20"
-        VerticalAlignment="Center"
-        Spacing="20">
-        <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="16"
-            Text="{Binding Greeting}"
-            TextWrapping="Wrap" />
-        <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="16"
-            Text="{Binding NowTime}"
-            TextWrapping="Wrap" />
-
-        <Separator />
-
-        <TextBlock
-            HorizontalAlignment="Center"
-            FontWeight="Bold"
-            Text="异步消息演示：" />
-
-        <TextBlock
-            Margin="10"
-            HorizontalAlignment="Center"
-            Name="TextBlock"
-            Tag="JDJDKJKJDKLSJADSA"
-            Text="{Binding AsyncMessage}"
-            TextWrapping="Wrap" />
-
-        <Button
-            Padding="15,8"
-            HorizontalAlignment="Center"
-            Command="{Binding RelayParameterCommand}"
-            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
-            Content="RelayCommand"
-            IsEnabled="{Binding !IsLoadingAsync}" />
-        <Button
-            Padding="15,8"
-            HorizontalAlignment="Center"
-            Command="{Binding AsyncRelayCommand}"
-            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
-            Content="AsyncRelayCommand"
-            IsEnabled="{Binding !IsLoadingAsync}" />
-        <Button
-            Padding="15,8"
-            HorizontalAlignment="Center"
-            Command="{Binding RelayCommand}"
-            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
-            Content="Relay{}Command"
-            IsEnabled="{Binding !IsLoadingAsync}" />
-        <Button
-            Padding="15,8"
-            HorizontalAlignment="Center"
-            Command="{Binding AsyncRelayParameterCommand}"
-            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
-            Content="AsyncRelay{}Command"
-            IsEnabled="{Binding !IsLoadingAsync}" />
-        <Button
-            Padding="15,8"
-            HorizontalAlignment="Center"
-            Command="{Binding ChangeTrayColorCommand}"
-            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
-            Content="ChangeTrayColor"
-            IsEnabled="{Binding !IsLoadingAsync}" />
-
-        <ProgressBar
-            Width="200"
-            HorizontalAlignment="Center"
-            IsIndeterminate="True"
-            IsVisible="{Binding IsLoadingAsync}" />
-    </StackPanel>
-
+    <ContentControl Name="WindowContentControl" />
 </Window>

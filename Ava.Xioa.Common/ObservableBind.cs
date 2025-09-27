@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Ava.Xioa.Common;
 
-public abstract partial class ObservableBindable : INotifyPropertyChanged, INotifyPropertyChanging
+public abstract partial class ObservableBindBase : INotifyPropertyChanged, INotifyPropertyChanging
 {
     public event PropertyChangedEventHandler? PropertyChanged;
     public event PropertyChangingEventHandler? PropertyChanging;

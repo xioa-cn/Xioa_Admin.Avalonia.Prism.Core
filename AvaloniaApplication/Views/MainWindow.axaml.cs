@@ -7,9 +7,9 @@ namespace AvaloniaApplication.Views;
 [PrismView]
 public partial class MainWindow : Window
 {
-    public MainWindow(MainWindowViewModel viewModel)
+    public MainWindow(UserControl userControl)
     {
-        this.DataContext = viewModel;
         InitializeComponent();
+        this.WindowContentControl.Content = userControl;
     }
 }

@@ -1,32 +1,45 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="AvaloniaApplication.App"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:local="using:AvaloniaApplication"
              RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
     <TrayIcon.Icons>
         <TrayIcons>
-            <TrayIcon ToolTipText="SukiUI Native Menu Demo">
-                <TrayIcon.Menu>
-                    <NativeMenu>
-                        <NativeMenuItem Header="Native Menu Demo">
-                            <NativeMenu>
-                                <NativeMenuItem Header="Option 1" />
-                                <NativeMenuItem Header="Option 2" />
-                                <NativeMenuItemSeparator />
-                                <NativeMenuItem Header="Option 3" />
-                            </NativeMenu>
-                        </NativeMenuItem>
-                    </NativeMenu>
-                </TrayIcon.Menu>
+            <TrayIcon ToolTipText="Avalonia Application">
+                <!-- <TrayIcon.Menu> -->
+                <!--     <NativeMenu> -->
+                <!--         <NativeMenuItem Header="NDemo"> -->
+                <!--             <NativeMenu> -->
+                <!--                 <NativeMenuItem Header="Option 1" /> -->
+                <!--                 <NativeMenuItem Header="Option 2" /> -->
+                <!--                 <NativeMenuItemSeparator /> -->
+                <!--                 <NativeMenuItem Header="Option 3" /> -->
+                <!--             </NativeMenu> -->
+                <!--         </NativeMenuItem> -->
+                <!--     </NativeMenu> -->
+                <!-- </TrayIcon.Menu> -->
             </TrayIcon>
         </TrayIcons>
     </TrayIcon.Icons>
     <Application.DataTemplates>
-        <local:ViewLocator />
+      
     </Application.DataTemplates>
 
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://SukiUI.Dock/Index.axaml" />
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <suki:SukiTheme Locale="zh-CN" ThemeColor="Blue" />
+        <!-- <StyleInclude Source="avares://SukiUI.Demo/Styles/ShowMeTheXamlStyles.axaml" /> -->
+        <!-- <StyleInclude Source="avares://SukiUI.Demo/Styles/WrapPanelStyles.axaml" /> -->
+        <!-- <StyleInclude Source="avares://SukiUI.Demo/Styles/TextStyles.axaml" /> -->
+        <!-- <StyleInclude Source="avares://SukiUI.Demo/Styles/GlassCardStyles.axaml" /> -->
+        <!-- <StyleInclude Source="avares://SukiUI.Demo/Styles/MaterialIconStyles.axaml" /> -->
+
+        <avalonia:MaterialIconStyles />
     </Application.Styles>
 </Application>
