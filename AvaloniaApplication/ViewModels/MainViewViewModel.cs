@@ -4,13 +4,17 @@ using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Events;
 using Ava.Xioa.Common.Input;
+using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
 using Avalonia.Collections;
+using Avalonia.Controls.Notifications;
 using Avalonia.Styling;
 using AvaloniaApplication.PubSubEvents;
 using Prism.Events;
 using SukiUI;
+using SukiUI.Dialogs;
 using SukiUI.Models;
+using SukiUI.Toasts;
 
 namespace AvaloniaApplication.ViewModels;
 
@@ -29,8 +33,11 @@ public class MainViewViewModel : EventEnabledViewModelObject
     public Action<bool?>? AnimationsEnabledChanged { get; set; }
     public Action<string?>? CustomBackgroundStyleChanged { get; set; }
 
-    public MainViewViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
+    private readonly ToastsService _toastsService;
+
+    public MainViewViewModel(IEventAggregator eventAggregator, ToastsService toastsService) : base(eventAggregator)
     {
+        _toastsService = toastsService;
         AvailableColors = _theme.ColorThemes;
         var t = AvailableColors[0];
         ChangeSystemColorCommand = new RelayCommand(ChangeSystemColor);
@@ -49,6 +56,8 @@ public class MainViewViewModel : EventEnabledViewModelObject
         
         this.PublishEvent<ThemeChangedEvent, TokenKeyPubSubEvent<string>>(
             new TokenKeyPubSubEvent<string>("SystemColor", color));
+        
+        _toastsService.ShowToast(NotificationType.Success,"切换主题",obj.DisplayName);
     }
 
     private void AnimationsEnabled(bool? obj)
