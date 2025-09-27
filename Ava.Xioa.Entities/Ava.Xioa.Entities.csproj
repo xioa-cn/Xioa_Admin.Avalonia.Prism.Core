@@ -7,12 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+      <ProjectReference Include="..\Ava.Xioa.Common\Ava.Xioa.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Ava.Xioa.Common\Ava.Xioa.Common.csproj" />
-      <ProjectReference Include="..\Ava.Xioa.Entities\Ava.Xioa.Entities.csproj" />
-      <ProjectReference Include="..\ObservableBind.Generator\ObservableBind.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
     </ItemGroup>
 </Project>
