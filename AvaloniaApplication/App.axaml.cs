@@ -11,6 +11,8 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Prism.Events;
 using Prism.Modularity;
+using SukiUI.Dialogs;
+using SukiUI.Toasts;
 
 namespace AvaloniaApplication;
 
@@ -42,6 +44,9 @@ public partial class App : PrismApplicationBase
             .AddPrismServices()
             .AddPrismVms()
             .AddPrismViews();
+        
+        containerRegistry.RegisterSingleton<ISukiToastManager, SukiToastManager>();
+        containerRegistry.RegisterSingleton<ISukiDialogManager, SukiDialogManager>();
     }
 
     protected override AvaloniaObject CreateShell()

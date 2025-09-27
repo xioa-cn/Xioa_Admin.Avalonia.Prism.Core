@@ -1,15 +1,52 @@
-<Window
+<suki:SukiWindow
     x:Class="AvaloniaApplication.Views.MainWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="clr-namespace:Ava.Xioa.Common.Themes.Converter;assembly=Ava.Xioa.Common.Themes"
     xmlns:vm="using:AvaloniaApplication.ViewModels"
-    Title="AvaloniaApplication"
+    Name="MainDeskTopWindow"
+    Loaded="Control_OnLoaded"
+    xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
+    xmlns:suki="https://github.com/kikipoulet/SukiUI"
+    BackgroundStyle="{Binding BackgroundStyle}"
+    BackgroundShaderFile="{Binding CustomShaderFile}"
+    BackgroundTransitionsEnabled="{Binding TransitionsEnabled}"
+    BackgroundAnimationEnabled="{Binding AnimationsEnabled}"
+    ShowBottomBorder="True"
+    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    Title="{Binding Source={x:Static const:AppInformation.Instance}, Path=ApplicationName}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:DataType="vm:MainWindowBindableViewModel"
-    Icon="/Assets/avalonia-logo.ico"
+    CanFullScreen="True"
+    IsTitleBarVisible="True"
+    TitleBarVisibilityOnFullScreen="Visible"
+    CanPin="True"
+    ShowTitlebarBackground="True"
+    x:DataType="vm:MainWindowViewModel"
     mc:Ignorable="d">
+    <suki:SukiWindow.Resources>
+        <converter:WindowIconToImageSourceConverter x:Key="IconConverter" />
+    </suki:SukiWindow.Resources>
+    <suki:SukiWindow.TitleBarContextMenu>
+        <ContextMenu>
+            <!-- <MenuItem Header="Custom TitleBar Context Menu Item" /> -->
+        </ContextMenu>
+    </suki:SukiWindow.TitleBarContextMenu>
+    <suki:SukiWindow.Hosts>
+        <!-- 通知容器 -->
+        <suki:SukiToastHost Manager="{Binding ToastManager}" />
+        <!-- 对话框容器 -->
+        <suki:SukiDialogHost Manager="{Binding DialogManager}" />
+    </suki:SukiWindow.Hosts>
+    <suki:SukiWindow.LogoContent>
+        <Image Width="20"
+               Height="20"
+               Stretch="Uniform"
+               Source="{Binding RelativeSource={RelativeSource AncestorType=suki:SukiWindow},Path=Icon,
+               Converter={StaticResource IconConverter}}">
+        </Image>
+    </suki:SukiWindow.LogoContent>
     <ContentControl Name="WindowContentControl" />
-</Window>
+</suki:SukiWindow>

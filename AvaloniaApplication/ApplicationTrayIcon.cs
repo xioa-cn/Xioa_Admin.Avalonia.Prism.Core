@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using AvaloniaApplication.PubSubEvents;
@@ -97,7 +98,7 @@ public partial class App
         }
 
         _eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(color => UpdateTrayIconColor(color.Value)
-            , ThreadOption.UIThread, true, filter => filter.TokenKey == "TrayIconColor");
+            , ThreadOption.UIThread, true, filter => filter.TokenKey == "SystemColor");
     }
 
     /// <summary>
@@ -132,6 +133,10 @@ public partial class App
 
         // 渲染SVG为位图，应用指定颜色
         var bitmap = LoadSvgWithColor(svgPath, 16, 16, colorCode);
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
+        {
+           desktop.MainWindow.Icon = new WindowIcon(bitmap);
+        }
 
         // 更新托盘图标
         _trayIcon.Icon = new WindowIcon(bitmap);

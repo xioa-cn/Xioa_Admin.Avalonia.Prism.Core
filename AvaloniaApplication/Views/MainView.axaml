@@ -3,8 +3,67 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:AvaloniaApplication.ViewModels"
-             x:DataType="vm:MainBindableViewModel"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             x:DataType="vm:MainViewViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaApplication.Views.MainView">
-    Welcome to Avalonia!
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+        <ItemsControl ItemsSource="{Binding AvailableColors}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="10" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.DataTemplates>
+                <DataTemplate x:DataType="suki:SukiColorTheme">
+                    <Button
+                        Background="{Binding PrimaryBrush}"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl},
+                            Path=((vm:MainViewViewModel)DataContext).SwitchToColorThemeCommand}"
+                        CommandParameter="{Binding}">
+                        <Border></Border>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.DataTemplates>
+        </ItemsControl>
+        <Button Width="200" Command="{Binding LightThemeChangedCommand}">
+            <Button.CommandParameter>
+                <sys:Boolean>True</sys:Boolean>
+            </Button.CommandParameter>
+            亮色主题
+        </Button>
+        <Button Width="200" Command="{Binding LightThemeChangedCommand}">
+            <Button.CommandParameter>
+                <sys:Boolean>False</sys:Boolean>
+            </Button.CommandParameter>
+            暗色主题
+        </Button>
+        <Button Width="200" Command="{Binding BackgroundEffectCommand}">
+            <Button.CommandParameter>
+                <sys:Boolean>True</sys:Boolean>
+            </Button.CommandParameter>
+            打开背景
+        </Button>
+        <Button Width="200" Command="{Binding BackgroundEffectCommand}">
+            <Button.CommandParameter>
+                <sys:Boolean>False</sys:Boolean>
+            </Button.CommandParameter>
+            关闭背景
+        </Button>
+        <Button Width="200" Command="{Binding AnimationsEnabledCommand}">
+            <Button.CommandParameter>
+                <sys:Boolean>True</sys:Boolean>
+            </Button.CommandParameter>
+            打开动画
+        </Button>
+        <Button Width="200" Command="{Binding AnimationsEnabledCommand}">
+            <Button.CommandParameter>
+                <sys:Boolean>False</sys:Boolean>
+            </Button.CommandParameter>
+            关闭动画
+        </Button>
+    </StackPanel>
 </UserControl>

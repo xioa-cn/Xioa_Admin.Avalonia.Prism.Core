@@ -9,8 +9,4 @@
     <ItemGroup>
       <ProjectReference Include="..\Ava.Xioa.Common\Ava.Xioa.Common.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Styles\" />
-    </ItemGroup>
 </Project>
