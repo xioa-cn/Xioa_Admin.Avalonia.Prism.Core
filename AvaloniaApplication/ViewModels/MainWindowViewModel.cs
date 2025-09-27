@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using Ava.Xioa.Common.Attributes;
 using AvaloniaApplication.Models;
 using System;
-using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
+using Ava.Xioa.Common.Input;
+
 
 namespace AvaloniaApplication.ViewModels;
 
@@ -23,12 +25,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableBindProperty] private string _nowTime;
 
     [ObservableBindProperty] private TestModel _TestModel;
+    
+    
+    
+    public ICommand RelayParameterCommand { get; set; } 
+    
+    public ICommand RelayCommand { get; set; } 
 
     public MainWindowViewModel(IMessageService messageService)
     {
         _messageService = messageService;
         _greeting = _messageService.GetWelcomeMessage();
         Task.Factory.StartNew(Test, TaskCreationOptions.LongRunning);
+        
+        RelayParameterCommand = new RelayCommand<string>(LoadMessageAsync);
+        RelayCommand = new RelayCommand(LoadMessageAsync);
     }
 
     private async Task Test()
@@ -42,13 +53,52 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnNameChanged();
 
-    [RelayCommand]
-    private async Task LoadAsyncMessageAsync()
+   
+    private async void LoadAsyncMessageAsync()
     {
         IsLoadingAsync = true;
         try
         {
-            AsyncMessage = await _messageService.GetAsyncMessageAsync();
+            AsyncMessage = "AsyncRelayCommand";
+        }
+        finally
+        {
+            IsLoadingAsync = false;
+        }
+    }
+    
+    private async void LoadAsyncMessageAsync(string str)
+    {
+        IsLoadingAsync = true;
+        try
+        {
+            AsyncMessage = "AsyncRelayCommand" + str;
+        }
+        finally
+        {
+            IsLoadingAsync = false;
+        }
+    }
+    
+    private void LoadMessageAsync()
+    {
+        IsLoadingAsync = true;
+        try
+        {
+            AsyncMessage = "RelayCommand";
+        }
+        finally
+        {
+            IsLoadingAsync = false;
+        }
+    }
+    
+    private void LoadMessageAsync(string str)
+    {
+        IsLoadingAsync = true;
+        try
+        {
+            AsyncMessage = "RelayCommand" + str;
         }
         finally
         {

@@ -37,14 +37,24 @@
         <TextBlock
             Margin="10"
             HorizontalAlignment="Center"
+            Name="TextBlock"
+            Tag="JDJDKJKJDKLSJADSA"
             Text="{Binding AsyncMessage}"
             TextWrapping="Wrap" />
 
         <Button
             Padding="15,8"
             HorizontalAlignment="Center"
-            Command="{Binding LoadAsyncMessageCommand}"
-            Content="加载异步消息"
+            Command="{Binding RelayParameterCommand}"
+            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
+            Content="加载消息"
+            IsEnabled="{Binding !IsLoadingAsync}" />
+        <Button
+            Padding="15,8"
+            HorizontalAlignment="Center"
+            Command="{Binding RelayCommand}"
+            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
+            Content="加载消息"
             IsEnabled="{Binding !IsLoadingAsync}" />
 
         <ProgressBar
