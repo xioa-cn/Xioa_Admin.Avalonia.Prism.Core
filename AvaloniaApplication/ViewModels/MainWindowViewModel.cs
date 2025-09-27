@@ -4,7 +4,10 @@ using Ava.Xioa.Common.Attributes;
 using AvaloniaApplication.Models;
 using System;
 using System.Windows.Input;
+using Ava.Xioa.Common.Events;
 using Ava.Xioa.Common.Input;
+using AvaloniaApplication.PubSubEvents;
+using Prism.Events;
 
 
 namespace AvaloniaApplication.ViewModels;
@@ -25,28 +28,41 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableBindProperty] private string _nowTime;
 
     [ObservableBindProperty] private TestModel _TestModel;
-    
-    
-    
-    public ICommand RelayParameterCommand { get; set; } 
-    
-    public ICommand RelayCommand { get; set; } 
-    
+
+
+    public ICommand RelayParameterCommand { get; set; }
+
+    public ICommand RelayCommand { get; set; }
+
     public ICommand AsyncRelayCommand { get; set; }
-    
+
     public ICommand AsyncRelayParameterCommand { get; set; }
 
-    public MainWindowViewModel(IMessageService messageService)
+    public ICommand ChangeTrayColorCommand { get; set; }
+
+    public MainWindowViewModel(IMessageService messageService, IEventAggregator? aggregator) : base(aggregator)
     {
         _messageService = messageService;
         _greeting = _messageService.GetWelcomeMessage();
         Task.Factory.StartNew(Test, TaskCreationOptions.LongRunning);
-        
+
         RelayParameterCommand = new RelayCommand<string>(LoadMessageAsync);
         AsyncRelayParameterCommand = new AsyncRelayCommand<string>(LoadAsyncMessageAsync);
         RelayCommand = new RelayCommand(LoadMessageAsync);
-        
+
         AsyncRelayCommand = new AsyncRelayCommand(LoadAsyncMessageAsync);
+
+        ChangeTrayColorCommand = new RelayCommand(ChangeTrayColor);
+    }
+
+    private void ChangeTrayColor()
+    {
+        // 生成随机颜色
+        var random = Random.Shared;
+        string randomColor = $"#{random.Next(0x1000000):X6}"; // 生成格式为 #RRGGBB 的随机颜色
+
+        this._eventAggregator?.GetEvent<ThemeChangedEvent>()
+            .Publish(new TokenKeyPubSubEvent<string>("TrayIconColor", randomColor));
     }
 
     private async Task Test()
@@ -60,7 +76,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnNameChanged();
 
-   
+
     private async Task LoadAsyncMessageAsync()
     {
         IsLoadingAsync = true;
@@ -73,7 +89,7 @@ public partial class MainWindowViewModel : ViewModelBase
             IsLoadingAsync = false;
         }
     }
-    
+
     private async Task LoadAsyncMessageAsync(string str)
     {
         IsLoadingAsync = true;
@@ -86,7 +102,7 @@ public partial class MainWindowViewModel : ViewModelBase
             IsLoadingAsync = false;
         }
     }
-    
+
     private void LoadMessageAsync()
     {
         IsLoadingAsync = true;
@@ -99,7 +115,7 @@ public partial class MainWindowViewModel : ViewModelBase
             IsLoadingAsync = false;
         }
     }
-    
+
     private void LoadMessageAsync(string str)
     {
         IsLoadingAsync = true;

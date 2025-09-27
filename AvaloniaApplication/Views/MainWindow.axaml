@@ -70,6 +70,13 @@
             CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
             Content="AsyncRelay{}Command"
             IsEnabled="{Binding !IsLoadingAsync}" />
+        <Button
+            Padding="15,8"
+            HorizontalAlignment="Center"
+            Command="{Binding ChangeTrayColorCommand}"
+            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
+            Content="ChangeTrayColor"
+            IsEnabled="{Binding !IsLoadingAsync}" />
 
         <ProgressBar
             Width="200"

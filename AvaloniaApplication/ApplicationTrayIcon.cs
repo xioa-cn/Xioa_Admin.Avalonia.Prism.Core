@@ -4,6 +4,9 @@ using System.Text;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using AvaloniaApplication.PubSubEvents;
+using Prism.Events;
+using Prism.Ioc;
 using SkiaSharp;
 using Svg.Skia;
 
@@ -11,6 +14,8 @@ namespace AvaloniaApplication;
 
 public partial class App
 {
+    private IEventAggregator? _eventAggregator;
+
     private TrayIcon? _trayIcon;
 
     /// <summary>
@@ -81,6 +86,7 @@ public partial class App
     /// </summary>
     public void InitializeTrayIcon()
     {
+        _eventAggregator = Container.Resolve<IEventAggregator>();
         var icons = TrayIcon.GetIcons(this);
         if (icons != null && icons.Count > 0)
         {
@@ -89,6 +95,9 @@ public partial class App
             // 初始设置
             UpdateTrayIconForTheme(RequestedThemeVariant);
         }
+
+        _eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(color => UpdateTrayIconColor(color.Value)
+            , ThreadOption.UIThread, true, filter => filter.TokenKey == "TrayIconColor");
     }
 
     /// <summary>

@@ -9,6 +9,7 @@ using Prism.Ioc;
 using Prism.Microsoft.DependencyInjection;
 using Ava.Xioa.Common.Extensions;
 using Avalonia.Controls.ApplicationLifetimes;
+using Prism.Events;
 using Prism.Modularity;
 
 namespace AvaloniaApplication;
@@ -33,7 +34,8 @@ public partial class App : PrismApplicationBase
         containerRegistry.RegisterSingleton<IModuleCatalog, ModuleCatalog>();
         containerRegistry.RegisterSingleton<IModuleInitializer, ModuleInitializer>();
         containerRegistry.RegisterSingleton<IModuleManager, ModuleManager>();
-
+        containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
+        
         containerRegistry
             .AddPrismAutoDbContext()
             .AddPrismAutoRepository()
@@ -45,7 +47,7 @@ public partial class App : PrismApplicationBase
     protected override Window CreateShell()
     {
         var indexWindow = Container.Resolve<MainWindow>();
-
+       
         return indexWindow;
     }
 
