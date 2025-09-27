@@ -14,7 +14,7 @@ public sealed partial class AsyncRelayCommand : IAsyncRelayCommand, ICancellatio
     /// <summary>
     /// 要执行的异步委托。
     /// </summary>
-    private readonly Func<Task> execute;
+    private readonly Func<CancellationToken, Task> execute;
 
     /// <summary>
     /// 可选的同步谓词，用于确定命令是否可以执行。
@@ -114,7 +114,8 @@ public sealed partial class AsyncRelayCommand : IAsyncRelayCommand, ICancellatio
     {
         ArgumentNullException.ThrowIfNull(execute);
 
-        this.execute = execute;
+        // 将不带取消令牌的委托包装为带取消令牌的委托
+        this.execute = (cancellationToken) => execute();
         this.canExecute = canExecute;
         this.IsCancellationSupported = !allowConcurrentExecutions;
     }
@@ -140,7 +141,7 @@ public sealed partial class AsyncRelayCommand : IAsyncRelayCommand, ICancellatio
     {
         ArgumentNullException.ThrowIfNull(cancelableExecute);
 
-        this.execute = () => cancelableExecute(CancellationToken.None);
+        this.execute = cancelableExecute;
         this.canExecute = canExecute;
         this.IsCancellationSupported = true;
     }
@@ -202,7 +203,7 @@ public sealed partial class AsyncRelayCommand : IAsyncRelayCommand, ICancellatio
         }
         else
         {
-            await this.execute();
+            await this.execute(CancellationToken.None);
         }
     }
 
@@ -231,8 +232,9 @@ public sealed partial class AsyncRelayCommand : IAsyncRelayCommand, ICancellatio
 
         // 创建一个新的取消令牌源
         this.cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = this.cancellationTokenSource.Token;
 
-        Task executionTask = this.execute();
+        Task executionTask = this.execute(cancellationToken);
 
         this.ExecutionTask = executionTask;
 

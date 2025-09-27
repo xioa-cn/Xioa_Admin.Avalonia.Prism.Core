@@ -63,6 +63,13 @@
             CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
             Content="Relay{}Command"
             IsEnabled="{Binding !IsLoadingAsync}" />
+        <Button
+            Padding="15,8"
+            HorizontalAlignment="Center"
+            Command="{Binding AsyncRelayParameterCommand}"
+            CommandParameter="{Binding ElementName=TextBlock,Path=Tag}"
+            Content="AsyncRelay{}Command"
+            IsEnabled="{Binding !IsLoadingAsync}" />
 
         <ProgressBar
             Width="200"

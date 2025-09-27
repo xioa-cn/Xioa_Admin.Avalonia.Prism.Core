@@ -33,6 +33,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand RelayCommand { get; set; } 
     
     public ICommand AsyncRelayCommand { get; set; }
+    
+    public ICommand AsyncRelayParameterCommand { get; set; }
 
     public MainWindowViewModel(IMessageService messageService)
     {
@@ -41,6 +43,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Task.Factory.StartNew(Test, TaskCreationOptions.LongRunning);
         
         RelayParameterCommand = new RelayCommand<string>(LoadMessageAsync);
+        AsyncRelayParameterCommand = new AsyncRelayCommand<string>(LoadAsyncMessageAsync);
         RelayCommand = new RelayCommand(LoadMessageAsync);
         
         AsyncRelayCommand = new AsyncRelayCommand(LoadAsyncMessageAsync);
@@ -71,12 +74,12 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
     
-    private async void LoadAsyncMessageAsync(string str)
+    private async Task LoadAsyncMessageAsync(string str)
     {
         IsLoadingAsync = true;
         try
         {
-            AsyncMessage = "AsyncRelayCommand" + str;
+            AsyncMessage = await _messageService.GetAsyncMessageAsync() + str;
         }
         finally
         {
