@@ -8,6 +8,7 @@ using Prism;
 using Prism.Ioc;
 using Prism.Microsoft.DependencyInjection;
 using Ava.Xioa.Common.Extensions;
+using Avalonia.Controls.ApplicationLifetimes;
 using Prism.Modularity;
 
 namespace AvaloniaApplication;
@@ -26,8 +27,7 @@ public partial class App : PrismApplicationBase
 
         return new PrismContainerExtension(services) as IContainerExtension;
     }
-
-
+    
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<IModuleCatalog, ModuleCatalog>();
@@ -65,4 +65,16 @@ public partial class App : PrismApplicationBase
             BindingPlugins.DataValidators.Remove(plugin);
         }
     }
+    
+    public override void OnFrameworkInitializationCompleted()
+    {
+        base.OnFrameworkInitializationCompleted();
+    
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            // 初始化托盘图标
+            InitializeTrayIcon();
+        }
+    }
+
 }
