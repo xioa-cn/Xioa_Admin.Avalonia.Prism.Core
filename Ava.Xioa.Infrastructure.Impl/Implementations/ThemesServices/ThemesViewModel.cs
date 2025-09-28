@@ -34,7 +34,8 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     public ThemesViewModel(ToastsService toastsService, IEventAggregator eventAggregator)
         : base(eventAggregator)
     {
-        AvailableBackgroundStyles = new AvaloniaList<SukiBackgroundStyleDesc>(SukiBackgroundStyleDesc.SukiBackgroundStyleDescs);
+        AvailableBackgroundStyles =
+            new AvaloniaList<SukiBackgroundStyleDesc>(SukiBackgroundStyleDesc.SukiBackgroundStyleDescs);
 
         _toastsService = toastsService;
         AvailableColors = _theme.ColorThemes;
@@ -93,9 +94,21 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     }
 
     private bool _backgroundEffect = true;
+    private bool _backgroundEffectChangeAnimations = false;
 
     private void ChangeBackgroundEffect()
     {
+        if (_backgroundEffect && !BackgroundAnimations)
+        {
+            BackgroundAnimations = true;
+            _backgroundEffectChangeAnimations = true;
+        }
+        else if (BackgroundAnimations && _backgroundEffectChangeAnimations)
+        {
+            BackgroundAnimations = false;
+            _backgroundEffectChangeAnimations = false;
+        }
+
         CustomBackgroundStyleChanged?.Invoke(_backgroundEffect ? "Space" : null);
         _backgroundEffect = !_backgroundEffect;
     }
