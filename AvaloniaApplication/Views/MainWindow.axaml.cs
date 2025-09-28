@@ -1,6 +1,7 @@
 using Ava.Xioa.Common.Attributes;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using AvaloniaApplication.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Controls;
 
@@ -17,6 +18,10 @@ public partial class MainWindow : SukiWindow
 
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
+        if (this.DataContext is MainWindowViewModel vm)
+        {
+            vm.AnimationsEnabled = true;
+        }
         this.BackgroundAnimationEnabled = true;
     }
 }

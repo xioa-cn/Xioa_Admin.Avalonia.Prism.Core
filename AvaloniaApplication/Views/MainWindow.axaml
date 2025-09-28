@@ -10,7 +10,7 @@
     Loaded="Control_OnLoaded"
     xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
     xmlns:suki="https://github.com/kikipoulet/SukiUI"
-    BackgroundStyle="{Binding BackgroundStyle}"
+    BackgroundStyle="{Binding BackgroundStyle.SukiBackgroundStyle}"
     BackgroundShaderFile="{Binding CustomShaderFile}"
     BackgroundTransitionsEnabled="{Binding TransitionsEnabled}"
     BackgroundAnimationEnabled="{Binding AnimationsEnabled}"
