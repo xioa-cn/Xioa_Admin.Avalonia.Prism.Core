@@ -9,5 +9,5 @@
              xmlns:regions="http://prismlibrary.com/"
              x:DataType="vm:MainViewViewModel"
              x:Class="AvaloniaApplication.Views.MainView">
-    <ContentControl regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=MainRegion}" />
+    <ContentControl regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Main}" />
 </UserControl>

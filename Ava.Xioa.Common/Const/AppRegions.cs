@@ -9,5 +9,7 @@ public class AppRegions
         get { return _instance ??= new AppRegions(); }
     }
 
-    public string MainRegion { get; } = nameof(MainRegion);
+    public string Main { get; } = nameof(MainRegion);
+    
+    public const string MainRegion = nameof(MainRegion);
 }
