@@ -21,14 +21,14 @@ using SukiUI.Models;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.ThemesServices;
 
-[PrismVm(typeof(IThemesServices), ServiceLifetime.Scoped)]
+[PrismViewModel(typeof(IThemesServices), ServiceLifetime.Scoped)]
 public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServices
 {
     [ObservableBindProperty] private bool _backgroundAnimations;
     [ObservableBindProperty] private bool _backgroundTransitions;
     [ObservableBindProperty] private bool _isLightTheme;
     [ObservableBindProperty] private SukiBackgroundStyleDesc _backgroundStyle;
-    
+
     public IAvaloniaReadOnlyList<SukiColorTheme> AvailableColors { get; }
     public IAvaloniaReadOnlyList<SukiBackgroundStyleDesc> AvailableBackgroundStyles { get; }
 
@@ -48,11 +48,11 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     {
         AvailableBackgroundStyles =
             new AvaloniaList<SukiBackgroundStyleDesc>(SukiBackgroundStyleDesc.SukiBackgroundStyleDescs);
-        
+
         AvailableColors = _theme.ColorThemes;
 
         LightThemeChangedCommand = new RelayCommand<bool?>(ChangeLightTheme);
-        BackgroundEffectCommand = new RelayCommand(ChangeBackgroundEffect);
+        BackgroundEffectCommand = new AsyncRelayCommand(ChangeBackgroundEffect);
         AnimationsEnabledCommand = new RelayCommand(AnimationsEnabled);
         SwitchToColorThemeCommand = new RelayCommand<SukiColorTheme>(SwitchToColorTheme);
 
@@ -115,7 +115,12 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
 
     private string? _backgroundEffectKey;
 
-    private void ChangeBackgroundEffect()
+    public void SetPrivateBackgroundEffectKey(string key)
+    {
+        this._backgroundEffectKey = key;
+    }
+
+    private async Task ChangeBackgroundEffect()
     {
         if (_backgroundEffect && !BackgroundAnimations)
         {
@@ -127,9 +132,15 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             BackgroundAnimations = false;
             _backgroundEffectChangeAnimations = false;
         }
+        else
+        {
+            BackgroundAnimations = false;
+            await Task.Delay(100);
+            BackgroundAnimations = true;
+        }
 
-        _backgroundEffectKey = _backgroundEffect ? "Space" : null;
-        CustomBackgroundStyleChanged?.Invoke(_backgroundEffect ? "Space" : null);
+        _backgroundEffectKey = _backgroundEffectKey == null ? "Space" : null;
+        CustomBackgroundStyleChanged?.Invoke(_backgroundEffectKey);
         _backgroundEffect = !_backgroundEffect;
         _debouncer.DebounceAsync(async () => { await SaveThemeInformation(); });
     }
@@ -147,8 +158,9 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             _backgroundEffectChangeAnimations = false;
         }
 
+        _backgroundEffectKey = effectKey;
         _backgroundEffect = true;
-        CustomBackgroundStyleChanged?.Invoke(_backgroundEffect ? effectKey : null);
+        CustomBackgroundStyleChanged?.Invoke(effectKey);
     }
 
     private void ChangeLightTheme(bool? obj)

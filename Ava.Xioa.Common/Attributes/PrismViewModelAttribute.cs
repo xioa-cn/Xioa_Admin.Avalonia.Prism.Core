@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Ava.Xioa.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public class PrismVmAttribute : Attribute
+public class PrismViewModelAttribute : Attribute
 {
     /// <summary>
     /// 服务生命周期类型
@@ -21,7 +21,7 @@ public class PrismVmAttribute : Attribute
 
     public Type Type { get; set; }
 
-    public PrismVmAttribute(Type type, ServiceLifetime lifetime = ServiceLifetime.Singleton,
+    public PrismViewModelAttribute(Type type, ServiceLifetime lifetime = ServiceLifetime.Singleton,
         string serviceName = "", ProgrammingVersion version = ProgrammingVersion.EnabledStandby)
     {
         Lifetime = lifetime;

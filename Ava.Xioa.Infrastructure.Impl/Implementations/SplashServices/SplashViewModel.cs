@@ -10,7 +10,7 @@ using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.SplashServices;
 
-[PrismVm(typeof(ISplashServices))]
+[PrismViewModel(typeof(ISplashServices))]
 public class SplashViewModel : NavigableViewModelObject, ISplashServices, IInitializedAsyncable
 {
     public SplashViewModel(IEventAggregator eventAggregator, IRegionManager regionManager) : base(eventAggregator,

@@ -11,7 +11,7 @@ using SukiUI.Toasts;
 
 namespace AvaloniaApplication.ViewModels;
 
-[PrismVm(typeof(MainWindowViewModel))]
+[PrismViewModel(typeof(MainWindowViewModel))]
 public partial class MainWindowViewModel : ReactiveObject, IInitializedable
 {
     public ISukiToastManager ToastManager { get; }
@@ -75,6 +75,7 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         _themesServices.BackgroundAnimations = findLastUseThemeInfo.Animation;
         _themesServices.IsLightTheme = findLastUseThemeInfo.IsLightTheme;
         _themesServices.ChangeColorTheme(findLastUseThemeInfo.ColorThemeDisplayName);
+      
         if (!string.IsNullOrEmpty(findLastUseThemeInfo.BackgroundEffectKey))
         {
             _themesServices.ChangeBackgroundEffect(findLastUseThemeInfo.BackgroundEffectKey);

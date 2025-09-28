@@ -6,7 +6,7 @@ using Prism.Navigation.Regions;
 
 namespace AvaloniaApplication.ViewModels;
 
-[PrismVm(typeof(MainViewViewModel))]
+[PrismViewModel(typeof(MainViewViewModel))]
 public class MainViewViewModel : NavigableViewModelObject
 {
     public MainViewViewModel(IRegionManager regionManager) : base(regionManager)

@@ -21,12 +21,12 @@ public static class RegistryPrismVmExtensions
             var types = AssemblyLoadContext.Default
                 .LoadFromAssemblyName(new AssemblyName(compilation.Name))
                 .GetTypes().Where(a =>
-                    a.GetCustomAttribute<PrismVmAttribute>() != null)
+                    a.GetCustomAttribute<PrismViewModelAttribute>() != null)
                 .ToList();
             if (types.Count <= 0) continue;
             foreach (var type in types)
             {
-                var attr = type.GetCustomAttribute<PrismVmAttribute>();
+                var attr = type.GetCustomAttribute<PrismViewModelAttribute>();
                 if (attr == null) continue;
                 
                 if (attr.Version == ProgrammingVersion.Obsolete)

@@ -72,4 +72,6 @@ public interface IThemesServices
     ICommand SwitchToColorThemeCommand { get; }
 
     void SetThemesInformationRepository(ISystemThemesInformationRepository repository);
+
+    void SetPrivateBackgroundEffectKey(string key);
 }
