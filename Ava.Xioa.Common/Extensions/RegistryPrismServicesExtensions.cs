@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
@@ -28,6 +29,12 @@ public static class RegistryPrismServicesExtensions
             {
                 var attr = type.GetCustomAttribute<PrismServiceAttribute>();
                 if (attr == null) continue;
+                
+                if (attr.Version == ProgrammingVersion.Obsolete)
+                {
+                    continue;
+                }
+                
                 switch (attr.Lifetime)
                 {
                     case ServiceLifetime.Scoped:

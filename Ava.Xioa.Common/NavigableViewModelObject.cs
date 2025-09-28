@@ -3,7 +3,8 @@ using System.Windows.Input;
 using Avalonia.Threading;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Regions;
+using Prism.Navigation;
+using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Common;
 
@@ -101,13 +102,13 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
         {
             try
             {
-                if (result.Result == true)
+                if (result.Success == true)
                 {
                     OnNavigationCompleted(result.Context);
                 }
                 else
                 {
-                    OnNavigationFailed(result.Context, result.Error);
+                    OnNavigationFailed(result.Context, result.Exception);
                 }
             }
             finally
@@ -165,7 +166,7 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
     /// <summary>
     /// 处理导航参数
     /// </summary>
-    protected virtual void ProcessNavigationParameters(NavigationParameters parameters)
+    protected virtual void ProcessNavigationParameters(INavigationParameters parameters)
     {
         // 子类可重写此方法处理导航参数
     }

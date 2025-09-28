@@ -5,9 +5,9 @@
              xmlns:vm="clr-namespace:AvaloniaApplication.ViewModels"
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
-             xmlns:prism="clr-namespace:Prism.Regions;assembly=Prism.Avalonia"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:regions="http://prismlibrary.com/"
              x:DataType="vm:MainViewViewModel"
              x:Class="AvaloniaApplication.Views.MainView">
-    <ContentControl prism:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=MainRegion}" />
+    <ContentControl regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=MainRegion}" />
 </UserControl>

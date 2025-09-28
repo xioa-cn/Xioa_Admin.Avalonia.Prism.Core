@@ -27,9 +27,8 @@
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.9" />
-        <PackageReference Include="Prism.Avalonia" Version="8.1.97.11073" />
-        <PackageReference Include="Prism.Core" Version="8.1.97" />
-        <PackageReference Include="Prism.Microsoft.DependencyInjection.Extensions" Version="8.0.62" />
+        <PackageReference Include="Prism.Avalonia" Version="9.0.537.11130" />
+        <PackageReference Include="Prism.Core" Version="9.0.537" />
         <PackageReference Include="SukiUI" Version="6.0.3" />
         <PackageReference Include="SukiUI.Dock" Version="6.0.3" />
     </ItemGroup>

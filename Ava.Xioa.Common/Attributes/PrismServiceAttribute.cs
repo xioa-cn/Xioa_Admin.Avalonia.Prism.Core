@@ -1,4 +1,5 @@
 ﻿using System;
+using Ava.Xioa.Common.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ava.Xioa.Common.Attributes;
@@ -11,6 +12,8 @@ public class PrismServiceAttribute : Attribute
     /// </summary>
     public ServiceLifetime Lifetime { get; set; }
 
+    public ProgrammingVersion Version { get; set; }
+
     /// <summary>
     /// 服务注册名称
     /// </summary>
@@ -19,10 +22,11 @@ public class PrismServiceAttribute : Attribute
     public Type Type { get; set; }
 
     public PrismServiceAttribute(Type type, ServiceLifetime lifetime = ServiceLifetime.Singleton,
-        string serviceName = "")
+        string serviceName = "", ProgrammingVersion version = ProgrammingVersion.EnabledStandby)
     {
         Lifetime = lifetime;
         Type = type;
+        Version = version;
         ServiceName = serviceName;
     }
 }

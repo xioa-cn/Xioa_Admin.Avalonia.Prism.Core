@@ -2,18 +2,16 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication.Views;
-using Microsoft.Extensions.DependencyInjection;
 using Prism;
 using Prism.Ioc;
-using Prism.Microsoft.DependencyInjection;
 using Ava.Xioa.Common.Extensions;
 using Ava.Xioa.Infrastructure;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Prism.Container.DryIoc;
 using Prism.Events;
 using Prism.Modularity;
-using Prism.Regions;
+using Prism.Navigation.Regions;
 using SukiUI.Dialogs;
 using SukiUI.Toasts;
 
@@ -29,9 +27,7 @@ public partial class App : PrismApplicationBase
 
     protected override IContainerExtension CreateContainerExtension()
     {
-        var services = new ServiceCollection();
-
-        return new PrismContainerExtension(services) as IContainerExtension;
+        return new DryIocContainerExtension();
     }
 
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -41,15 +37,16 @@ public partial class App : PrismApplicationBase
 
     protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
     {
-        regionAdapterMappings.RegisterMapping(
-            typeof(ContentControl), 
-            Container.Resolve<ContentControlRegionAdapter>()
-        );
+        base.ConfigureRegionAdapterMappings(regionAdapterMappings);
     }
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        containerRegistry.RegisterSingleton<IModuleCatalog, ModuleCatalog>();
+        // 注册区域相关服务
+        containerRegistry.RegisterSingleton<IRegionManager, RegionManager>();
+        containerRegistry.RegisterSingleton<IRegionNavigationContentLoader, RegionNavigationContentLoader>();
+        containerRegistry.RegisterSingleton<IRegionBehaviorFactory, RegionBehaviorFactory>();
+        
         containerRegistry.RegisterSingleton<IModuleInitializer, ModuleInitializer>();
         containerRegistry.RegisterSingleton<IModuleManager, ModuleManager>();
         containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
