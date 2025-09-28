@@ -29,7 +29,7 @@ public partial class Program
         }
         WriteColorLine($"\n找到解决方案：{slnPath}", COLOR_SUCCESS);
 
-        // 用户输入（强化解决方案文件夹的提示）
+        // 用户输入
         string projectName = GetUserInput("请输入项目名称（如 Ava.Xioa.Utils）：", COLOR_PROMPT);
 
         if (string.IsNullOrEmpty(projectName))
@@ -41,7 +41,7 @@ public partial class Program
         
         projectName = string.IsNullOrEmpty(projectName) ? "NewProject" : projectName;
 
-        // 重点优化：明确说明解决方案文件夹的作用和示例
+        // 明确说明解决方案文件夹的作用和示例
         string solutionFolder = GetUserInput(
             "请输入解决方案文件夹（用于在解决方案中组织项目，如 Common , Modules , Utils，直接回车不指定）：", 
             COLOR_PROMPT
