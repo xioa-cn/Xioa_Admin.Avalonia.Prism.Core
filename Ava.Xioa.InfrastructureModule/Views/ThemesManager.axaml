@@ -109,20 +109,7 @@
                                                    TextWrapping="Wrap" />
                                     </StackPanel>
                                 </DockPanel>
-                                <!-- <DockPanel> -->
-                                <!--     <ToggleSwitch VerticalAlignment="Top" -->
-                                <!--                   DockPanel.Dock="Right" -->
-                                <!--                   IsChecked="{Binding BackgroundTransitions}" /> -->
-                                <!--     <StackPanel HorizontalAlignment="Left"> -->
-                                <!--         <TextBlock FontSize="16" -->
-                                <!--                    FontWeight="DemiBold" -->
-                                <!--                    Text="Background Transitions" /> -->
-                                <!--         <TextBlock Margin="0,12,70,0" -->
-                                <!--                    Foreground="{DynamicResource SukiLowText}" -->
-                                <!--                    Text="Enable/disable the transitions for the background, these will fade between the active effects when changed." -->
-                                <!--                    TextWrapping="Wrap" /> -->
-                                <!--     </StackPanel> -->
-                                <!-- </DockPanel> -->
+                               
                             </StackPanel>
                         </suki:GlassCard>
                         <suki:GlassCard Margin="0,45,0,0" Padding="25">
