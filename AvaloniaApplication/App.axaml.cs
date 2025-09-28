@@ -5,7 +5,7 @@ using AvaloniaApplication.Views;
 using Prism;
 using Prism.Ioc;
 using Ava.Xioa.Common.Extensions;
-using Ava.Xioa.Infrastructure;
+using Ava.Xioa.InfrastructureModule;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Prism.Container.DryIoc;

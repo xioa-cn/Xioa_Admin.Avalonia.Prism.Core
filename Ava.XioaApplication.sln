@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Infrastructure.Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Infrastructure.Impl", "Ava.Xioa.Infrastructure.Impl\Ava.Xioa.Infrastructure.Impl.csproj", "{4B86B402-C529-4EDA-BA3D-A250E1F74F17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Infrastructure", "Ava.Xioa.Infrastructure\Ava.Xioa.Infrastructure.csproj", "{20EA896C-287E-4CD1-B813-E47D70FC29AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.InfrastructureModule", "Ava.Xioa.InfrastructureModule\Ava.Xioa.InfrastructureModule.csproj", "{20EA896C-287E-4CD1-B813-E47D70FC29AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ava.Xioa.Connectlayer", "Ava.Xioa.Connectlayer\Ava.Xioa.Connectlayer.csproj", "{376A6B2F-9589-4E5B-810A-BFAA40492F7C}"
 EndProject

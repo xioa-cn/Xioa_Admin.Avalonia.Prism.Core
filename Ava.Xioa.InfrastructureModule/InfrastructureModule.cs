@@ -3,7 +3,7 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Navigation.Regions;
 
-namespace Ava.Xioa.Infrastructure;
+namespace Ava.Xioa.InfrastructureModule;
 
 public class InfrastructureModule : IModule
 {
