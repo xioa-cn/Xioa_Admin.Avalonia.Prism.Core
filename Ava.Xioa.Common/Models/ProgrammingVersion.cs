@@ -14,6 +14,6 @@ public enum ProgrammingVersion
     /// <summary>
     /// 启用中版本
     /// </summary>
-    [Description("启用中版本（可切换备用）")]
+    [Description("启用中版本")]
     EnabledStandby
 }
