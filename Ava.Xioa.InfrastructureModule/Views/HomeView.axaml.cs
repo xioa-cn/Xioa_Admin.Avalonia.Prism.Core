@@ -4,7 +4,7 @@ using Avalonia.Controls;
 
 namespace Ava.Xioa.InfrastructureModule.Views;
 
-[RegisterForNavigation(navigationName: nameof(ThemesManager), region: AppRegions.MainRegion)]
+[RegisterForNavigation(navigationName: nameof(HomeView), region: AppRegions.MainRegion)]
 public partial class HomeView : UserControl
 {
     public HomeView()

@@ -23,6 +23,7 @@
     IsTitleBarVisible="True"
     TitleBarVisibilityOnFullScreen="Visible"
     CanPin="True"
+    WindowStartupLocation="CenterScreen"
     ShowTitlebarBackground="True"
     x:DataType="vm:MainWindowViewModel"
     mc:Ignorable="d">

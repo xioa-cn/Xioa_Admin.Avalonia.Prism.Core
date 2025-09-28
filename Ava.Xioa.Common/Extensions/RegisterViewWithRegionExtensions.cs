@@ -11,7 +11,7 @@ public static class RegisterViewWithRegionExtensions
     public static IRegionManager RegisterViewsWithRegion(this IRegionManager regionManager, Assembly assembly)
     {
         var types = assembly.GetTypes().Where(t => t.GetCustomAttribute<RegisterForNavigationAttribute>() != null)
-            .ToList();
+            .OrderByDescending(item => item.GetCustomAttribute<RegisterForNavigationAttribute>()?.ZIndex ?? -1).ToList();
 
         if (types.Count <= 0) return regionManager;
 
@@ -24,7 +24,7 @@ public static class RegisterViewWithRegionExtensions
             {
                 continue;
             }
-            
+
             regionManager.RegisterViewWithRegion(attr.Region, type);
         }
 

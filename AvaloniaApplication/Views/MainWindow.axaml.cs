@@ -17,7 +17,6 @@ public partial class MainWindow : SukiWindow
 
         InitializeComponent();
         this.WindowContentControl.Content = userControl;
-        this.IsEnabled = false;
     }
 
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
@@ -26,7 +25,5 @@ public partial class MainWindow : SukiWindow
         {
             vm.Initialized();
         }
-
-        this.IsEnabled = true;
     }
 }

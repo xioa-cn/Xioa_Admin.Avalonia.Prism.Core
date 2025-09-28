@@ -12,7 +12,7 @@ namespace Ava.Xioa.Common;
 /// 适用于Avalonia.Prism的导航视图模型基类
 /// 整合了Avalonia的UI线程特性和Prism的导航功能
 /// </summary>
-public abstract class NavigableViewModelObject : EventEnabledViewModelObject, 
+public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
     INavigationAware, IConfirmNavigationRequest, IRegionMemberLifetime
 {
     private readonly IRegionManager? _regionManager;
@@ -51,10 +51,17 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
             .ObservesProperty(() => IsNavigating);
     }
 
+    public NavigableViewModelObject(IRegionManager? regionManager)
+    {
+        _regionManager = regionManager;
+        NavigateCommand = new DelegateCommand<NavigationParameters>(ExecuteNavigate, CanNavigate)
+            .ObservesProperty(() => IsNavigating);
+    }
+
     /// <summary>
     /// 带事件聚合器和区域管理器的构造函数
     /// </summary>
-    public NavigableViewModelObject(IEventAggregator? eventAggregator, IRegionManager? regionManager) 
+    public NavigableViewModelObject(IEventAggregator? eventAggregator, IRegionManager? regionManager)
         : base(eventAggregator)
     {
         _regionManager = regionManager;
@@ -70,8 +77,8 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
         if (parameters == null || !parameters.ContainsKey("TargetView") || !parameters.ContainsKey("RegionName"))
             throw new ArgumentException("导航参数必须包含TargetView和RegionName");
 
-        var targetView = parameters["TargetView"].ToString();
-        var regionName = parameters["RegionName"].ToString();
+        var targetView = parameters["TargetView"]!.ToString();
+        var regionName = parameters["RegionName"]!.ToString();
 
         if (string.IsNullOrEmpty(targetView) || string.IsNullOrEmpty(regionName))
             return;
@@ -132,10 +139,7 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
     public virtual void OnNavigatedTo(NavigationContext navigationContext)
     {
         // 在UI线程处理导航参数
-        Dispatcher.UIThread.Post(() =>
-        {
-            ProcessNavigationParameters(navigationContext.Parameters);
-        });
+        Dispatcher.UIThread.Post(() => { ProcessNavigationParameters(navigationContext.Parameters); });
     }
 
     /// <summary>
@@ -195,10 +199,9 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
     protected virtual void NavigateTo(string regionName, string viewName, NavigationParameters? parameters = null)
     {
         var navParams = parameters ?? new NavigationParameters();
-        navParams.Add("RegionName",regionName);
+        navParams.Add("RegionName", regionName);
         navParams.Add("TargetView", viewName);
 
         NavigateCommand.Execute(navParams);
     }
 }
-    

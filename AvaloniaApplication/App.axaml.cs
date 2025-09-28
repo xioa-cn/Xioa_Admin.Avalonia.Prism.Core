@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
+using Ava.Xioa.Common.Const;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication.Views;
 using Prism;
@@ -98,6 +99,8 @@ public partial class App : PrismApplicationBase
     {
         DisableAvaloniaDataAnnotationValidation();
         base.OnInitialized();
+        // var regionManager = Container.Resolve<IRegionManager>();
+        // regionManager.RequestNavigate("SplashView", AppRegions.MainRegion);
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

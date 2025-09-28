@@ -12,7 +12,7 @@ public static class RegisterForNavigationExtensions
         Assembly assembly)
     {
         var types = assembly.GetTypes().Where(t => t.GetCustomAttribute<RegisterForNavigationAttribute>() != null)
-            .ToList();
+            .OrderByDescending(item => item.GetCustomAttribute<RegisterForNavigationAttribute>()?.ZIndex ?? -1).ToList();
 
         if (types.Count <= 0) return containerRegistry;
 
