@@ -30,34 +30,37 @@ public class HomeViewModel : NavigableViewModelObject, IHomeServices
         var duration = TimeSpan.FromSeconds(1.25);
         
         
-        var sizeAnimation = new Animation
-        {
-            Duration = duration,
-            Easing = new CubicEaseInOut(),
-            Children =
-            {
-                new KeyFrame
-                {
-                    Cue = new Cue(0),
-                    Setters = 
-                    { 
-                        new Setter(Layoutable.WidthProperty, window.Width),
-                        new Setter(Layoutable.HeightProperty, window.Height)
-                    }
-                },
-                new KeyFrame
-                {
-                    Cue = new Cue(1),
-                    Setters = 
-                    { 
-                        new Setter(Layoutable.WidthProperty, targetSize.Width),
-                        new Setter(Layoutable.HeightProperty, targetSize.Height)
-                    }
-                }
-            }
-        };
+        // var sizeAnimation = new Animation
+        // {
+        //     Duration = duration,
+        //     Easing = new CubicEaseInOut(),
+        //     Children =
+        //     {
+        //         new KeyFrame
+        //         {
+        //             Cue = new Cue(0),
+        //             Setters = 
+        //             { 
+        //                 new Setter(Layoutable.WidthProperty, window.Width),
+        //                 new Setter(Layoutable.HeightProperty, window.Height)
+        //             }
+        //         },
+        //         new KeyFrame
+        //         {
+        //             Cue = new Cue(1),
+        //             Setters = 
+        //             { 
+        //                 new Setter(Layoutable.WidthProperty, targetSize.Width),
+        //                 new Setter(Layoutable.HeightProperty, targetSize.Height)
+        //             }
+        //         }
+        //     }
+        // };
 
-        sizeAnimation.RunAsync(window);
+       
+        window.Width = targetSize.Width;
+        window.Height = targetSize.Height;
+        //sizeAnimation.RunAsync(window);
         
         // 立即计算并设置居中位置(考虑DPI缩放)
         var screen = window.Screens.ScreenFromVisual(window);
