@@ -7,10 +7,13 @@ using Prism;
 using Prism.Ioc;
 using Prism.Microsoft.DependencyInjection;
 using Ava.Xioa.Common.Extensions;
+using Ava.Xioa.Infrastructure;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Prism.Events;
 using Prism.Modularity;
+using Prism.Regions;
 using SukiUI.Dialogs;
 using SukiUI.Toasts;
 
@@ -29,6 +32,19 @@ public partial class App : PrismApplicationBase
         var services = new ServiceCollection();
 
         return new PrismContainerExtension(services) as IContainerExtension;
+    }
+
+    protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+    {
+        moduleCatalog.AddModule(typeof(InfrastructureModule));
+    }
+
+    protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
+    {
+        regionAdapterMappings.RegisterMapping(
+            typeof(ContentControl), 
+            Container.Resolve<ContentControlRegionAdapter>()
+        );
     }
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)

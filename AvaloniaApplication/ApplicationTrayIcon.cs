@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Ava.Xioa.Common.Events;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform;
 using Avalonia.Styling;
-using AvaloniaApplication.PubSubEvents;
 using Prism.Events;
 using Prism.Ioc;
 using SkiaSharp;

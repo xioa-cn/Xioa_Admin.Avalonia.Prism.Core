@@ -23,6 +23,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Ava.Xioa.Common.Themes\Ava.Xioa.Common.Themes.csproj" />
 	  <ProjectReference Include="..\Ava.Xioa.Connectlayer\Ava.Xioa.Connectlayer.csproj" />
+	  <ProjectReference Include="..\Ava.Xioa.Infrastructure.Services\Ava.Xioa.Infrastructure.Services.csproj" />
+	  <ProjectReference Include="..\Ava.Xioa.Infrastructure\Ava.Xioa.Infrastructure.csproj" />
 	  <ProjectReference Include="..\ObservableBind.Generator\ObservableBind.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>

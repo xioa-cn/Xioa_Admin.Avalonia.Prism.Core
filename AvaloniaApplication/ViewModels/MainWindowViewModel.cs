@@ -1,5 +1,6 @@
 ﻿using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common;
+using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
 using SukiUI.Dialogs;
 using SukiUI.Enums;
 using SukiUI.Toasts;
@@ -18,16 +19,16 @@ public partial class MainWindowViewModel : ReactiveObject
 
     [ObservableBindProperty] private string _customShaderFile = null;
 
-    [ObservableBindProperty] private bool _animationsEnabled;
+    [ObservableBindProperty] private bool _animationsEnabled = false;
 
-    private readonly MainViewViewModel _mainViewViewModel;
+    private readonly IThemesServices _themesServices;
 
     public MainWindowViewModel(ISukiToastManager toastManager, ISukiDialogManager dialogManager,
-        MainViewViewModel mainViewViewModel)
+        IThemesServices mainViewViewModel)
     {
         ToastManager = toastManager;
         DialogManager = dialogManager;
-        _mainViewViewModel = mainViewViewModel;
+        _themesServices = mainViewViewModel;
 
         mainViewViewModel.CustomBackgroundStyleChanged += value => CustomShaderFile = value;
         mainViewViewModel.AnimationsEnabledChanged += value => AnimationsEnabled = (bool)value!;

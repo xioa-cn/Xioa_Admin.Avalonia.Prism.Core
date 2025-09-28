@@ -12,8 +12,4 @@
         <ProjectReference Include="..\Ava.Xioa.Infrastructure.Services\Ava.Xioa.Infrastructure.Services.csproj" />
         <ProjectReference Include="..\ObservableBind.Generator\ObservableBind.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
     </ItemGroup>
-
-    <ItemGroup>
-
-    </ItemGroup>
 </Project>
