@@ -1,4 +1,5 @@
 ﻿using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Models;
 using Ava.Xioa.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,11 @@ public class SystemDbContext : EfDbContext.EfDbContext
 {
     protected override string ConnectionString { get; }
 
+    public SystemDbContext(SystemDbConfig systemDbConfig)
+    {
+        this.ConnectionString = systemDbConfig.ConnectionString;
+    }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder,typeof(SystemEntity));

@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
@@ -5,9 +6,11 @@ using AvaloniaApplication.Views;
 using Prism;
 using Prism.Ioc;
 using Ava.Xioa.Common.Extensions;
+using Ava.Xioa.Common.Models;
 using Ava.Xioa.InfrastructureModule;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Microsoft.Extensions.Configuration;
 using Prism.Container.DryIoc;
 using Prism.Events;
 using Prism.Modularity;
@@ -42,14 +45,24 @@ public partial class App : PrismApplicationBase
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        IConfiguration configuration = new ConfigurationManager()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .Build();
+
         // 注册区域相关服务
         containerRegistry.RegisterSingleton<IRegionManager, RegionManager>();
         containerRegistry.RegisterSingleton<IRegionNavigationContentLoader, RegionNavigationContentLoader>();
         containerRegistry.RegisterSingleton<IRegionBehaviorFactory, RegionBehaviorFactory>();
-        
+
         containerRegistry.RegisterSingleton<IModuleInitializer, ModuleInitializer>();
         containerRegistry.RegisterSingleton<IModuleManager, ModuleManager>();
         containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
+
+        containerRegistry.RegisterInstance<IConfiguration>(configuration);
+
+        containerRegistry.RegisterInstance<SystemDbConfig>(configuration.GetSection("SystemDb").Get<SystemDbConfig>()
+                                                           ?? throw new Exception("SystemDb配置项缺失"));
 
         containerRegistry
             .AddPrismAutoDbContext()
@@ -57,7 +70,7 @@ public partial class App : PrismApplicationBase
             .AddPrismServices()
             .AddPrismVms()
             .AddPrismViews();
-        
+
         containerRegistry.RegisterSingleton<ISukiToastManager, SukiToastManager>();
         containerRegistry.RegisterSingleton<ISukiDialogManager, SukiDialogManager>();
     }
