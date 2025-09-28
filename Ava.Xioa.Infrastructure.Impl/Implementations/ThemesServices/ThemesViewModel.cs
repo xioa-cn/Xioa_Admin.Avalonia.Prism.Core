@@ -13,7 +13,6 @@ using Avalonia.Styling;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using SukiUI;
-using SukiUI.Enums;
 using SukiUI.Models;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.ThemesServices;
