@@ -1,4 +1,5 @@
 using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Services;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaApplication.ViewModels;
@@ -10,18 +11,22 @@ namespace AvaloniaApplication.Views;
 [PrismView(ServiceLifetime.Singleton)]
 public partial class MainWindow : SukiWindow
 {
-    public MainWindow(UserControl userControl)
+    public MainWindow(UserControl userControl, MainWindowViewModel viewModel)
     {
+        this.DataContext = viewModel;
+
         InitializeComponent();
         this.WindowContentControl.Content = userControl;
+        this.IsEnabled = false;
     }
 
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (this.DataContext is MainWindowViewModel vm)
+        if (this.DataContext is IInitializedable vm)
         {
-            vm.AnimationsEnabled = true;
+            vm.Initialized();
         }
-        this.BackgroundAnimationEnabled = true;
+
+        this.IsEnabled = true;
     }
 }

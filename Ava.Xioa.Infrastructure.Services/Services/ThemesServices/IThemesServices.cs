@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 using Avalonia.Collections;
 using SukiUI.Models;
@@ -32,6 +33,8 @@ public interface IThemesServices
     /// </summary>
     bool IsLightTheme { get; set; }
 
+    void ChangeColorTheme(string displayName);
+
     /// <summary>
     /// 开启动画
     /// </summary>
@@ -46,6 +49,8 @@ public interface IThemesServices
 
     Action<SukiBackgroundStyleDesc?>? BackgroundStyleChanged { get; set; }
 
+    void ChangeBackgroundEffect(string effectKey);
+    
     /// <summary>
     /// 明暗主题切换
     /// </summary>
@@ -65,4 +70,6 @@ public interface IThemesServices
     /// 颜色主题切换
     /// </summary>
     ICommand SwitchToColorThemeCommand { get; }
+
+    void SetThemesInformationRepository(ISystemThemesInformationRepository repository);
 }

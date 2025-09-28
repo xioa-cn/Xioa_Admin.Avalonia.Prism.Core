@@ -10,6 +10,7 @@ using Ava.Xioa.Common.Models;
 using Ava.Xioa.InfrastructureModule;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using AvaloniaApplication.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Prism.Container.DryIoc;
 using Prism.Events;
@@ -80,7 +81,8 @@ public partial class App : PrismApplicationBase
         var mainView = Container.Resolve<MainView>();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow(mainView);
+            var mainWindowViewModel = Container.Resolve<MainWindowViewModel>();
+            desktop.MainWindow = new MainWindow(mainView, mainWindowViewModel);
             return desktop.MainWindow;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)

@@ -14,16 +14,20 @@ public class SystemDbContext : EfDbContext.EfDbContext, ISqliteNormalable
 {
     protected override string ConnectionString { get; }
 
+    private readonly string _dbFilePath;
+
     public SystemDbContext(SystemDbConfig systemDbConfig)
     {
         if (systemDbConfig.LiteDbName.EndsWith(".db") || systemDbConfig.LiteDbName.EndsWith(".sqlite3"))
         {
-            this.ConnectionString = "Data Source = " + AppDataPath.GetLocalFilePath(systemDbConfig.LiteDbName);
+            _dbFilePath = AppDataPath.GetLocalFilePath(systemDbConfig.LiteDbName);
         }
         else
         {
-            this.ConnectionString = "Data Source = " + AppDataPath.GetLocalFilePath($"{systemDbConfig.LiteDbName}.db");
+            _dbFilePath = AppDataPath.GetLocalFilePath($"{systemDbConfig.LiteDbName}.db");
         }
+
+        ConnectionString = $"Data Source={_dbFilePath}";
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -39,7 +43,7 @@ public class SystemDbContext : EfDbContext.EfDbContext, ISqliteNormalable
 
     public async Task DbFileExistOrCreateAsync()
     {
-        if (System.IO.File.Exists(ConnectionString))
+        if (System.IO.File.Exists(_dbFilePath))
         {
             return;
         }
