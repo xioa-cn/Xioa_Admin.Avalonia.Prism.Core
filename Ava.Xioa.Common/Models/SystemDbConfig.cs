@@ -4,5 +4,5 @@ namespace Ava.Xioa.Common.Models;
 
 public class SystemDbConfig
 {
-    [Required] public string ConnectionString { get; init; }
+    [Required] public string LiteDbName { get; init; }
 }

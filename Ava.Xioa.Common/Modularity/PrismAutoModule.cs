@@ -7,12 +7,12 @@ namespace Ava.Xioa.Common.Modularity;
 
 public abstract class PrismAutoModule<T> : IModule
 {
-    public void RegisterTypes(IContainerRegistry containerRegistry)
+    public virtual void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterForNavigations(typeof(T).Assembly);
     }
 
-    public void OnInitialized(IContainerProvider containerProvider)
+    public virtual void OnInitialized(IContainerProvider containerProvider)
     {
         var regionManager = containerProvider.Resolve<IRegionManager>();
 
