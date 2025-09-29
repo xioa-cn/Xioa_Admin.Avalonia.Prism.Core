@@ -11,18 +11,6 @@
     <TrayIcon.Icons>
         <TrayIcons>
             <TrayIcon ToolTipText="{Binding Source={x:Static const:AppInformation.Instance}, Path=ApplicationName}">
-                <!-- <TrayIcon.Menu> -->
-                <!--     <NativeMenu> -->
-                <!--         <NativeMenuItem Header="NDemo"> -->
-                <!--             <NativeMenu> -->
-                <!--                 <NativeMenuItem Header="Option 1" /> -->
-                <!--                 <NativeMenuItem Header="Option 2" /> -->
-                <!--                 <NativeMenuItemSeparator /> -->
-                <!--                 <NativeMenuItem Header="Option 3" /> -->
-                <!--             </NativeMenu> -->
-                <!--         </NativeMenuItem> -->
-                <!--     </NativeMenu> -->
-                <!-- </TrayIcon.Menu> -->
             </TrayIcon>
         </TrayIcons>
     </TrayIcon.Icons>

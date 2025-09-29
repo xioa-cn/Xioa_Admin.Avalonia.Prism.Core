@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Ava.Xioa.Common.Events;
+using Ava.Xioa.Common.Input;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform;
@@ -9,6 +12,7 @@ using Avalonia.Styling;
 using Prism.Events;
 using Prism.Ioc;
 using SkiaSharp;
+using SukiUI.Controls;
 using Svg.Skia;
 
 namespace AvaloniaApplication;
@@ -93,12 +97,37 @@ public partial class App
         {
             _trayIcon = icons[0]; // 获取第一个托盘图标
 
+            _trayIcon.Menu = new NativeMenu();
+            _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "打开", Command = new RelayCommand(OpenMainWindow) });
+            _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "退出", Command = new RelayCommand(ExitApplication) });
             // 初始设置
             UpdateTrayIconForTheme(RequestedThemeVariant);
         }
 
         _eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(color => UpdateTrayIconColor(color.Value)
             , ThreadOption.UIThread, true, filter => filter.TokenKey == "SystemColor");
+    }
+
+    private void ExitApplication()
+    {
+        // Environment.Exit(0);
+    }
+
+    private void OpenMainWindow()
+    {
+        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        desktop.MainWindow?.Show();
+        desktop.MainWindow?.Activate();
+
+
+        if (desktop.MainWindow is null) return;
+        desktop.MainWindow.Topmost = true;
+        _ = Task.Delay(100).ContinueWith(_ =>
+        {
+            desktop.MainWindow.Topmost = false;
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+        
+        desktop.MainWindow.WindowState = WindowState.Normal;
     }
 
     /// <summary>
@@ -135,7 +164,7 @@ public partial class App
         var bitmap = LoadSvgWithColor(svgPath, 16, 16, colorCode);
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
         {
-           desktop.MainWindow.Icon = new WindowIcon(bitmap);
+            desktop.MainWindow.Icon = new WindowIcon(bitmap);
         }
 
         // 更新托盘图标
