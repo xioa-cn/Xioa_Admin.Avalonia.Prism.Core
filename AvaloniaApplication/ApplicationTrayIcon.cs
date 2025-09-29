@@ -98,12 +98,19 @@ public partial class App
             _trayIcon.Menu = new NativeMenu();
             _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "打开", Command = new RelayCommand(OpenMainWindow) });
             _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "退出", Command = new RelayCommand(ExitApplication) });
+            
+            _trayIcon.Clicked += TrayIcon_Clicked;
             // 初始设置
             UpdateTrayIconForTheme(RequestedThemeVariant);
         }
 
         _eventAggregator.GetEvent<ThemeChangedEvent>().Subscribe(color => UpdateTrayIconColor(color.Value)
             , ThreadOption.UIThread, true, filter => filter.TokenKey == "SystemColor");
+    }
+
+    private void TrayIcon_Clicked(object? sender, EventArgs e)
+    {
+        OpenMainWindow();
     }
 
     private void ExitApplication()
