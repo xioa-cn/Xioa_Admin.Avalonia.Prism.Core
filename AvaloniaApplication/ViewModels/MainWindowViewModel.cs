@@ -6,6 +6,7 @@ using Ava.Xioa.Common.Services;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
+using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using SukiUI.Dialogs;
 using SukiUI.Toasts;
 
@@ -28,14 +29,17 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
     private readonly IThemesServices _themesServices;
 
     private readonly ISystemThemesInformationRepository _systemThemesInformationRepository;
+    
+    public IMainWindowServices MainWindowServices { get; }
 
     public MainWindowViewModel(ISukiToastManager toastManager, ISukiDialogManager dialogManager,
-        IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository)
+        IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository, IMainWindowServices mainWindowServices)
     {
         ToastManager = toastManager;
         DialogManager = dialogManager;
         _themesServices = themesServices;
         _systemThemesInformationRepository = systemThemesInformationRepository;
+        MainWindowServices = mainWindowServices;
         _themesServices.CustomBackgroundStyleChanged += value => CustomShaderFile = value;
         _themesServices.AnimationsEnabledChanged += value => AnimationsEnabled = (bool)value!;
         _themesServices.BackgroundTransitionsChanged += value => TransitionsEnabled = (bool)value!;

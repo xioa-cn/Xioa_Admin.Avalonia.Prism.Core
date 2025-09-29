@@ -10,4 +10,6 @@ public class AppInformation
     }
 
     public string ApplicationName { get; set; } = "Ava.XioaDemo";
+    
+    public string SplashIndexView { get; set; } = "LoginView";
 }

@@ -1,4 +1,3 @@
-using System;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Services;
 using Avalonia.Controls;
@@ -15,7 +14,7 @@ public partial class MainWindow : SukiWindow
     public MainWindow(UserControl userControl, MainWindowViewModel viewModel)
     {
         this.DataContext = viewModel;
-      
+        this.IsVisible = false;
         InitializeComponent();
         this.WindowContentControl.Content = userControl;
     }
