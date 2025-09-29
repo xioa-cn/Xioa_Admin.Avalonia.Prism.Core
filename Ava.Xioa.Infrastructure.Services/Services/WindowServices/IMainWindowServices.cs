@@ -1,27 +1,28 @@
-﻿using Avalonia;
+﻿using Ava.Xioa.Common.Services;
+using Avalonia;
 using SukiUI.Controls;
 
 namespace Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 
 public interface IMainWindowServices
 {
-    double Width { get; set; }
-    double Height { get; set; }
-    double Opacity { get; set; }
+    public double Width { get; set; }
+    public double Height { get; set; }
+    public double Opacity { get; set; }
 
-    SukiWindow.TitleBarVisibilityMode TitleBarVisibilityOnFullScreen { get; set; }
-    PixelPoint Position { get; set; }
+    public SukiWindow.TitleBarVisibilityMode TitleBarVisibilityOnFullScreen { get; set; }
+    public PixelPoint Position { get; set; }
 
-    bool CanFullScreen { get; set; }
-    bool CanMaximize { get; set; }
-    bool CanMinimize { get; set; }
-    bool IsTitleBarVisible { get; set; }
-    bool CanPin { get; set; }
-    bool CanResize { get; set; }
-    bool ShowTitlebarBackground { get; set; }
-    bool ShowBottomBorder { get; set; }
-    bool CanMove { get; set; }
-    bool IsVisible { get; set; }
+    public bool CanFullScreen { get; set; }
+    public bool CanMaximize { get; set; }
+    public bool CanMinimize { get; set; }
+    public bool IsTitleBarVisible { get; set; }
+    public bool CanPin { get; set; }
+    public bool CanResize { get; set; }
+    public bool ShowTitlebarBackground { get; set; }
+    public bool ShowBottomBorder { get; set; }
+    public bool CanMove { get; set; }
+    public bool IsVisible { get; set; }
 
-    void CenterScreen();
+    public void CenterScreen();
 }

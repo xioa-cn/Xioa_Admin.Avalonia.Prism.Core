@@ -9,7 +9,7 @@ using SukiUI.Controls;
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.WindowServices;
 
 [PrismViewModel(typeof(IMainWindowServices), ServiceLifetime.Singleton)]
-public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
+public partial class MainWindowViewModel : ChainReactiveObject<MainWindowViewModel>, IMainWindowServices
 {
     [ObservableBindProperty] private double _Width;
     [ObservableBindProperty] private double _Height;
@@ -29,16 +29,16 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
 
     public MainWindowViewModel()
     {
-        this.Width = 404;
-        this.Height = 384;
-        this.Opacity = 0;
+        this.SetProperty(e => e.Width, 404)
+                .SetProperty(e => e.Height, 384)
+                    .SetProperty(e => e.Opacity, 0);
     }
 
     public void CenterScreen()
     {
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
         var window = desktop.MainWindow;
-        
+
         if (window == null)
             return;
 
@@ -47,7 +47,7 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
         window.Arrange(new Rect(window.DesiredSize));
 
         // 获取主屏幕工作区（排除任务栏等）
-        var screen =  window.Screens.ScreenFromVisual(window);
+        var screen = window.Screens.ScreenFromVisual(window);
         if (screen == null)
             return;
 
