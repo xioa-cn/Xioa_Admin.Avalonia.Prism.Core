@@ -1,5 +1,4 @@
 using Ava.Xioa.Common.Attributes;
-using Ava.Xioa.Common.Services;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaApplication.ViewModels;
@@ -11,19 +10,29 @@ namespace AvaloniaApplication.Views;
 [PrismView(ServiceLifetime.Singleton)]
 public partial class MainWindow : SukiWindow
 {
-    public MainWindow(UserControl userControl, MainWindowViewModel viewModel)
+    private readonly MainWindowViewModel mainWindowViewModel;
+    public MainWindow(UserControl userControl,MainWindowViewModel mainWindowViewModel)
     {
-        this.DataContext = viewModel;
-        this.IsVisible = false;
+        this.mainWindowViewModel = mainWindowViewModel;
+        this.DataContext = mainWindowViewModel;
+        this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        this.WindowState = WindowState.Normal;
+        this.Width = 444;
+        this.Height = 550;
+        this.Loaded += OnLoaded;
         InitializeComponent();
         this.WindowContentControl.Content = userControl;
     }
 
-    private void Control_OnLoaded(object? sender, RoutedEventArgs e)
+    private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (this.DataContext is IInitializedable vm)
-        {
-            vm.Initialized();
-        }
+        mainWindowViewModel.Initialized();
+    }
+
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        e.Cancel = true;
+        this.Hide();
     }
 }

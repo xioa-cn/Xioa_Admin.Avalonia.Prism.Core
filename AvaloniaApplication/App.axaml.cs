@@ -26,6 +26,7 @@ public partial class App : PrismApplicationBase
 {
     public override void Initialize()
     {
+        SubscribeMessage();
         AvaloniaXamlLoader.Load(this);
         base.Initialize();
     }
@@ -116,6 +117,12 @@ public partial class App : PrismApplicationBase
 
     public override void OnFrameworkInitializationCompleted()
     {
+        if (Detection)
+        {
+            throw new Exception("检测到程序正在运行，请关闭所有程序后重新运行");
+        }
+
+
         base.OnFrameworkInitializationCompleted();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

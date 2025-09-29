@@ -1,12 +1,12 @@
 <prism:PrismApplicationBase xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="AvaloniaApplication.App"
-        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
-        xmlns:suki="https://github.com/kikipoulet/SukiUI"
-        xmlns:local="using:AvaloniaApplication"
-        xmlns:prism="clr-namespace:Prism;assembly=Prism.Avalonia"
-        RequestedThemeVariant="Default">
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            x:Class="AvaloniaApplication.App"
+                            xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                            xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
+                            xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                            xmlns:local="using:AvaloniaApplication"
+                            xmlns:prism="clr-namespace:Prism;assembly=Prism.Avalonia"
+                            RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
     <TrayIcon.Icons>
         <TrayIcons>
@@ -17,7 +17,17 @@
     <Application.DataTemplates>
 
     </Application.DataTemplates>
-
+    <Application.Resources>
+        <ResourceDictionary>
+            <FontFamily x:Key="DefaultFontFamily">avares://AvaloniaApplication/Assets/FontFamily/PingFangSC-Semibold.ttf#苹方_特粗</FontFamily>
+            <FontFamily x:Key="PingFangSC-Light_FontFamily">avares://AvaloniaApplication/Assets/FontFamily/PingFangSC-Light.ttf#苹方_常规</FontFamily>
+            <FontFamily x:Key="PingFangSC-Medium_FontFamily">avares://AvaloniaApplication/Assets/FontFamily/PingFangSC-Medium.ttf#苹方_粗体</FontFamily>
+            <FontFamily x:Key="PingFangSC-Regular_FontFamily">avares://AvaloniaApplication/Assets/FontFamily/PingFangSC-Regular.ttf#苹方_中等</FontFamily>
+            <FontFamily x:Key="PingFangSC-Semibold_FontFamily">avares://AvaloniaApplication/Assets/FontFamily/PingFangSC-Semibold.ttf#苹方_特粗</FontFamily>
+            <FontFamily x:Key="PingFangSC-Thin_FontFamily">avares://AvaloniaApplication/Assets/FontFamily/PingFangSC-Thin.ttf#苹方_细体</FontFamily>
+            <FontFamily x:Key="PingFangSC-Ultralight_FontFamily">avares://AvaloniaApplication/Assets/FontFamily/PingFangSC-Ultralight.ttf#苹方_特细</FontFamily>
+        </ResourceDictionary>
+    </Application.Resources>
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://SukiUI.Dock/Index.axaml" />

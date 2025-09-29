@@ -33,8 +33,8 @@
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.9" />
         <PackageReference Include="Prism.Avalonia" Version="9.0.537.11130" />
         <PackageReference Include="Prism.Core" Version="9.0.537" />
-        <PackageReference Include="SukiUI" Version="6.0.3" />
-        <PackageReference Include="SukiUI.Dock" Version="6.0.3" />
+        <PackageReference Include="SukiUI" Version="6.0.4-nightly20250926" />
+        <PackageReference Include="SukiUI.Dock" Version="6.0.4-nightly20250926" />
     </ItemGroup>
 
    

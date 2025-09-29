@@ -22,4 +22,8 @@ public class SystemThemesInformation : SystemEntity
     [MaxLength(255)]
     [Column("BackgroundEffectKey")]
     public string? BackgroundEffectKey { get; set; }
+    
+    [MaxLength(255)]
+    [Column("FontFamily")]
+    public string? FontFamily { get; set; }
 }

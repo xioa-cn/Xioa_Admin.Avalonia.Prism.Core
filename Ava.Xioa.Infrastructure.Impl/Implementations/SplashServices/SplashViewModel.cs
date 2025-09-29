@@ -1,30 +1,33 @@
 ﻿using System.Threading.Tasks;
-using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Const;
 using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.SplashServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
-using Prism.Events;
+using Ava.Xioa.Infrastructure.Services.Utils;
+using Avalonia;
 using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.SplashServices;
 
 [PrismViewModel(typeof(ISplashServices))]
-public class SplashViewModel : NavigableViewModelObject, ISplashServices, IInitializedAsyncable
+public class SplashViewModel : NavigableChangeWindowSizeViewModel, ISplashServices, IInitializedAsyncable
 {
     private readonly IMainWindowServices _mainWindowServices;
-    
-    public SplashViewModel(IEventAggregator eventAggregator, IRegionManager regionManager, IMainWindowServices mainWindowServices) : base(eventAggregator,
-        regionManager)
+
+    public SplashViewModel(IRegionManager regionManager,
+        IMainWindowServices mainWindowServices) : base(regionManager, mainWindowServices)
+
     {
         _mainWindowServices = mainWindowServices;
     }
 
+    protected override Size AfterChangeSize { get; } = new Size(550, 550);
+
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        base.OnNavigatedTo(navigationContext);
+        //base.OnNavigatedTo(navigationContext);
     }
 
     public async Task InitializedAsync()

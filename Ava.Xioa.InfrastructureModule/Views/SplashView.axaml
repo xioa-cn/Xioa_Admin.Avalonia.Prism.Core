@@ -3,8 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             Height="384"
-             Width="404"
+             Height="550"
+             Width="444"
              x:Class="Ava.Xioa.InfrastructureModule.Views.SplashView">
     WELCOME TO AVA.XIOA
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using Ava.Xioa.Common.Services;
 using Avalonia;
+using Avalonia.Controls;
 using SukiUI.Controls;
 
 namespace Ava.Xioa.Infrastructure.Services.Services.WindowServices;
@@ -12,6 +13,7 @@ public interface IMainWindowServices
 
     public SukiWindow.TitleBarVisibilityMode TitleBarVisibilityOnFullScreen { get; set; }
     public PixelPoint Position { get; set; }
+    public WindowState WindowState { get; set; }
 
     public bool CanFullScreen { get; set; }
     public bool CanMaximize { get; set; }
@@ -19,10 +21,15 @@ public interface IMainWindowServices
     public bool IsTitleBarVisible { get; set; }
     public bool CanPin { get; set; }
     public bool CanResize { get; set; }
+    public bool ShowInTaskbar { get; set; }
     public bool ShowTitlebarBackground { get; set; }
     public bool ShowBottomBorder { get; set; }
     public bool CanMove { get; set; }
     public bool IsVisible { get; set; }
 
     public void CenterScreen();
+
+    void ToNotifyTrayIcon();
+
+    bool ChangeAppFontFamily(string fontFamily);
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Ava.Xioa.Common;
+﻿using Ava.Xioa.Common;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Avalonia;
 using Avalonia.Animation;

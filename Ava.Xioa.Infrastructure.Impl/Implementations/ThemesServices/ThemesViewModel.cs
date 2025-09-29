@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -11,8 +12,12 @@ using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation.Mapper;
 using Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
+using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
+using Avalonia;
 using Avalonia.Collections;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
@@ -28,9 +33,11 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     [ObservableBindProperty] private bool _backgroundTransitions;
     [ObservableBindProperty] private bool _isLightTheme;
     [ObservableBindProperty] private SukiBackgroundStyleDesc _backgroundStyle;
-
+    [ObservableBindProperty] private string? _fontFamily;
     public IAvaloniaReadOnlyList<SukiColorTheme> AvailableColors { get; }
     public IAvaloniaReadOnlyList<SukiBackgroundStyleDesc> AvailableBackgroundStyles { get; }
+
+    public IAvaloniaReadOnlyList<string> AvailableFontFamily { get; }
 
     private readonly SukiTheme _theme = SukiTheme.GetInstance();
 
@@ -43,12 +50,26 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
 
     private readonly Debouncer _debouncer;
 
-    public ThemesViewModel(IEventAggregator eventAggregator)
+    private readonly IMainWindowServices _mainWindowServices;
+
+    public ThemesViewModel(IEventAggregator eventAggregator, IMainWindowServices mainWindowServices)
         : base(eventAggregator)
     {
+        _mainWindowServices = mainWindowServices;
         AvailableBackgroundStyles =
             new AvaloniaList<SukiBackgroundStyleDesc>(SukiBackgroundStyleDesc.SukiBackgroundStyleDescs);
 
+        var fontFamilies = new List<string>();
+
+        foreach (var item in Application.Current?.Resources)
+        {
+            if (item.Key is string value && value.Contains("_FontFamily"))
+            {
+                fontFamilies.Add(value.Replace("_FontFamily", ""));
+            }
+        }
+
+        AvailableFontFamily = new AvaloniaList<string>(fontFamilies);
         AvailableColors = _theme.ColorThemes;
 
         LightThemeChangedCommand = new RelayCommand<bool?>(ChangeLightTheme);
@@ -57,6 +78,20 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
         SwitchToColorThemeCommand = new RelayCommand<SukiColorTheme>(SwitchToColorTheme);
 
         _debouncer = new Debouncer(1000);
+    }
+
+    partial void OnFontFamilyChanged(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        var result = _mainWindowServices.ChangeAppFontFamily(value + "_FontFamily");
+
+
+        if (!result) return;
+        _debouncer.DebounceAsync(async () => { await SaveThemeInformation(); });
     }
 
     partial void OnBackgroundStyleChanged(SukiBackgroundStyleDesc value)
@@ -85,7 +120,30 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     {
         if (obj is null) return;
 
-        _theme.ChangeColorTheme(obj);
+        Dispatcher.UIThread.Invoke(async () =>
+        {
+            // 先强制刷新当前主题状态
+            //_theme.InvalidateVisual();
+            await Task.Delay(50);
+
+            // 应用新主题
+            _theme.ChangeColorTheme(obj);
+
+            // 全面刷新窗口UI
+            // if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            // {
+            //     var window = desktop.MainWindow;
+            //     if (window != null)
+            //     {
+            //         window.InvalidateVisual();
+            //         window.InvalidateArrange();
+            //         window.InvalidateMeasure();
+            //         await Task.Delay(50);
+            //         window.InvalidateVisual();
+            //     }
+            // }
+        });
+
         var color = obj.PrimaryBrush.ToString()?.Replace("ff", "");
 
         this.PublishEvent<ThemeChangedEvent, TokenKeyPubSubEvent<string>>(
@@ -210,6 +268,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             findThemeInfo.Animation = this.BackgroundAnimations;
             findThemeInfo.ColorThemeDisplayName = _colorThemeDisplayName ?? "Orange";
             findThemeInfo.BackgroundEffectKey = _backgroundEffectKey;
+            findThemeInfo.FontFamily = FontFamily;
 
 
             this.ThemesInformationRepository.DbSet.Add(findThemeInfo);
@@ -221,6 +280,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             findThemeInfo.Animation = this.BackgroundAnimations;
             findThemeInfo.ColorThemeDisplayName = _colorThemeDisplayName ?? "Orange";
             findThemeInfo.BackgroundEffectKey = _backgroundEffectKey;
+            findThemeInfo.FontFamily = FontFamily;
         }
 
         await this.ThemesInformationRepository.SaveChangesAsync();

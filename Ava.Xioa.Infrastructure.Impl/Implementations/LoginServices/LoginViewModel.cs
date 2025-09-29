@@ -18,10 +18,19 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
 {
     public ICommand LoginCommand { get; }
 
+    private readonly IMainWindowServices _mainWindowServices;
+
     public LoginViewModel(IRegionManager regionManager, IMainWindowServices mainWindowServices) : base(
         regionManager, mainWindowServices)
     {
+        _mainWindowServices = mainWindowServices;
         LoginCommand = new AsyncRelayCommand(Login);
+    }
+
+    public override void OnNavigatedTo(NavigationContext navigationContext)
+    {
+        _mainWindowServices.ShowInTaskbar = true;
+        base.OnNavigatedTo(navigationContext);
     }
 
     private async Task Login()

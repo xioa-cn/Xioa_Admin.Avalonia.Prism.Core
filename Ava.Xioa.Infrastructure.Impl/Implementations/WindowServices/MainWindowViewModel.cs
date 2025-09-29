@@ -2,7 +2,10 @@
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Controls;
 
@@ -26,12 +29,17 @@ public partial class MainWindowViewModel : ChainReactiveObject<MainWindowViewMod
     [ObservableBindProperty] private bool _CanMove;
     [ObservableBindProperty] private bool _IsVisible;
     [ObservableBindProperty] private double _Opacity;
+    [ObservableBindProperty] private bool _ShowInTaskbar;
+    [ObservableBindProperty] private WindowState _WindowState;
 
     public MainWindowViewModel()
     {
         this.SetProperty(e => e.Width, 404)
-                .SetProperty(e => e.Height, 384)
-                    .SetProperty(e => e.Opacity, 0);
+            .SetProperty(e => e.Height, 384)
+            .SetProperty(e => e.Opacity, 0)
+            .SetProperty(e => e.IsVisible, true)
+            .SetProperty(e => e.Opacity, 1)
+            .SetProperty(e => e.WindowState, WindowState.Normal);
     }
 
     public void CenterScreen()
@@ -59,5 +67,24 @@ public partial class MainWindowViewModel : ChainReactiveObject<MainWindowViewMod
 
         // 设置窗口位置
         window.Position = new PixelPoint((int)x, (int)y);
+    }
+
+    public void ToNotifyTrayIcon()
+    {
+        this.IsVisible = false;
+        this.Opacity = 0;
+    }
+
+    public bool ChangeAppFontFamily(string fontFamily)
+    {
+        if (!(Application.Current?.Resources.TryGetResource(fontFamily, null, out var fontObj) ?? false)) return false;
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            if (fontObj is FontFamily fontFamilyObj)
+            {
+                Application.Current.Resources["DefaultFontFamily"] = fontFamilyObj;
+            }
+        });
+        return fontObj is FontFamily;
     }
 }

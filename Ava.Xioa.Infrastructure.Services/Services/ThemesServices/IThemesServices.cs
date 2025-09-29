@@ -18,6 +18,10 @@ public interface IThemesServices
     /// 背景样式
     /// </summary>
     IAvaloniaReadOnlyList<SukiBackgroundStyleDesc> AvailableBackgroundStyles { get; }
+    
+    IAvaloniaReadOnlyList<string> AvailableFontFamily { get; }
+    
+    string? FontFamily { get; set; }
 
     SukiBackgroundStyleDesc BackgroundStyle { get; set; }
 

@@ -20,7 +20,7 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
 
     [ObservableBindProperty] private SukiBackgroundStyleDesc _backgroundStyle;
 
-    [ObservableBindProperty] private bool _transitionsEnabled;
+    [ObservableBindProperty] private bool _transitionsEnabled = true;
 
     [ObservableBindProperty] private string _customShaderFile = null;
 
@@ -29,11 +29,12 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
     private readonly IThemesServices _themesServices;
 
     private readonly ISystemThemesInformationRepository _systemThemesInformationRepository;
-    
+
     public IMainWindowServices MainWindowServices { get; }
 
     public MainWindowViewModel(ISukiToastManager toastManager, ISukiDialogManager dialogManager,
-        IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository, IMainWindowServices mainWindowServices)
+        IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository,
+        IMainWindowServices mainWindowServices)
     {
         ToastManager = toastManager;
         DialogManager = dialogManager;
@@ -75,11 +76,12 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         _themesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
         if (findLastUseThemeInfo == null) return;
         BackgroundStyle = SukiBackgroundStyleDesc.SukiBackgroundStyleDescs[findLastUseThemeInfo.BackgroundStyleKey];
-        AnimationsEnabled = findLastUseThemeInfo.Animation;
-        _themesServices.BackgroundAnimations = findLastUseThemeInfo.Animation;
+        AnimationsEnabled = true;
+        _themesServices.BackgroundAnimations = true;
         _themesServices.IsLightTheme = findLastUseThemeInfo.IsLightTheme;
         _themesServices.ChangeColorTheme(findLastUseThemeInfo.ColorThemeDisplayName);
-      
+        _themesServices.FontFamily = findLastUseThemeInfo.FontFamily;
+        
         if (!string.IsNullOrEmpty(findLastUseThemeInfo.BackgroundEffectKey))
         {
             _themesServices.ChangeBackgroundEffect(findLastUseThemeInfo.BackgroundEffectKey);

@@ -1,57 +1,67 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.ThemesServices;assembly=Ava.Xioa.Infrastructure.Services"
-             xmlns:local="clr-namespace:Ava.Xioa.InfrastructureModule.Views"
-             xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
-             x:Class="Ava.Xioa.InfrastructureModule.Views.ThemesManager"
-             x:DataType="vm:IThemesServices">
+﻿<UserControl
+    x:Class="Ava.Xioa.InfrastructureModule.Views.ThemesManager"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
+    xmlns:local="clr-namespace:Ava.Xioa.InfrastructureModule.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:suki="https://github.com/kikipoulet/SukiUI"
+    xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.ThemesServices;assembly=Ava.Xioa.Infrastructure.Services"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:IThemesServices"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <generic:List x:Key="Collection" x:TypeArguments="suki:SettingsLayoutItem">
             <suki:SettingsLayoutItem x:Name="ThemeHeader" Header="主题模式">
                 <suki:SettingsLayoutItem.Content>
-                    <StackPanel HorizontalAlignment="Center"
-                                Orientation="Horizontal"
-                                Spacing="20">
-                        <RadioButton Width="180"
-                                     Height="160"
-                                     Padding="0"
-                                     Classes="GigaChips"
-                                     GroupName="RadioBaseTheme"
-                                     IsChecked="{Binding IsLightTheme}">
-                            <Border Margin="-50"
-                                    Background="#fafafa"
-                                    CornerRadius="{DynamicResource MediumCornerRadius}">
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="20">
+                        <RadioButton
+                            Width="180"
+                            Height="160"
+                            Padding="0"
+                            Classes="GigaChips"
+                            GroupName="RadioBaseTheme"
+                            IsChecked="{Binding IsLightTheme}">
+                            <Border
+                                Margin="-50"
+                                Background="#fafafa"
+                                CornerRadius="{DynamicResource MediumCornerRadius}">
                                 <Grid>
-                                    <TextBlock Margin="58,42,42,42"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Bottom"
-                                               FontWeight="DemiBold"
-                                               Foreground="#555555"
-                                               Text="明亮主题" />
+                                    <TextBlock
+                                        Margin="58,42,42,42"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        FontWeight="DemiBold"
+                                        Foreground="#555555"
+                                        Text="明亮主题" />
                                 </Grid>
                             </Border>
                         </RadioButton>
 
-                        <RadioButton Width="180"
-                                     Height="160"
-                                     Classes="GigaChips"
-                                     GroupName="RadioBaseTheme"
-                                     IsChecked="{Binding !IsLightTheme}">
-                            <Border Margin="-50"
-                                    Background="#222222"
-                                    CornerRadius="{DynamicResource MediumCornerRadius}">
+                        <RadioButton
+                            Width="180"
+                            Height="160"
+                            Classes="GigaChips"
+                            GroupName="RadioBaseTheme"
+                            IsChecked="{Binding !IsLightTheme}">
+                            <Border
+                                Margin="-50"
+                                Background="#222222"
+                                CornerRadius="{DynamicResource MediumCornerRadius}">
                                 <Grid>
-                                    <TextBlock Margin="58,42,42,42"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Bottom"
-                                               FontWeight="DemiBold"
-                                               Foreground="#fafafa"
-                                               Text="暗黑主题" />
+                                    <TextBlock
+                                        Margin="58,42,42,42"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        FontWeight="DemiBold"
+                                        Foreground="#fafafa"
+                                        Text="暗黑主题" />
                                 </Grid>
                             </Border>
                         </RadioButton>
@@ -64,24 +74,26 @@
                     <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding AvailableColors}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel HorizontalAlignment="Center"
-                                            Orientation="Horizontal"
-                                            Spacing="10" />
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="10" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="suki:SukiColorTheme">
-                                <RadioButton Width="50"
-                                             Height="50"
-                                             Classes="GigaChips"
-                                             Command="{Binding ((vm:IThemesServices)DataContext).SwitchToColorThemeCommand, 
-                                             RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ThemesManager}}}"
-                                             CommandParameter="{Binding}"
-                                             CornerRadius="50"
-                                             GroupName="RadioColorTheme">
-                                    <Border Margin="-30"
-                                            Background="{Binding PrimaryBrush}"
-                                            CornerRadius="50" />
+                                <RadioButton
+                                    Width="50"
+                                    Height="50"
+                                    Classes="GigaChips"
+                                    Command="{Binding ((vm:IThemesServices)DataContext).SwitchToColorThemeCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ThemesManager}}}"
+                                    CommandParameter="{Binding}"
+                                    CornerRadius="50"
+                                    GroupName="RadioColorTheme">
+                                    <Border
+                                        Margin="-30"
+                                        Background="{Binding PrimaryBrush}"
+                                        CornerRadius="50" />
                                 </RadioButton>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -92,57 +104,94 @@
             <suki:SettingsLayoutItem Header="主题背景">
                 <suki:SettingsLayoutItem.Content>
                     <StackPanel>
-                        <suki:GlassCard Margin="0,25,0,0" Padding="25">
-                            <StackPanel Spacing="40">
-                                <DockPanel>
-                                    <ToggleSwitch VerticalAlignment="Top"
-                                                  Classes="Switch"
-                                                  DockPanel.Dock="Right"
-                                                  IsChecked="{Binding BackgroundAnimations}" />
-                                    <StackPanel HorizontalAlignment="Left">
-                                        <TextBlock FontSize="16"
-                                                   FontWeight="DemiBold"
-                                                   Text="背景动画" />
-                                        <TextBlock Margin="0,12,70,0"
-                                                   Foreground="{DynamicResource SukiLowText}"
-                                                   Text="启用/禁用由当前活动效果驱动的背景动画。"
-                                                   TextWrapping="Wrap" />
-                                    </StackPanel>
-                                </DockPanel>
-                               
-                            </StackPanel>
-                        </suki:GlassCard>
+                        <!-- <suki:GlassCard Margin="0,25,0,0" Padding="25"> -->
+                        <!--     <StackPanel Spacing="40"> -->
+                        <!--         <DockPanel> -->
+                        <!--             <ToggleSwitch -->
+                        <!--                 VerticalAlignment="Top" -->
+                        <!--                 Classes="Switch" -->
+                        <!--                 DockPanel.Dock="Right" -->
+                        <!--                 IsChecked="{Binding BackgroundAnimations}" /> -->
+                        <!--             <StackPanel HorizontalAlignment="Left"> -->
+                        <!--                 <TextBlock -->
+                        <!--                     FontSize="16" -->
+                        <!--                     FontWeight="DemiBold" -->
+                        <!--                     Text="背景动画" /> -->
+                        <!--                 <TextBlock -->
+                        <!--                     Margin="0,12,70,0" -->
+                        <!--                     Foreground="{DynamicResource SukiLowText}" -->
+                        <!--                     Text="启用/禁用由当前活动效果驱动的背景动画。" -->
+                        <!--                     TextWrapping="Wrap" /> -->
+                        <!--             </StackPanel> -->
+                        <!--         </DockPanel> -->
+                        <!-- -->
+                        <!--     </StackPanel> -->
+                        <!-- </suki:GlassCard> -->
                         <suki:GlassCard Margin="0,45,0,0" Padding="25">
                             <StackPanel Spacing="40">
                                 <DockPanel>
-                                    <ComboBox DockPanel.Dock="Right" VerticalAlignment="Top"
-                                              ItemsSource="{Binding AvailableBackgroundStyles}"
-                                              SelectedItem="{Binding BackgroundStyle}">
-                                        
-                                    </ComboBox>
+                                    <ComboBox
+                                        VerticalAlignment="Top"
+                                        DockPanel.Dock="Right"
+                                        ItemsSource="{Binding AvailableBackgroundStyles}"
+                                        SelectedItem="{Binding BackgroundStyle}" />
                                     <StackPanel HorizontalAlignment="Left">
-                                        <TextBlock FontSize="16"
-                                                   FontWeight="DemiBold"
-                                                   Text="背景样式" />
-                                        <TextBlock Margin="0,12,70,0"
-                                                   Foreground="{DynamicResource SukiLowText}"
-                                                   Text="从包含的背景样式中选择。"
-                                                   TextWrapping="Wrap" />
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="DemiBold"
+                                            Text="背景样式" />
+                                        <TextBlock
+                                            Margin="0,12,70,0"
+                                            Foreground="{DynamicResource SukiLowText}"
+                                            Text="从包含的背景样式中选择。"
+                                            TextWrapping="Wrap" />
                                     </StackPanel>
                                 </DockPanel>
                                 <DockPanel>
                                     <StackPanel HorizontalAlignment="Left" DockPanel.Dock="Top">
-                                        <TextBlock FontSize="16"
-                                                   FontWeight="DemiBold"
-                                                   Text="着色器" />
-                                        <TextBlock Margin="0,12,70,0"
-                                                   Foreground="{DynamicResource SukiLowText}"
-                                                   Text="单击下面的任何按钮来启用背景着色器。再次单击以禁用它。这些可能会给你的GPU带来相当大的负载。"
-                                                   TextWrapping="Wrap" />
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="DemiBold"
+                                            Text="着色器" />
+                                        <TextBlock
+                                            Margin="0,12,70,0"
+                                            Foreground="{DynamicResource SukiLowText}"
+                                            Text="单击下面的任何按钮来启用背景着色器。再次单击以禁用它。这些可能会给你的GPU带来相当大的负载。"
+                                            TextWrapping="Wrap" />
                                     </StackPanel>
-                                    <Button Margin="10"
-                                            Command="{Binding BackgroundEffectCommand}"
-                                            Content="Space" />
+                                    <Button
+                                        Margin="10"
+                                        Command="{Binding BackgroundEffectCommand}"
+                                        Content="Space" />
+                                </DockPanel>
+                            </StackPanel>
+                        </suki:GlassCard>
+                    </StackPanel>
+                </suki:SettingsLayoutItem.Content>
+            </suki:SettingsLayoutItem>
+            
+             <suki:SettingsLayoutItem Header="主题字体">
+                <suki:SettingsLayoutItem.Content>
+                    <StackPanel>
+                        <suki:GlassCard Margin="0,45,0,0" Padding="25">
+                            <StackPanel Spacing="40">
+                                <DockPanel>
+                                    <ComboBox
+                                        VerticalAlignment="Top"
+                                        DockPanel.Dock="Right"
+                                        ItemsSource="{Binding AvailableFontFamily}"
+                                        SelectedItem="{Binding FontFamily}" />
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="DemiBold"
+                                            Text="字体样式" />
+                                        <TextBlock
+                                            Margin="0,12,70,0"
+                                            Foreground="{DynamicResource SukiLowText}"
+                                            Text="从包含的字体样式中选择。"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
                                 </DockPanel>
                             </StackPanel>
                         </suki:GlassCard>
@@ -151,10 +200,11 @@
             </suki:SettingsLayoutItem>
         </generic:List>
     </UserControl.Resources>
-
-    <suki:SukiStackPage Margin="20">
-        <suki:SukiStackPage.Content>
-            <suki:SettingsLayout Name="主题相关" Items="{StaticResource Collection}" />
-        </suki:SukiStackPage.Content>
-    </suki:SukiStackPage>
+    <Grid>
+        <suki:SukiStackPage Margin="20">
+            <suki:SukiStackPage.Content>
+                <suki:SettingsLayout Name="主题相关" Items="{StaticResource Collection}" />
+            </suki:SukiStackPage.Content>
+        </suki:SukiStackPage>
+    </Grid>
 </UserControl>

@@ -120,11 +120,9 @@ public partial class App
 
         if (desktop.MainWindow is null) return;
         desktop.MainWindow.Topmost = true;
-        _ = Task.Delay(100).ContinueWith(_ =>
-        {
-            desktop.MainWindow.Topmost = false;
-        }, TaskScheduler.FromCurrentSynchronizationContext());
-        
+        _ = Task.Delay(100).ContinueWith(_ => { desktop.MainWindow.Topmost = false; },
+            TaskScheduler.FromCurrentSynchronizationContext());
+
         desktop.MainWindow.WindowState = WindowState.Normal;
     }
 
