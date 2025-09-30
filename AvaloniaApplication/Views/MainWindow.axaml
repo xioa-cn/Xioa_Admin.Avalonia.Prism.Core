@@ -31,6 +31,7 @@
     WindowStartupLocation="CenterScreen"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Icon="{Binding MainWindowServices.Icon}"
     Opacity="{Binding MainWindowServices.Opacity}"
     WindowState="{Binding MainWindowServices.WindowState}"
     CanMove="{Binding MainWindowServices.CanMove}"
@@ -39,7 +40,7 @@
     mc:Ignorable="d">
     <suki:SukiWindow.Resources>
         <converter:WindowIconToImageSourceConverter x:Key="IconConverter" />
-        
+
     </suki:SukiWindow.Resources>
     <suki:SukiWindow.TitleBarContextMenu>
         <ContextMenu>
@@ -60,5 +61,5 @@
                Converter={StaticResource IconConverter}}">
         </Image>
     </suki:SukiWindow.LogoContent>
-    <ContentControl Name="WindowContentControl" Background="Transparent"/>
+    <ContentControl Name="WindowContentControl" Background="Transparent" />
 </suki:SukiWindow>

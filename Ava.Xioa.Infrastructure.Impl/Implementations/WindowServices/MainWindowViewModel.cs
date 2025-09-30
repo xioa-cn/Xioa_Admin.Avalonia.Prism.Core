@@ -1,5 +1,6 @@
 ﻿using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Events;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -7,12 +8,13 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Events;
 using SukiUI.Controls;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.WindowServices;
 
 [PrismViewModel(typeof(IMainWindowServices), ServiceLifetime.Singleton)]
-public partial class MainWindowViewModel : ChainReactiveObject<MainWindowViewModel>, IMainWindowServices
+public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
 {
     [ObservableBindProperty] private double _Width;
     [ObservableBindProperty] private double _Height;
@@ -31,15 +33,27 @@ public partial class MainWindowViewModel : ChainReactiveObject<MainWindowViewMod
     [ObservableBindProperty] private double _Opacity;
     [ObservableBindProperty] private bool _ShowInTaskbar;
     [ObservableBindProperty] private WindowState _WindowState;
+    [ObservableBindProperty] private WindowIcon _Icon;
 
-    public MainWindowViewModel()
+    private readonly IEventAggregator _eventAggregator;
+
+    public MainWindowViewModel(IEventAggregator eventAggregator)
     {
-        this.SetProperty(e => e.Width, 404)
-            .SetProperty(e => e.Height, 384)
-            .SetProperty(e => e.Opacity, 0)
-            .SetProperty(e => e.IsVisible, true)
-            .SetProperty(e => e.Opacity, 1)
-            .SetProperty(e => e.WindowState, WindowState.Normal);
+        _eventAggregator = eventAggregator;
+        this.Width = 404;
+        this.Height = 384;
+        this.Opacity = 0;
+        this.IsVisible = true;
+        this.Opacity = 1;
+        this.WindowState = WindowState.Normal;
+
+        _eventAggregator.GetEvent<WindowIconEvent>().Subscribe(IconChanged, ThreadOption.UIThread, true,
+            filter => filter.TokenKey == "WindowIcon");
+    }
+
+    private void IconChanged(TokenKeyPubSubEvent<WindowIcon> obj)
+    {
+        this.Icon = obj.Value;
     }
 
     public void CenterScreen()

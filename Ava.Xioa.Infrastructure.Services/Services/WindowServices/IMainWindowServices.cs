@@ -26,6 +26,8 @@ public interface IMainWindowServices
     public bool ShowBottomBorder { get; set; }
     public bool CanMove { get; set; }
     public bool IsVisible { get; set; }
+    
+    public WindowIcon Icon { get; set; }
 
     public void CenterScreen();
 

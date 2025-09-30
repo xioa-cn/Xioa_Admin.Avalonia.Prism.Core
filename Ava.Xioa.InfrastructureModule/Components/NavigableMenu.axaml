@@ -1,0 +1,63 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.HomeServices;assembly=Ava.Xioa.Infrastructure.Services"
+             xmlns:converter="clr-namespace:Ava.Xioa.Common.Themes.Converter;assembly=Ava.Xioa.Common.Themes"
+             xmlns:regions="http://prismlibrary.com/"
+             xmlns:sys="clr-namespace:System"
+             xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
+             xmlns:components="clr-namespace:Ava.Xioa.InfrastructureModule.Components"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:model="clr-namespace:Ava.Xioa.Common.Models;assembly=Ava.Xioa.Common"
+             xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
+             x:DataType="vm:IHomeServices"
+             mc:Ignorable="d"
+             x:Class="Ava.Xioa.InfrastructureModule.Components.NavigableMenu">
+    <UserControl.Resources>
+        <converter:WindowIconToImageSourceConverter x:Key="IconConverter" />
+        <converter:NavigableMenuItemConverter x:Key="NavigableMenuItemConverter" />
+    </UserControl.Resources>
+    <ContentControl Name="ContentControl" />
+    <!-- <suki:SukiSideMenu IsSearchEnabled="False" UseCustomContent="True" x:Name="Menu" -->
+    <!--                    ItemsSource="{Binding NavigableMenuServices.NavigableMenuItems}" -->
+    <!--                    SelectedItem="{Binding NavigableMenuServices.SelectedView}"> -->
+    <!-- -->
+    <!--     <suki:SukiSideMenu.Content> -->
+    <!--         <components:NavigableMenuContent /> -->
+    <!--     </suki:SukiSideMenu.Content> -->
+    <!-- -->
+    <!--     <suki:SukiSideMenu.ItemTemplate> -->
+    <!--         <DataTemplate> -->
+    <!--             <suki:SukiSideMenuItem Header="{Binding Header}" -->
+    <!--                                    ToolTip.Tip="{Binding Header}" -->
+    <!--                                    > -->
+    <!--                 <suki:SukiSideMenuItem.Items> -->
+    <!--                     <generic:List x:TypeArguments="suki:SukiSideMenuItem"> -->
+    <!--                          -->
+    <!--                     </generic:List> -->
+    <!--                 </suki:SukiSideMenuItem.Items> -->
+    <!--                 <suki:SukiSideMenuItem.Icon> -->
+    <!--                     <avalonia:MaterialIcon Height="24" Kind="{Binding IconKind}" Width="24"> -->
+    <!--                     </avalonia:MaterialIcon> -->
+    <!--                 </suki:SukiSideMenuItem.Icon> -->
+    <!--             </suki:SukiSideMenuItem> -->
+    <!--         </DataTemplate> -->
+    <!--     </suki:SukiSideMenu.ItemTemplate> -->
+    <!-- -->
+    <!--     <suki:SukiSideMenu.HeaderContent> -->
+    <!--         <Image Width="80" -->
+    <!--                Height="80" -->
+    <!--                Margin="30,10,30,30" -->
+    <!--                Classes="AppIcon" -->
+    <!--                Stretch="UniformToFill" -->
+    <!--                Source="{Binding MainWindowServices.Icon,Converter={StaticResource IconConverter}}" -->
+    <!--                Name="HeaderImage" /> -->
+    <!--     </suki:SukiSideMenu.HeaderContent> -->
+    <!-- -->
+    <!--     <suki:SukiSideMenu.FooterContent> -->
+    <!--         ~1~  Footer Content  @1@ -->
+    <!--     </suki:SukiSideMenu.FooterContent> -->
+    <!-- </suki:SukiSideMenu> -->
+</UserControl>

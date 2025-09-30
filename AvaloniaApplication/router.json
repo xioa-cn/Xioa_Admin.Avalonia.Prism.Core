@@ -1,0 +1,25 @@
+﻿{
+  "Routers": [
+    {
+      "Key": "系统设置",
+      "Header": "系统设置",
+      "IconKind": 7088,
+      "Children": [
+        {
+          "Key": "主题设置",
+          "Header": "主题设置",
+          "IconKind": 6683,
+          "NavigationName": "ThemesManager",
+          "Region": "HomeRegion"
+        },
+        {
+          "Key": "用户管理",
+          "Header": "用户管理",
+          "IconKind": 85,
+          "NavigationName": "UserManager",
+          "Region": "HomeRegion"
+        }
+      ]
+    }
+  ]
+}

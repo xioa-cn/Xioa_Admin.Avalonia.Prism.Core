@@ -15,6 +15,10 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Assets\space.sksl" />
+		<None Remove="router.json" />
+		<AvaloniaResource Include="router.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</AvaloniaResource>
 	</ItemGroup>
 	
 	<ItemGroup>

@@ -1,0 +1,10 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:regions="http://prismlibrary.com/"
+             xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Ava.Xioa.InfrastructureModule.Components.NavigableMenuContent">
+    <ContentControl regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
+</UserControl>

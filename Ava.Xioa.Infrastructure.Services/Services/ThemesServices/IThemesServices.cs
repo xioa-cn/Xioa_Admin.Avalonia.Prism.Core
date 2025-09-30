@@ -19,6 +19,8 @@ public interface IThemesServices
     /// </summary>
     IAvaloniaReadOnlyList<SukiBackgroundStyleDesc> AvailableBackgroundStyles { get; }
     
+    IAvaloniaReadOnlyList<string> AvailableEffect { get; }
+    
     IAvaloniaReadOnlyList<string> AvailableFontFamily { get; }
     
     string? FontFamily { get; set; }
@@ -75,6 +77,8 @@ public interface IThemesServices
     /// </summary>
     ICommand SwitchToColorThemeCommand { get; }
 
+    ICommand ChangeBackgroundEffectCommand { get; }
+    
     void SetThemesInformationRepository(ISystemThemesInformationRepository repository);
 
     void SetPrivateBackgroundEffectKey(string key);

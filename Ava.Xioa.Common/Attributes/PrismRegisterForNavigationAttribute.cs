@@ -4,9 +4,9 @@ using Ava.Xioa.Common.Models;
 namespace Ava.Xioa.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public class RegisterForNavigationAttribute : Attribute
+public class PrismRegisterForNavigationAttribute : Attribute
 {
-    public RegisterForNavigationAttribute(string navigationName, string region,
+    public PrismRegisterForNavigationAttribute(string navigationName, string region,
         ProgrammingVersion version = ProgrammingVersion.EnabledStandby, int zIndex = -1)
     {
         NavigationName = navigationName;

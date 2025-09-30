@@ -7,7 +7,7 @@ using Avalonia.Interactivity;
 
 namespace Ava.Xioa.InfrastructureModule.Views
 {
-    [RegisterForNavigation(navigationName: nameof(SplashView), region: AppRegions.MainRegion, zIndex: 9999)]
+    [PrismRegisterForNavigation(navigationName: nameof(SplashView), region: AppRegions.MainRegion, zIndex: 9999)]
     public partial class SplashView : UserControl
     {
         public SplashView(ISplashServices splashServices)

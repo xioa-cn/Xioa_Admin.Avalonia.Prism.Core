@@ -37,6 +37,8 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     public IAvaloniaReadOnlyList<SukiColorTheme> AvailableColors { get; }
     public IAvaloniaReadOnlyList<SukiBackgroundStyleDesc> AvailableBackgroundStyles { get; }
 
+    public IAvaloniaReadOnlyList<string> AvailableEffect { get; }
+    
     public IAvaloniaReadOnlyList<string> AvailableFontFamily { get; }
 
     private readonly SukiTheme _theme = SukiTheme.GetInstance();
@@ -55,6 +57,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     public ThemesViewModel(IEventAggregator eventAggregator, IMainWindowServices mainWindowServices)
         : base(eventAggregator)
     {
+        AvailableEffect = new AvaloniaList<string>(["Space"]);
         _mainWindowServices = mainWindowServices;
         AvailableBackgroundStyles =
             new AvaloniaList<SukiBackgroundStyleDesc>(SukiBackgroundStyleDesc.SukiBackgroundStyleDescs);
@@ -76,7 +79,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
         BackgroundEffectCommand = new AsyncRelayCommand(ChangeBackgroundEffect);
         AnimationsEnabledCommand = new RelayCommand(AnimationsEnabled);
         SwitchToColorThemeCommand = new RelayCommand<SukiColorTheme>(SwitchToColorTheme);
-
+        ChangeBackgroundEffectCommand = new RelayCommand<string>(ChangeBackgroundEffect);
         _debouncer = new Debouncer(1000);
     }
 
@@ -203,7 +206,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
         _debouncer.DebounceAsync(async () => { await SaveThemeInformation(); });
     }
 
-    public void ChangeBackgroundEffect(string effectKey)
+    public void ChangeBackgroundEffect(string? effectKey)
     {
         if (_backgroundEffect && !BackgroundAnimations)
         {
@@ -219,6 +222,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
         _backgroundEffectKey = effectKey;
         _backgroundEffect = true;
         CustomBackgroundStyleChanged?.Invoke(effectKey);
+        _debouncer.DebounceAsync(async () => { await SaveThemeInformation(); });
     }
 
     private void ChangeLightTheme(bool? obj)
@@ -247,6 +251,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     public ICommand BackgroundEffectCommand { get; }
     public ICommand AnimationsEnabledCommand { get; }
     public ICommand SwitchToColorThemeCommand { get; }
+    public ICommand ChangeBackgroundEffectCommand { get; }
 
 
     private async Task SaveThemeInformation()

@@ -5,7 +5,7 @@ using Avalonia.Controls;
 
 namespace Ava.Xioa.InfrastructureModule.Views;
 
-[RegisterForNavigation(navigationName: nameof(ThemesManager), region: AppRegions.HomeRegion)]
+[PrismRegisterForNavigation(navigationName: nameof(ThemesManager), region: AppRegions.HomeRegion)]
 public partial class ThemesManager : UserControl
 {
     public ThemesManager(IThemesServices themesServices)

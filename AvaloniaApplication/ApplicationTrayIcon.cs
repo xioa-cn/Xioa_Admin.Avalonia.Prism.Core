@@ -98,7 +98,7 @@ public partial class App
             _trayIcon.Menu = new NativeMenu();
             _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "打开", Command = new RelayCommand(OpenMainWindow) });
             _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "退出", Command = new RelayCommand(ExitApplication) });
-            
+
             _trayIcon.Clicked += TrayIcon_Clicked;
             // 初始设置
             UpdateTrayIconForTheme(RequestedThemeVariant);
@@ -167,7 +167,10 @@ public partial class App
         var bitmap = LoadSvgWithColor(svgPath, 16, 16, colorCode);
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
         {
-            desktop.MainWindow.Icon = new WindowIcon(bitmap);
+            var icon = new WindowIcon(bitmap);
+            // desktop.MainWindow.Icon = icon;
+            _eventAggregator?.GetEvent<WindowIconEvent>()
+                .Publish(new TokenKeyPubSubEvent<WindowIcon>("WindowIcon", icon));
         }
 
         // 更新托盘图标

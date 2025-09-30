@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Windows.Input;
 using Avalonia.Threading;
 using Prism.Commands;
@@ -74,6 +75,11 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
     /// </summary>
     protected virtual void ExecuteNavigate(NavigationParameters? parameters)
     {
+        if (_regionManager is null)
+        {
+            throw new NoNullAllowedException(nameof(_regionManager));
+        }
+
         if (parameters == null || !parameters.ContainsKey("TargetView") || !parameters.ContainsKey("RegionName"))
             throw new ArgumentException("导航参数必须包含TargetView和RegionName");
 

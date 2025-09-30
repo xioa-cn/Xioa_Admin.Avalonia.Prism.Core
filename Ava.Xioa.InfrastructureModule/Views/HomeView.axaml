@@ -4,7 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:regions="http://prismlibrary.com/"
+             Name="Home"
+             x:DataType="vm:IHomeServices"
+             xmlns:components="clr-namespace:Ava.Xioa.InfrastructureModule.Components;assembly=Ava.Xioa.InfrastructureModule"
              xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
+             xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.HomeServices;assembly=Ava.Xioa.Infrastructure.Services"
              x:Class="Ava.Xioa.InfrastructureModule.Views.HomeView">
-    <ContentControl regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
+    <components:NavigableMenu DataContext="{Binding ElementName=Home,Path=DataContext}"></components:NavigableMenu>
+    <!-- <ContentControl regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" /> -->
 </UserControl>

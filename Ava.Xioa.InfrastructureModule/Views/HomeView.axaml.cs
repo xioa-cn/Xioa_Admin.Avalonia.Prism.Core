@@ -5,7 +5,7 @@ using Avalonia.Controls;
 
 namespace Ava.Xioa.InfrastructureModule.Views;
 
-[RegisterForNavigation(navigationName: nameof(HomeView), region: AppRegions.MainRegion)]
+[PrismRegisterForNavigation(navigationName: nameof(HomeView), region: AppRegions.MainRegion, zIndex: 9998)]
 public partial class HomeView : UserControl
 {
     public HomeView(IHomeServices homeServices)
