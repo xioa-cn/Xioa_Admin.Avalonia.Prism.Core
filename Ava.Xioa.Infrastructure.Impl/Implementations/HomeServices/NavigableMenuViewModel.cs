@@ -7,7 +7,6 @@ using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
 using Ava.Xioa.Infrastructure.Services.Services.RouterServices;
 using Avalonia.Collections;
-using Material.Icons;
 using Prism.Navigation.Regions;
 using SukiUI.Controls;
 
