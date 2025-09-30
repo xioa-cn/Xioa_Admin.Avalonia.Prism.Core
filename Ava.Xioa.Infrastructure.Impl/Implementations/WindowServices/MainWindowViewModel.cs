@@ -1,6 +1,7 @@
 ﻿using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Events;
+using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -101,4 +102,7 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
         });
         return fontObj is FontFamily;
     }
+
+    public string ApplicationInformation =>
+        $"{AppAuthor.DllCreateTime:yyyy} © AvaloniaApplication BY {AppAuthor.Author}. {AppAuthor.DllCreateTime.TimeYearMonthDayHourString()}";
 }

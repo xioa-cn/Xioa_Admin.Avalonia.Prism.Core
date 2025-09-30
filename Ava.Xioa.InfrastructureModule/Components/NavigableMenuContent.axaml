@@ -4,7 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:regions="http://prismlibrary.com/"
              xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
+             xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.WindowServices;assembly=Ava.Xioa.Infrastructure.Services"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:IMainWindowServices"
              x:Class="Ava.Xioa.InfrastructureModule.Components.NavigableMenuContent">
-    <ContentControl regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ContentControl Grid.Row="0"
+            regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
+        
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Margin="2" Text="{Binding ApplicationInformation}"></TextBlock>
+        </StackPanel>
+    </Grid>
 </UserControl>

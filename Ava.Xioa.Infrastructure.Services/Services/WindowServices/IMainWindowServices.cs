@@ -32,6 +32,8 @@ public interface IMainWindowServices
     public void CenterScreen();
 
     void ToNotifyTrayIcon();
+    
+    public string ApplicationInformation { get; }
 
     bool ChangeAppFontFamily(string fontFamily);
 }

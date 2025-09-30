@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using Ava.Xioa.Common.Utils;
 
 namespace AvaloniaApplication;
 
@@ -11,13 +12,13 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        AppAuthor.DllCreateTime = System.IO.File.GetLastWriteTime(typeof(Program).Assembly.Location);
         if (!App.Detection)
         {
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
-      
-    } 
+    }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()

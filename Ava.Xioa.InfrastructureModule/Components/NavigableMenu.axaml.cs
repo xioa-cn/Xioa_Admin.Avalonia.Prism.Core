@@ -49,6 +49,7 @@ public partial class NavigableMenu : UserControl, INotifyPropertyChanged, INotif
             SukiSideMenuHelper.GetNavigableMenu(homeServices.NavigableMenuServices.NavigableMenuItems);
 
         sukiSideMenu.Content = new NavigableMenuContent();
+        sukiSideMenu.DataContext = homeServices.MainWindowServices;
         var image = new Image();
         image.Width = 40;
         image.Height = 40;
