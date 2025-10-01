@@ -1,6 +1,8 @@
 using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Extensions;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using AvaloniaApplication.Utils;
 using AvaloniaApplication.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Controls;
@@ -22,6 +24,11 @@ public partial class MainWindow : SukiWindow
         this.Loaded += OnLoaded;
         InitializeComponent();
         this.WindowContentControl.Content = userControl;
+        
+        this.OnceExecutedLoaded(() =>
+        {
+            LangUtils.ApplicationLanguages();
+        });
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)

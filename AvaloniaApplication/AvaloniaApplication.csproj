@@ -38,4 +38,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Langs\ZH_CN.json" />
+	  <EmbeddedResource Include="Langs\ZH_CN.json" />
+	</ItemGroup>
 </Project>
