@@ -1,8 +1,11 @@
 ﻿using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Services;
 using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
+using Avalonia.Controls.Notifications;
+using Avalonia.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Navigation.Regions;
 using SukiUI.Controls;
@@ -18,11 +21,16 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
     public INavigableMenuServices NavigableMenuServices { get; }
 
     public HomeViewModel(IRegionManager regionManager, IMainWindowServices mainWindowServices,
-        INavigableMenuServices navigableMenuServices) : base(regionManager,
+        INavigableMenuServices navigableMenuServices,HotKeyServices hotKeyServices,ToastsService toastsService) : base(regionManager,
         mainWindowServices)
     {
         _mainWindowServices = mainWindowServices;
         NavigableMenuServices = navigableMenuServices;
+        
+        hotKeyServices.SetPageHotKey(new KeyGesture(Key.F, KeyModifiers.Control), () =>
+        {
+            toastsService.ShowToast(NotificationType.Information,"title","HotKey F + Control");
+        },"ShowF");
     }
 
     protected override Size AfterChangeSize { get; } = new Size(1536, 808);
