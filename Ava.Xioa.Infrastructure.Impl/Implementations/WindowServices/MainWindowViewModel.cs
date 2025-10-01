@@ -35,6 +35,7 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
     [ObservableBindProperty] private bool _ShowInTaskbar;
     [ObservableBindProperty] private WindowState _WindowState;
     [ObservableBindProperty] private WindowIcon _Icon;
+    [ObservableBindProperty] private bool _IsMenuVisible;
 
     private readonly IEventAggregator _eventAggregator;
 
@@ -64,7 +65,7 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
 
         if (window == null)
             return;
-
+        
         // 确保窗口尺寸已确定（如果是动态尺寸，先更新布局）
         window.Measure(Size.Infinity);
         window.Arrange(new Rect(window.DesiredSize));
@@ -73,15 +74,22 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
         var screen = window.Screens.ScreenFromVisual(window);
         if (screen == null)
             return;
-
-        var workArea = screen.WorkingArea;
-
-        // 计算居中位置（工作区中心 - 窗口一半尺寸）
-        var x = workArea.X + (workArea.Width - window.Width) / 2;
-        var y = workArea.Y + (workArea.Height - window.Height) / 2;
-
-        // 设置窗口位置
-        window.Position = new PixelPoint((int)x, (int)y);
+        
+        var scaling = screen.Scaling;
+        var scaledWidth = window.Width * scaling;
+        var scaledHeight = window.Height * scaling;
+        var newLeft = (int)((screen.WorkingArea.Width - scaledWidth) / 2);
+        var newTop = (int)((screen.WorkingArea.Height - scaledHeight) / 2);
+        window.Position = new PixelPoint(newLeft, newTop);
+        
+        // var workArea = screen.WorkingArea;
+        //
+        // // 计算居中位置（工作区中心 - 窗口一半尺寸）
+        // var x = workArea.X + (workArea.Width - window.Width) / 2;
+        // var y = workArea.Y + (workArea.Height - window.Height) / 2;
+        //
+        // // 设置窗口位置
+        // window.Position = new PixelPoint((int)x, (int)y);
     }
 
     public void ToNotifyTrayIcon()

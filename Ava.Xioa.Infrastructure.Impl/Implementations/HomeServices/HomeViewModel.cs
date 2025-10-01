@@ -38,6 +38,7 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
         _mainWindowServices.ShowTitlebarBackground = true;
         _mainWindowServices.ShowBottomBorder = true;
         _mainWindowServices.CanMove = true;
+        _mainWindowServices.IsMenuVisible = true;
         _mainWindowServices.TitleBarVisibilityOnFullScreen = SukiWindow.TitleBarVisibilityMode.Visible;
         base.OnNavigatedTo(navigationContext);
     }

@@ -1,7 +1,6 @@
 using System;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
-using Ava.Xioa.Common.Const;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication.Views;
 using Prism;
@@ -66,6 +65,10 @@ public partial class App : PrismApplicationBase
 
         containerRegistry.RegisterInstance<SystemDbConfig>(configuration.GetSection("SystemDb").Get<SystemDbConfig>()
                                                            ?? throw new Exception("SystemDb配置项缺失"));
+
+
+        containerRegistry.RegisterInstance<IApplicationLifetime>(ApplicationLifetime!);
+
 
         containerRegistry
             .AddPrismAutoDbContext()

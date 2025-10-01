@@ -26,13 +26,14 @@ public interface IMainWindowServices
     public bool ShowBottomBorder { get; set; }
     public bool CanMove { get; set; }
     public bool IsVisible { get; set; }
-    
+    public bool IsMenuVisible { get; set; }
+
     public WindowIcon Icon { get; set; }
 
     public void CenterScreen();
 
     void ToNotifyTrayIcon();
-    
+
     public string ApplicationInformation { get; }
 
     bool ChangeAppFontFamily(string fontFamily);
