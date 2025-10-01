@@ -4,6 +4,7 @@ using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,16 +22,32 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
     public INavigableMenuServices NavigableMenuServices { get; }
 
     public HomeViewModel(IRegionManager regionManager, IMainWindowServices mainWindowServices,
-        INavigableMenuServices navigableMenuServices,HotKeyServices hotKeyServices,ToastsService toastsService) : base(regionManager,
+        INavigableMenuServices navigableMenuServices, HotKeyServices hotKeyServices,
+        ToastsService toastsService) : base(regionManager,
         mainWindowServices)
     {
         _mainWindowServices = mainWindowServices;
         NavigableMenuServices = navigableMenuServices;
+
+        hotKeyServices.SetPageHotKey(new KeyGesture(Key.Escape),
+            () =>
+            {
+                if (mainWindowServices.WindowState == WindowState.FullScreen)
+                {
+                    mainWindowServices.WindowState = WindowState.Normal;
+                }
+            },
+            "Close_Full_Screen");
         
-        hotKeyServices.SetPageHotKey(new KeyGesture(Key.F, KeyModifiers.Control), () =>
-        {
-            toastsService.ShowToast(NotificationType.Information,"title","HotKey F + Control");
-        },"ShowF");
+        hotKeyServices.SetPageHotKey(new KeyGesture(Key.F, KeyModifiers.Control),
+            () =>
+            {
+                if (mainWindowServices.WindowState != WindowState.FullScreen)
+                {
+                    mainWindowServices.WindowState = WindowState.FullScreen;
+                }
+            },
+            "Open_Full_Screen");
     }
 
     protected override Size AfterChangeSize { get; } = new Size(1536, 808);

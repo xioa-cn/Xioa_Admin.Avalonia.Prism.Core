@@ -34,7 +34,7 @@
     IsMenuVisible="{Binding MainWindowServices.IsMenuVisible}"
     Icon="{Binding MainWindowServices.Icon}"
     Opacity="{Binding MainWindowServices.Opacity}"
-    WindowState="{Binding MainWindowServices.WindowState}"
+    WindowState="{Binding MainWindowServices.WindowState,Mode=TwoWay}"
     CanMove="{Binding MainWindowServices.CanMove}"
     ShowTitlebarBackground="{Binding MainWindowServices.ShowTitlebarBackground}"
     x:DataType="vm:MainWindowViewModel"
@@ -45,7 +45,7 @@
     </suki:SukiWindow.Resources>
     
     <suki:SukiWindow.MenuItems>
-        <MenuItem Header="用户信息" HorizontalAlignment="Right">
+        <MenuItem Header="用户信息">
             <MenuItem Header="修改密码">
                 <MenuItem.Icon>
                     <avalonia:MaterialIcon Kind="Password" />
@@ -54,6 +54,18 @@
             <MenuItem Header="退出登录">
                 <MenuItem.Icon>
                     <avalonia:MaterialIcon Kind="Logout" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </MenuItem>
+        <MenuItem Header="语言选项">
+            <MenuItem Header="中文">
+                <MenuItem.Icon>
+                    <avalonia:MaterialIcon Kind="Language" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="English">
+                <MenuItem.Icon>
+                    <avalonia:MaterialIcon Kind="Language" />
                 </MenuItem.Icon>
             </MenuItem>
         </MenuItem>

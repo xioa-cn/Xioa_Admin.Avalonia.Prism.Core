@@ -62,7 +62,10 @@ public partial class NavigableMenu : UserControl, INotifyPropertyChanged, INotif
             Source = homeServices.MainWindowServices,
             Converter = new WindowIconToImageSourceConverter()
         });
-
+        image.PointerPressed += (s, e) =>
+        {
+            homeServices.MainWindowServices.IsMenuVisible = !homeServices.MainWindowServices.IsMenuVisible;
+        };
         sukiSideMenu.HeaderContent = image;
 
         // sukiSideMenu.Bind(SukiSideMenu.SelectedItemProperty,
