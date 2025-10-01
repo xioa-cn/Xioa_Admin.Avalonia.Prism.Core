@@ -2,13 +2,13 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Extensions;
 using Ava.Xioa.Common.Themes.Converter;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using SukiUI.Controls;
@@ -21,7 +21,7 @@ public partial class NavigableMenu : UserControl, INotifyPropertyChanged, INotif
 
     public NavigableMenu()
     {
-        this.Loaded += OnLoaded;
+        this.OnceExecutedLoaded(OnLoaded);
         InitializeComponent();
     }
 
@@ -42,7 +42,7 @@ public partial class NavigableMenu : UserControl, INotifyPropertyChanged, INotif
 
     private SukiSideMenu? _sukiSideMenu;
 
-    private void OnLoaded(object? sender, RoutedEventArgs e)
+    private void OnLoaded()
     {
         if (this.DataContext is not IHomeServices homeServices) return;
         var sukiSideMenu =
