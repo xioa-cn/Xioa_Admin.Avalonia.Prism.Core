@@ -26,6 +26,7 @@ public partial class App : PrismApplicationBase
     public override void Initialize()
     {
         SubscribeMessage();
+        ConfigureLangManager();
         AvaloniaXamlLoader.Load(this);
         base.Initialize();
     }
