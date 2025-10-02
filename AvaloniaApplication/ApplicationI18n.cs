@@ -14,7 +14,7 @@ public partial class App
             // 设置资源在当前程序集中的命名空间
             I18nManager.Instance.I18nResourceNamespace("AvaloniaApplication");
             // 设置默认语言资源文件 （这里为资源名称 排除后命名空间）
-            I18nManager.Instance.DefaultLang("Langs.zh");
+            I18nManager.Instance.DefaultLang("Langs.ZH_CN");
         }
         // 语言文件为外部文件的写法
         // {

@@ -11,6 +11,8 @@
 
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
+		<None Remove="Langs\EN_US.json" />
+		<EmbeddedResource Include="Langs\EN_US.json" />
 	</ItemGroup>
 
 	<ItemGroup>

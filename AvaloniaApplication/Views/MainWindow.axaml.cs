@@ -1,9 +1,12 @@
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Extensions;
+using Ava.Xioa.Common.Themes.I18n;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaApplication.Utils;
 using AvaloniaApplication.ViewModels;
+using Material.Icons;
+using Material.Icons.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Controls;
 
@@ -13,7 +16,8 @@ namespace AvaloniaApplication.Views;
 public partial class MainWindow : SukiWindow
 {
     private readonly MainWindowViewModel mainWindowViewModel;
-    public MainWindow(UserControl userControl,MainWindowViewModel mainWindowViewModel)
+
+    public MainWindow(UserControl userControl, MainWindowViewModel mainWindowViewModel)
     {
         this.mainWindowViewModel = mainWindowViewModel;
         this.DataContext = mainWindowViewModel;
@@ -24,10 +28,25 @@ public partial class MainWindow : SukiWindow
         this.Loaded += OnLoaded;
         InitializeComponent();
         this.WindowContentControl.Content = userControl;
-        
+
         this.OnceExecutedLoaded(() =>
         {
-            LangUtils.ApplicationLanguages();
+            var langs = LangUtils.ApplicationLanguages();
+
+            foreach (var lang in langs)
+            {
+                var menuItem = new MenuItem()
+                {
+                    Header = lang.Name,
+                    Tag = lang.SourceKey
+                };
+                menuItem.Icon = new MaterialIcon()
+                {
+                    Kind = MaterialIconKind.Language
+                };
+                menuItem.Click += (sender, e) => { I18nManager.Instance.ChangeLanguage(lang.Name, lang.SourceKey); };
+                this.LangItem.Items.Add(menuItem);
+            }
         });
     }
 

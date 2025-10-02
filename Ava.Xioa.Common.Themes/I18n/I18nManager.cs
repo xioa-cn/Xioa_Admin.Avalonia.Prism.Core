@@ -93,11 +93,11 @@ public class I18nManager
         }
     }
 
-    public void ChangeLanguage(string langCode)
+    public void ChangeLanguage(string langCode, string? sourceKey = null)
     {
         if (I18NJsonMode == I18nJsonMode.OnApplicationResources)
         {
-            ChangeAppResourcesLanguage(langCode);
+            ChangeAppResourcesLanguage(langCode, sourceKey);
         }
         else if (I18NJsonMode == I18nJsonMode.OnFileDir)
         {
@@ -130,7 +130,7 @@ public class I18nManager
         OnLanguageChanged?.Invoke();
     }
 
-    private void ChangeAppResourcesLanguage(string langCode)
+    private void ChangeAppResourcesLanguage(string langCode, string? sourceKey = null)
     {
         UsingLanguage = langCode;
         // 再次验证配置，确保调用者已正确设置
@@ -142,7 +142,12 @@ public class I18nManager
 
         // 构建资源名称
         var resourceName = $"{ResourceNamespace}.{langCode}.json";
-        resourceName = resourceName.Replace("..", "."); // 处理可能的连续点号
+        resourceName = resourceName.Replace("..", "."); 
+
+        if (sourceKey is not null)
+        {
+            resourceName = sourceKey;
+        }
 
         // 尝试加载指定语言
         using (var stream = ResourceAssembly.GetManifestResourceStream(resourceName))
@@ -186,7 +191,7 @@ public class I18nManager
             _currentLangDict = FlattenDictionary(_currentLangDict);
         }
     }
-    
+
     /// <summary>
     /// 将嵌套的字典结构扁平化为单层字典，使用点号表示嵌套关系
     /// </summary>
@@ -235,7 +240,7 @@ public class I18nManager
     {
         ResourceDirectory = directory;
     }
-    
+
     /// <summary>
     /// 根据指定的键获取对应的字符串值
     /// </summary>
