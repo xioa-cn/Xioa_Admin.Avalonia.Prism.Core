@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Ava.Xioa.Common;
@@ -12,6 +15,16 @@ public abstract partial class ObservableBindBase : INotifyPropertyChanged, INoti
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
+    {
+        if (this.PropertyChanged == null)
+            return;
+        string propertyName = ObservableBindBase.GetPropertyName<T>(propertyExpression);
+        if (string.IsNullOrEmpty(propertyName))
+            return;
+        this.OnPropertyChanged(propertyName);
     }
 
     protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
@@ -27,6 +40,39 @@ public abstract partial class ObservableBindBase : INotifyPropertyChanged, INoti
         OnPropertyChanging(propertyName);
         field = value;
         OnPropertyChanged(propertyName);
+        return true;
+    }
+
+    protected static string GetPropertyName<T>(Expression<Func<T>> propertyExpression)
+    {
+        if (propertyExpression == null)
+            throw new ArgumentNullException(nameof(propertyExpression));
+        if (!(propertyExpression.Body is MemberExpression body))
+            throw new ArgumentException("Invalid argument", nameof(propertyExpression));
+        return (body.Member as PropertyInfo ??
+                throw new ArgumentException("Argument is not a property", nameof(propertyExpression))).Name;
+    }
+
+    protected bool Set<T>(string? propertyName, ref T field, T newValue)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, newValue))
+            return false;
+        field = newValue;
+        this.OnPropertyChanged(propertyName);
+        return true;
+    }
+    
+    protected bool Set<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+    {
+        return this.Set<T>(propertyName, ref field, newValue);
+    }
+    
+    protected bool Set<T>(Expression<Func<T>> propertyExpression, ref T field, T newValue)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, newValue))
+            return false;
+        field = newValue;
+        this.OnPropertyChanged<T>(propertyExpression);
         return true;
     }
 }
