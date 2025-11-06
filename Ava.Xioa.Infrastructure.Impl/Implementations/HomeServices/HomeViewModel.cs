@@ -7,6 +7,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Events;
 using Prism.Navigation.Regions;
 using SukiUI.Controls;
 
@@ -20,9 +21,9 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
     public IMainWindowServices MainWindowServices => _mainWindowServices;
     public INavigableMenuServices NavigableMenuServices { get; }
 
-    public HomeViewModel(IRegionManager regionManager, IMainWindowServices mainWindowServices,
+    public HomeViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, IMainWindowServices mainWindowServices,
         INavigableMenuServices navigableMenuServices, HotKeyServices hotKeyServices,
-        ToastsService toastsService) : base(regionManager,
+        ToastsService toastsService) : base(eventAggregator,regionManager,
         mainWindowServices)
     {
         _mainWindowServices = mainWindowServices;

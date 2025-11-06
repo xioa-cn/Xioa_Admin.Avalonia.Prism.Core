@@ -1,7 +1,10 @@
-﻿using Ava.Xioa.Common.Services;
+﻿using System.Collections.ObjectModel;
+using Ava.Xioa.Common.Models;
+using Ava.Xioa.Common.Services;
 using Avalonia;
 using Avalonia.Controls;
 using SukiUI.Controls;
+using NavigableBarInfoModel = Ava.Xioa.Common.Models.NavigableBarInfoModel;
 
 namespace Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 
@@ -37,4 +40,6 @@ public interface IMainWindowServices
     public string ApplicationInformation { get; }
 
     bool ChangeAppFontFamily(string fontFamily);
+
+    ObservableCollection<NavigableBarInfoModel> NavigableBarInfos { get; set; }
 }

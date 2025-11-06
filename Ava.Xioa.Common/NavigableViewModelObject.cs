@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Input;
+using Ava.Xioa.Common.Events;
+using Ava.Xioa.Common.Models;
 using Avalonia.Threading;
 using Prism.Commands;
 using Prism.Events;
@@ -97,6 +99,18 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
             {
                 _regionManager?.RequestNavigate(regionName, targetView, NavigationCompleted);
             });
+
+            if (this.EventAggregator is not null && parameters.ContainsKey("Header"))
+            {
+                var header = parameters["Header"]!.ToString();
+                EventAggregator?.GetEvent<NavigableBarEvent>()
+                    .Publish(new TokenKeyPubSubEvent<NavigableBarInfoModel>("NavigableBar", new NavigableBarInfoModel
+                    {
+                        Name = header,
+                        TargetView = targetView,
+                        RegionName = regionName,
+                    }));
+            }
         }
         catch (Exception ex)
         {

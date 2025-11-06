@@ -5,17 +5,104 @@
              xmlns:regions="http://prismlibrary.com/"
              xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
              xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.WindowServices;assembly=Ava.Xioa.Infrastructure.Services"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:models="clr-namespace:Ava.Xioa.Common.Models;assembly=Ava.Xioa.Common"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:IMainWindowServices"
              x:Class="Ava.Xioa.InfrastructureModule.Components.NavigableMenuContent">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <ContentControl Grid.Row="0"
-            regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
-        
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0" RowDefinitions="auto,*">
+            <WrapPanel Grid.Row="0" Margin="0,0,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center">
+                <WrapPanel.Styles>
+                    <Style Selector="RadioButton.GigaChips">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource SukiControlBorderBrush}" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="CornerRadius" Value="{DynamicResource MediumCornerRadius}" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Template">
+                            <ControlTemplate>
+                                <Panel>
+                                    <suki:GlassCard Name="BigBorder" IsInteractive="True"
+                                                    ClipToBounds="True"
+                                                    Padding="0"
+                                                    CornerRadius="{TemplateBinding CornerRadius}">
+                                        <ContentPresenter Name="PART_ContentPresenter"
+                                                          Content="{TemplateBinding Content}"
+                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                          FontSize="{TemplateBinding FontSize}"
+                                                          RecognizesAccessKey="True" />
+                                    </suki:GlassCard>
+                                    <Border Name="SelectedBorder"
+                                            Height="2"
+                                            VerticalAlignment="Bottom"
+                                            Margin="1"
+                                            BorderBrush="{DynamicResource SukiPrimaryColor50}"
+                                            Background="{DynamicResource SukiPrimaryColor500}"
+                                            BorderThickness="1.5"
+                                            CornerRadius="{TemplateBinding CornerRadius}"
+                                            Opacity="0">
+                                        <Border.Transitions>
+                                            <Transitions>
+                                                <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                                            </Transitions>
+                                        </Border.Transitions>
+                                    </Border>
+
+                                </Panel>
+                            </ControlTemplate>
+                        </Setter>
+                    </Style>
+                    <Style Selector="Button.Icon">
+                        <Setter Property="Content">
+                            <Template>
+                                <PathIcon Height="{TemplateBinding Height}"
+                                          Width="{TemplateBinding Width}"
+                                          Data="{x:Static suki:Icons.CircleOutlineClose}"
+                                          Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}" />
+                            </Template>
+                        </Setter>
+                    </Style>
+                </WrapPanel.Styles>
+                <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding NavigableBarInfos}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.DataTemplates>
+                            <DataTemplate DataType="models:NavigableBarInfoModel">
+                                <RadioButton MinWidth="100" Height="30"
+                                             Tag="{Binding}"
+                                             Click="NavigationBarInfoModel_OnClick"
+                                             CornerRadius="0"
+                                             Classes="GigaChips"
+                                             Margin="1,0"
+                                             GroupName="NavigableGroup"
+                                             IsChecked="{Binding IsCheck}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
+                                        <TextBlock FontSize="10"
+                                                   MinWidth="80"
+                                                   Margin="5,0,0,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding Name}" />
+                                        <Button HorizontalAlignment="Right" Height="10" Width="10"
+                                                VerticalAlignment="Center" Margin="5,0" Classes="Basic Icon" />
+                                    </StackPanel>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.DataTemplates>
+                    </ItemsControl>
+                </ScrollViewer>
+            </WrapPanel>
+            <ContentControl Grid.Row="1"
+                            regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
+        </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Margin="2" Text="{Binding ApplicationInformation}"></TextBlock>
         </StackPanel>

@@ -1,6 +1,9 @@
-﻿using Ava.Xioa.Common;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Events;
+using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Avalonia;
@@ -10,12 +13,15 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
+using Prism.Navigation;
+using Prism.Navigation.Regions;
 using SukiUI.Controls;
+using NavigableBarInfoModel = Ava.Xioa.Common.Models.NavigableBarInfoModel;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.WindowServices;
 
 [PrismViewModel(typeof(IMainWindowServices), ServiceLifetime.Singleton)]
-public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
+public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindowServices
 {
     [ObservableBindProperty] private double _Width;
     [ObservableBindProperty] private double _Height;
@@ -39,7 +45,8 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
 
     private readonly IEventAggregator _eventAggregator;
 
-    public MainWindowViewModel(IEventAggregator eventAggregator)
+    public MainWindowViewModel(IEventAggregator eventAggregator, IRegionManager regionManager) : base(eventAggregator,
+        regionManager)
     {
         _eventAggregator = eventAggregator;
         this.Width = 404;
@@ -51,6 +58,30 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
 
         _eventAggregator.GetEvent<WindowIconEvent>().Subscribe(IconChanged, ThreadOption.UIThread, true,
             filter => filter.TokenKey == "WindowIcon");
+
+        NavigableBarInfos = new ObservableCollection<NavigableBarInfoModel>();
+
+        _eventAggregator.GetEvent<NavigableBarEvent>().Subscribe(NavigableBarChanged, ThreadOption.UIThread, true,
+            filter => filter.TokenKey == "NavigableBar");
+    }
+
+    private void NavigableBarChanged(TokenKeyPubSubEvent<NavigableBarInfoModel> obj)
+    {
+        var find = NavigableBarInfos.FirstOrDefault(item =>
+            item.Name == obj.Value.Name && item.RegionName == obj.Value.RegionName &&
+            item.TargetView == obj.Value.TargetView);
+
+        if (find is not null)
+        {
+            find.IsCheck = true;
+
+            return;
+        }
+
+        NavigableBarInfos.Add(obj.Value);
+        NavigableBarInfos.Where(item => item.IsCheck)
+            .ToList().ForEach(item => item.IsCheck = false);
+        obj.Value.IsCheck = true;
     }
 
     private void IconChanged(TokenKeyPubSubEvent<WindowIcon> obj)
@@ -65,7 +96,7 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
 
         if (window == null)
             return;
-        
+
         // 确保窗口尺寸已确定（如果是动态尺寸，先更新布局）
         window.Measure(Size.Infinity);
         window.Arrange(new Rect(window.DesiredSize));
@@ -74,14 +105,14 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
         var screen = window.Screens.ScreenFromVisual(window);
         if (screen == null)
             return;
-        
+
         var scaling = screen.Scaling;
         var scaledWidth = window.Width * scaling;
         var scaledHeight = window.Height * scaling;
         var newLeft = (int)((screen.WorkingArea.Width - scaledWidth) / 2);
         var newTop = (int)((screen.WorkingArea.Height - scaledHeight) / 2);
         window.Position = new PixelPoint(newLeft, newTop);
-        
+
         // var workArea = screen.WorkingArea;
         //
         // // 计算居中位置（工作区中心 - 窗口一半尺寸）
@@ -98,6 +129,11 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
         this.Opacity = 0;
     }
 
+    public new void ExecuteNavigate(NavigationParameters? parameters)
+    {
+        base.ExecuteNavigate(parameters);
+    }
+
     public bool ChangeAppFontFamily(string fontFamily)
     {
         if (!(Application.Current?.Resources.TryGetResource(fontFamily, null, out var fontObj) ?? false)) return false;
@@ -110,6 +146,8 @@ public partial class MainWindowViewModel : ReactiveObject, IMainWindowServices
         });
         return fontObj is FontFamily;
     }
+
+    public ObservableCollection<NavigableBarInfoModel> NavigableBarInfos { get; set; }
 
     public string ApplicationInformation =>
         $"{AppAuthor.DllCreateTime:yyyy} © AvaloniaApplication BY {AppAuthor.Author}. {AppAuthor.DllCreateTime.TimeYearMonthDayHourString()}";

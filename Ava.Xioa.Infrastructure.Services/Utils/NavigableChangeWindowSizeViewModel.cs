@@ -3,6 +3,7 @@ using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls.ApplicationLifetimes;
+using Prism.Events;
 using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Infrastructure.Services.Utils;
@@ -11,8 +12,9 @@ public abstract class NavigableChangeWindowSizeViewModel : NavigableViewModelObj
 {
     private readonly IMainWindowServices _mainWindowServices;
 
-    public NavigableChangeWindowSizeViewModel(IRegionManager regionManager, IMainWindowServices mainWindowServices) :
-        base(regionManager)
+    public NavigableChangeWindowSizeViewModel(IEventAggregator eventAggregator, IRegionManager regionManager,
+        IMainWindowServices mainWindowServices) :
+        base(eventAggregator, regionManager)
     {
         _mainWindowServices = mainWindowServices;
     }

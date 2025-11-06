@@ -9,6 +9,7 @@ using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Events;
 using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.LoginServices;
@@ -20,8 +21,9 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
 
     private readonly IMainWindowServices _mainWindowServices;
 
-    public LoginViewModel(IRegionManager regionManager, IMainWindowServices mainWindowServices) : base(
-        regionManager, mainWindowServices)
+    public LoginViewModel(IEventAggregator eventAggregator, IRegionManager regionManager,
+        IMainWindowServices mainWindowServices) : base(
+        eventAggregator, regionManager, mainWindowServices)
     {
         _mainWindowServices = mainWindowServices;
         LoginCommand = new AsyncRelayCommand(Login);

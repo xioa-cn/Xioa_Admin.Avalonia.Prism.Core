@@ -13,4 +13,15 @@ public static class NavigationParametersHelper
 
         return navigationParameters;
     }
+
+    public static NavigationParameters TargetNavigationParametersWithHeader(
+        string targetNavigateView, string regionName, string header)
+    {
+        var navigationParameters = new NavigationParameters();
+        navigationParameters.Add("TargetView", targetNavigateView);
+        navigationParameters.Add("RegionName", regionName);
+        navigationParameters.Add("Header", header);
+
+        return navigationParameters;
+    }
 }

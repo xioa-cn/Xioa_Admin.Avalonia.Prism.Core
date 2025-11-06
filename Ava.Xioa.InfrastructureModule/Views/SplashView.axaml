@@ -2,9 +2,95 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i18n="clr-namespace:Ava.Xioa.Common.Themes.I18n;assembly=Ava.Xioa.Common.Themes"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
              mc:Ignorable="d"
              Height="550"
              Width="444"
              x:Class="Ava.Xioa.InfrastructureModule.Views.SplashView">
-    WELCOME TO AVA.XIOA
+    <Border x:Name="MainBorder" CornerRadius="10" VerticalAlignment="Center">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Logo  -->
+            <Viewbox
+                Grid.Row="0"
+                Width="100"
+                Height="100"
+                Margin="0,20">
+                <Grid>
+                    <!--  主外圈  -->
+                    <Ellipse
+                        Width="120"
+                        Height="120"
+                        Stroke="#FF007ACC"
+                        StrokeThickness="3">
+                    </Ellipse>
+
+                    <!--  内圈  -->
+                    <Ellipse
+                        Width="110"
+                        Height="110"
+                        Stroke="#CCFFFFFF"
+                        StrokeThickness="1">
+                    </Ellipse>
+
+                    <!--  XIOA文字  -->
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="Arial"
+                        FontSize="36"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="{i18n:Localize AppBaseOnName}">
+                    </TextBlock>
+                </Grid>
+            </Viewbox>
+
+            <!--  标题  -->
+            <StackPanel Grid.Row="1">
+                <TextBlock
+                    x:Name="TitleText"
+                    Margin="0,0,0,20"
+                    HorizontalAlignment="Center"
+                    FontSize="28"
+                    Foreground="White"
+                    Text="{i18n:Localize AppName}" />
+                <!--  底部小文字  -->
+                <TextBlock
+                    Name="sText"
+                    Margin="0,0,0,15"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    FontSize="15"
+                    Foreground="#CCFFFFFF"
+                    Text="2024 © Xioa.Admin By Xioa." />
+            </StackPanel>
+
+            <!--  进度条  -->
+            <!--  进度条容器  -->
+            <Grid
+                x:Name="ProgressContainer"
+                Grid.Row="2"
+                Margin="0,0">
+                    <!--  进度条  -->
+                    <suki:Loading LoadingStyle="Glow" />
+            </Grid>
+
+            <!--  加载文本  -->
+            <TextBlock
+                Grid.Row="3"
+                Margin="0,20"
+                HorizontalAlignment="Center"
+                Foreground="LightGray"
+                Text="正在加载系统组件...">
+            </TextBlock>
+        </Grid>
+    </Border>
 </UserControl>

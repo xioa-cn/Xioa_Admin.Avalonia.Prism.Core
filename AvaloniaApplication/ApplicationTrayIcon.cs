@@ -115,7 +115,8 @@ public partial class App
 
     private void ExitApplication()
     {
-        // Environment.Exit(0);
+        this.Exit();
+        Environment.Exit(0);
     }
 
     private void OpenMainWindow()

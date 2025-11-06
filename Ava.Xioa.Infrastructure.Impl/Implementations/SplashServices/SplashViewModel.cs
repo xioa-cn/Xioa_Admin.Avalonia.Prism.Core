@@ -7,6 +7,7 @@ using Ava.Xioa.Infrastructure.Services.Services.SplashServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
+using Prism.Events;
 using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.SplashServices;
@@ -16,8 +17,8 @@ public class SplashViewModel : NavigableChangeWindowSizeViewModel, ISplashServic
 {
     private readonly IMainWindowServices _mainWindowServices;
 
-    public SplashViewModel(IRegionManager regionManager,
-        IMainWindowServices mainWindowServices) : base(regionManager, mainWindowServices)
+    public SplashViewModel(IEventAggregator eventAggregator, IRegionManager regionManager,
+        IMainWindowServices mainWindowServices) : base(eventAggregator, regionManager, mainWindowServices)
 
     {
         _mainWindowServices = mainWindowServices;

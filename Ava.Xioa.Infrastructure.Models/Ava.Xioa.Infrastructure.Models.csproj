@@ -14,5 +14,6 @@
 
     <ItemGroup>
       <Folder Include="Models\LoginModels\" />
+      <Folder Include="Models\NavigableBarModel\" />
     </ItemGroup>
 </Project>

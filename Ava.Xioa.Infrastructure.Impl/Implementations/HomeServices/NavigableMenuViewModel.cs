@@ -7,6 +7,7 @@ using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
 using Ava.Xioa.Infrastructure.Services.Services.RouterServices;
 using Avalonia.Collections;
+using Prism.Events;
 using Prism.Navigation.Regions;
 using SukiUI.Controls;
 
@@ -16,38 +17,39 @@ namespace Ava.Xioa.Infrastructure.Impl.Implementations.HomeServices;
 public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigableMenuServices
 {
     [ObservableBindProperty] private object? _selectedView;
-    
-    public NavigableMenuViewModel(IRegionManager regionManager, IRouterServices routerServices) : base(regionManager)
+
+    public NavigableMenuViewModel(IEventAggregator? eventAggregator, IRegionManager regionManager,
+        IRouterServices routerServices) : base(eventAggregator, regionManager)
     {
-       // var r= routerServices.PrismApplicationRouter();
-       //  NavigableMenuItemModel[] menu =
-       //  [
-       //      new NavigableMenuItemModel("系统设置")
-       //      {
-       //          Header = "系统设置",
-       //          IconKind = MaterialIconKind.VideoHomeSystem,
-       //          NavigationName = "ThemesManager",
-       //          Region = "HomeRegion",
-       //          Children =
-       //          [
-       //              new NavigableMenuItemModel("主题设置")
-       //              {
-       //                  Header = "主题设置",
-       //                  IconKind = MaterialIconKind.ThemeLightDark,
-       //                  NavigationName = "ThemesManager",
-       //                  Region = "HomeRegion",
-       //              },
-       //              new NavigableMenuItemModel("用户管理")
-       //              {
-       //                  Header = "用户管理",
-       //                  IconKind = MaterialIconKind.AccountMultiple,
-       //                  NavigationName = "UserManager",
-       //                  Region = "HomeRegion"
-       //              }
-       //          ]
-       //      },
-       //      
-       //  ];
+        // var r= routerServices.PrismApplicationRouter();
+        //  NavigableMenuItemModel[] menu =
+        //  [
+        //      new NavigableMenuItemModel("系统设置")
+        //      {
+        //          Header = "系统设置",
+        //          IconKind = MaterialIconKind.VideoHomeSystem,
+        //          NavigationName = "ThemesManager",
+        //          Region = "HomeRegion",
+        //          Children =
+        //          [
+        //              new NavigableMenuItemModel("主题设置")
+        //              {
+        //                  Header = "主题设置",
+        //                  IconKind = MaterialIconKind.ThemeLightDark,
+        //                  NavigationName = "ThemesManager",
+        //                  Region = "HomeRegion",
+        //              },
+        //              new NavigableMenuItemModel("用户管理")
+        //              {
+        //                  Header = "用户管理",
+        //                  IconKind = MaterialIconKind.AccountMultiple,
+        //                  NavigationName = "UserManager",
+        //                  Region = "HomeRegion"
+        //              }
+        //          ]
+        //      },
+        //      
+        //  ];
         NavigableMenuItems = new AvaloniaList<NavigableMenuItemModel>(routerServices.PrismApplicationRouter());
     }
 
@@ -63,8 +65,8 @@ public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigab
 
             if (findPage is not null && !findPage.HasChildren)
             {
-                ExecuteNavigate(NavigationParametersHelper.TargetNavigationParameters(findPage.NavigationName,
-                    findPage.Region));
+                ExecuteNavigate(NavigationParametersHelper.TargetNavigationParametersWithHeader(findPage.NavigationName,
+                    findPage.Region, findPage.Header));
             }
 
             return;
@@ -77,8 +79,8 @@ public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigab
 
             if (findPage is not null && !findPage.HasChildren)
             {
-                ExecuteNavigate(NavigationParametersHelper.TargetNavigationParameters(findPage.NavigationName,
-                    findPage.Region));
+                ExecuteNavigate(NavigationParametersHelper.TargetNavigationParametersWithHeader(findPage.NavigationName,
+                    findPage.Region, findPage.Header));
             }
         }
     }
