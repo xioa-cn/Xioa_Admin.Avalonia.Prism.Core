@@ -35,7 +35,7 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
     [ObservableBindProperty] private bool _ShowTitlebarBackground;
     [ObservableBindProperty] private bool _ShowBottomBorder;
     [ObservableBindProperty] private PixelPoint _Position;
-    [ObservableBindProperty] private bool _CanMove;
+    [ObservableBindProperty] private bool _CanMove = false;
     [ObservableBindProperty] private bool _IsVisible;
     [ObservableBindProperty] private double _Opacity;
     [ObservableBindProperty] private bool _ShowInTaskbar;

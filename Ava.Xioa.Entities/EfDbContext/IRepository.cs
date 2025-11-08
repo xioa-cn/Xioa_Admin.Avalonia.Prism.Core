@@ -17,4 +17,7 @@ public interface IRepository<TEntity> where TEntity : BaseEntity
     ValueTask<EntityEntry<TEntity>> AddAsync(
         TEntity entity,
         CancellationToken cancellationToken = default(CancellationToken));
+
+
+    bool DbIsExist { get; }
 }

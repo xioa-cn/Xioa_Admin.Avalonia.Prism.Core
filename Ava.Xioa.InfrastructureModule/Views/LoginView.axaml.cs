@@ -1,5 +1,6 @@
 ﻿using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Const;
+using Ava.Xioa.Common.Extensions;
 using Ava.Xioa.Infrastructure.Services.Services.LoginServices;
 using Avalonia.Controls;
 
@@ -12,5 +13,7 @@ public partial class LoginView : UserControl
     {
         this.DataContext = loginServices;
         InitializeComponent();
+        
+        this.OnceExecutedLoaded(loginServices.Loaded);
     }
 }

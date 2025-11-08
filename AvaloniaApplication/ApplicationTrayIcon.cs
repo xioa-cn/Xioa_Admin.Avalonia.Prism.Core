@@ -97,7 +97,8 @@ public partial class App
 
             _trayIcon.Menu = new NativeMenu();
             _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "打开", Command = new RelayCommand(OpenMainWindow) });
-            _trayIcon.Menu.Items.Add(new NativeMenuItem { Header = "退出", Command = new RelayCommand(ExitApplication) });
+            _trayIcon.Menu.Items.Add(new NativeMenuItem
+                { Header = "退出", Command = new RelayCommand(() => ExitApplication()) });
 
             _trayIcon.Clicked += TrayIcon_Clicked;
             // 初始设置
@@ -113,10 +114,10 @@ public partial class App
         OpenMainWindow();
     }
 
-    private void ExitApplication()
+    private void ExitApplication(int exitCode = 0)
     {
-        this.Exit();
-        Environment.Exit(0);
+        this.Exit(exitCode);
+        Environment.Exit(exitCode);
     }
 
     private void OpenMainWindow()

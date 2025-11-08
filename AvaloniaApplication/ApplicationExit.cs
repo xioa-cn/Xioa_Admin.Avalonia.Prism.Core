@@ -2,7 +2,7 @@
 
 public partial class App
 {
-    public void Exit()
+    public void Exit(int exitCode = 0)
     {
        
     }

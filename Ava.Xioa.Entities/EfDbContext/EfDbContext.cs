@@ -11,7 +11,7 @@ namespace Ava.Xioa.Entities.EfDbContext;
 public abstract class EfDbContext : DbContext
 {
     protected abstract string ConnectionString { get; }
-
+    public string DbFilePath { get; set; }
     public bool QueryTracking
     {
         set

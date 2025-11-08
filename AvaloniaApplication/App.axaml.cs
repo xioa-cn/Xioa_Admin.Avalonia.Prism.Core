@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
+using Ava.Xioa.Common.Events;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication.Views;
 using Prism;
@@ -88,7 +89,7 @@ public partial class App : PrismApplicationBase
         var mainView = Container.Resolve<MainView>();
 
         GlobalEventAggregator.EventAggregator = Container.Resolve<IEventAggregator>();
-        
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var mainWindowViewModel = Container.Resolve<MainWindowViewModel>();
@@ -137,6 +138,14 @@ public partial class App : PrismApplicationBase
         {
             // 初始化托盘图标
             InitializeTrayIcon();
+        }
+
+        if (_eventAggregator is not null)
+        {
+            _eventAggregator.GetEvent<ExitApplicationEvent>().Subscribe(
+                (x) => ExitApplication(x.Value.ExitCode)
+                , ThreadOption.UIThread, true,
+                filter => filter.TokenKey == "ExitApplication");
         }
     }
 }

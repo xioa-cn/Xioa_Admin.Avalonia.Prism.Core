@@ -8,68 +8,112 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:suki="https://github.com/kikipoulet/SukiUI"
     xmlns:viewModels="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.LoginServices;assembly=Ava.Xioa.Infrastructure.Services"
-    Width="444"
+
     x:DataType="viewModels:ILoginServices"
     mc:Ignorable="d">
-    <suki:GroupBox
-        Width="400"
-        Margin="22"
-        VerticalAlignment="Center">
-        <suki:GroupBox.Header>
-            <TextBlock
-                FontSize="20"
-                FontWeight="Bold"
-                Text="{Binding Source={x:Static const:AppInformation.Instance}, Path=ApplicationName}" />
-        </suki:GroupBox.Header>
+    <suki:BusyArea Name="BusySignIn"
+                   BusyText="Signing In..."
+                   IsBusy="{Binding LoginLoading}">
         <Grid>
-            <suki:GlassCard
-                Margin="15"
-                animations:SquishyOverExtensions.Enable="True"
-                animations:SquishyOverExtensions.Intensity="0.05"
-                animations:SquishyOverExtensions.SquishDepth="0.05">
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,20,0,45"
-                        HorizontalAlignment="Center"
-                        FontSize="22"
-                        FontWeight="DemiBold"
-                        Text="登录您的帐户" />
-                    <TextBlock
-                        Margin="6,0,0,5"
-                        FontWeight="DemiBold"
-                        Foreground="{DynamicResource SukiLowText}"
-                        Text="帐户" />
-                    <TextBox suki:TextBoxExtensions.Prefix="" Watermark="您的帐户" />
-                    <TextBlock
-                        Margin="6,18,0,5"
-                        FontWeight="DemiBold"
-                        Foreground="{DynamicResource SukiLowText}"
-                        Text="密码" />
-                    <TextBox
-                        Margin="0,0,0,15"
-                        suki:TextBoxExtensions.AddDeleteButton="False"
-                        PasswordChar="*"
-                        Watermark="*******" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
 
-                    <StackPanel Orientation="Horizontal" Spacing="9">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontWeight="DemiBold"
-                            Foreground="{DynamicResource SukiLowText}"
-                            Text="记住密码 : " />
-                        <ToggleSwitch VerticalAlignment="Center" />
-                    </StackPanel>
+            <Grid Grid.Column="0">
+                <Image Source="../Assets/bg.png" Margin="60" Stretch="Uniform">
+                    <!-- 原生动画：上下跳动（通过关键帧双向定义实现反向） -->
+                    <Image.Styles>
+                        <Style Selector="Image">
+                            <Style.Animations>
+                                <Animation
+                                    Duration="0:0:3"
+                                    IterationCount="Infinite">
+                                    <KeyFrame Cue="0%">
+                                        <Setter Property="TranslateTransform.Y" Value="0" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="50%">
+                                        <Setter Property="TranslateTransform.Y" Value="-20" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="100%">
+                                        <Setter Property="TranslateTransform.Y" Value="0" />
+                                    </KeyFrame>
+                                </Animation>
+                            </Style.Animations>
+                        </Style>
+                    </Image.Styles>
+                </Image>
+            </Grid>
 
-                    <Button
-                        Width="150"
-                        Margin="0,25,0,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Classes="Flat"
-                        Command="{Binding LoginCommand}"
-                        Content="登录" />
-                </StackPanel>
-            </suki:GlassCard>
+            <suki:GroupBox Grid.Column="1"
+                           Width="400"
+                           Margin="22"
+                           VerticalAlignment="Center">
+                <suki:GroupBox.Header>
+                    <TextBlock
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Text="{Binding Source={x:Static const:AppInformation.Instance}, Path=ApplicationName}" />
+                </suki:GroupBox.Header>
+                <Grid>
+                    <suki:GlassCard
+                        Margin="15"
+                        animations:SquishyOverExtensions.Enable="True"
+                        animations:SquishyOverExtensions.Intensity="0.05"
+                        animations:SquishyOverExtensions.SquishDepth="0.05">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,20,0,45"
+                                HorizontalAlignment="Center"
+                                FontSize="22"
+                                FontWeight="DemiBold"
+                                Text="登录您的帐户" />
+                            <TextBlock
+                                Margin="6,0,0,5"
+                                FontWeight="DemiBold"
+                                Foreground="{DynamicResource SukiLowText}"
+                                Text="帐户" />
+                            <TextBox Text="{Binding Account}" suki:TextBoxExtensions.Prefix="" Watermark="您的帐户" />
+                            <TextBlock
+                                Margin="6,18,0,5"
+                                FontWeight="DemiBold"
+                                Foreground="{DynamicResource SukiLowText}"
+                                Text="密码" />
+                            <TextBox
+                                Text="{Binding Password}"
+                                Margin="0,0,0,15"
+                                suki:TextBoxExtensions.AddDeleteButton="False"
+                                PasswordChar="*"
+                                Watermark="*******" />
+
+                            <StackPanel Orientation="Horizontal" Spacing="15">
+                                <CheckBox Content="记住密码" IsChecked="{Binding IsRemember}" />
+                                <CheckBox Content="自动登录" IsChecked="{Binding IsAutoLogin}" />
+                            </StackPanel>
+
+                            <UniformGrid Columns="2">
+                                <Button
+                                    Width="150"
+                                    Margin="0,25,0,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Classes="Flat"
+                                    Command="{Binding LoginCommand}"
+                                    Content="登录" />
+
+                                <Button
+                                    Width="150"
+                                    Margin="0,25,0,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Classes="Flat Danger"
+                                    Command="{Binding ExitCommand}"
+                                    Content="退出" />
+                            </UniformGrid>
+                        </StackPanel>
+                    </suki:GlassCard>
+                </Grid>
+            </suki:GroupBox>
         </Grid>
-    </suki:GroupBox>
+    </suki:BusyArea>
 </UserControl>

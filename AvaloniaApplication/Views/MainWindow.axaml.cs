@@ -52,7 +52,7 @@ public partial class MainWindow : SukiWindow
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        mainWindowViewModel.Initialized();
+        //mainWindowViewModel.Initialized();
     }
 
 

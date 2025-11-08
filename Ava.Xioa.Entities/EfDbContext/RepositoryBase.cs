@@ -39,10 +39,7 @@ public abstract class RepositoryBase<TEntity> where TEntity : BaseEntity
 
     private EfDbContext EFContext
     {
-        get
-        {
-            return DefaultDbContext;
-        }
+        get { return DefaultDbContext; }
     }
 
     public virtual EfDbContext DbContext
@@ -54,4 +51,6 @@ public abstract class RepositoryBase<TEntity> where TEntity : BaseEntity
     {
         get { return EFContext.Set<TEntity>(); }
     }
+
+    public bool DbIsExist => System.IO.File.Exists(EFContext.DbFilePath);
 }

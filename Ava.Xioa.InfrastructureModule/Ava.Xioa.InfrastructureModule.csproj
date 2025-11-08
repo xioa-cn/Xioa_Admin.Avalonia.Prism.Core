@@ -16,5 +16,7 @@
     <ItemGroup>
       <None Remove="Assets\login_left.png" />
       <AvaloniaResource Include="Assets\welcome.png" />
+      <None Remove="Assets\bg.png" />
+      <AvaloniaResource Include="Assets\bg.png" />
     </ItemGroup>
 </Project>

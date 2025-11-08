@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common;
@@ -72,19 +73,26 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
 
     public void Initialized()
     {
-        var findLastUseThemeInfo = this._systemThemesInformationRepository.DbSet.FirstOrDefault();
-        _themesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
-        if (findLastUseThemeInfo == null) return;
-        BackgroundStyle = SukiBackgroundStyleDesc.SukiBackgroundStyleDescs[findLastUseThemeInfo.BackgroundStyleKey];
-        AnimationsEnabled = true;
-        _themesServices.BackgroundAnimations = true;
-        _themesServices.IsLightTheme = findLastUseThemeInfo.IsLightTheme;
-        _themesServices.ChangeColorTheme(findLastUseThemeInfo.ColorThemeDisplayName);
-        _themesServices.FontFamily = findLastUseThemeInfo.FontFamily;
-        
-        if (!string.IsNullOrEmpty(findLastUseThemeInfo.BackgroundEffectKey))
+        try
         {
-            _themesServices.ChangeBackgroundEffect(findLastUseThemeInfo.BackgroundEffectKey);
+            var findLastUseThemeInfo = this._systemThemesInformationRepository.DbSet.FirstOrDefault();
+            if (findLastUseThemeInfo == null) return;
+            _themesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
+            BackgroundStyle = SukiBackgroundStyleDesc.SukiBackgroundStyleDescs[findLastUseThemeInfo.BackgroundStyleKey];
+            AnimationsEnabled = true;
+            _themesServices.BackgroundAnimations = true;
+            _themesServices.IsLightTheme = findLastUseThemeInfo.IsLightTheme;
+            _themesServices.ChangeColorTheme(findLastUseThemeInfo.ColorThemeDisplayName);
+            _themesServices.FontFamily = findLastUseThemeInfo.FontFamily;
+        
+            if (!string.IsNullOrEmpty(findLastUseThemeInfo.BackgroundEffectKey))
+            {
+                _themesServices.ChangeBackgroundEffect(findLastUseThemeInfo.BackgroundEffectKey);
+            }
+        }
+        catch (Exception e)
+        {
+            // ignored
         }
     }
 }

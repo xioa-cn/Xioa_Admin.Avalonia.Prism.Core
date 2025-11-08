@@ -15,7 +15,7 @@ public class InfrastructureModule : PrismAutoModule<InfrastructureModule>
 
     public override async void OnInitialized(IContainerProvider containerProvider)
     {
-        await _systemDbContext.DbFileExistOrCreateAsync();
+        //await _systemDbContext.DbFileExistOrCreateAsync();
         base.OnInitialized(containerProvider);
     }
 }
