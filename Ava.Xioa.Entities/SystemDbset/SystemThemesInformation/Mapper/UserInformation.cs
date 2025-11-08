@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ava.Xioa.Common.Models;
 using Ava.Xioa.Entities.Models;
 
 namespace Ava.Xioa.Entities.SystemDbset.SystemThemesInformation.Mapper;

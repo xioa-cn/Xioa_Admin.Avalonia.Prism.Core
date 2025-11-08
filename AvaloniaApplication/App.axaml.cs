@@ -8,6 +8,7 @@ using Prism;
 using Prism.Ioc;
 using Ava.Xioa.Common.Extensions;
 using Ava.Xioa.Common.Models;
+using Ava.Xioa.Common.Themes.Services.Services;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.InfrastructureModule;
 using Avalonia;
@@ -93,7 +94,8 @@ public partial class App : PrismApplicationBase
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var mainWindowViewModel = Container.Resolve<MainWindowViewModel>();
-            desktop.MainWindow = new MainWindow(mainView, mainWindowViewModel);
+            var closeDialogService = Container.Resolve<ICloseDialogService>();
+            desktop.MainWindow = new MainWindow(mainView, mainWindowViewModel, closeDialogService);
             return desktop.MainWindow;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)

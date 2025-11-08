@@ -6,6 +6,7 @@ using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Const;
 using Ava.Xioa.Common.Events;
 using Ava.Xioa.Common.Input;
+using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Entities.SystemDbset;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
@@ -14,10 +15,12 @@ using Ava.Xioa.Infrastructure.Services.Services.LoginServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using Prism.Navigation.Regions;
+using SukiUI.Controls;
 using SukiUI.Dialogs;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.LoginServices;
@@ -71,6 +74,15 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
         _mainWindowServices.ShowTitlebarBackground = true;
         _mainWindowServices.CanMove = true;
         _mainWindowServices.ShowInTaskbar = true;
+        _mainWindowServices.CanFullScreen = false;
+        _mainWindowServices.CanMinimize = false;
+        _mainWindowServices.CanMaximize = false;
+        _mainWindowServices.CanPin = false;
+        _mainWindowServices.CanResize = false;
+        _mainWindowServices.ShowBottomBorder = false;
+        _mainWindowServices.IsMenuVisible = false;
+        _mainWindowServices.TitleBarVisibilityOnFullScreen = SukiWindow.TitleBarVisibilityMode.Hidden;
+        _mainWindowServices.WindowState = WindowState.Normal;
         base.OnNavigatedTo(navigationContext);
     }
 
@@ -83,8 +95,13 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
             await Task.Delay(1000);
 
             var isAdmin = await IfAdminSettingApplication(this._account, this._password);
+
+            GlobalUserInformation.Instance.Account = this._account;
+            
             if (isAdmin)
             {
+                GlobalUserInformation.Instance.UserName = "XIOA";
+                GlobalUserInformation.Instance.UserAuthEnum = UserAuthEnum.Admin;
                 ExecuteNavigate(
                     NavigationParametersHelper.TargetNavigationParameters("HomeView",
                         AppRegions.MainRegion));
@@ -98,7 +115,9 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
                 _sukiDialogManager.SetMessage("帳號不存在", "登录报错").OfType(NotificationType.Error).TryShow();
                 return;
             }
-
+            GlobalUserInformation.Instance.UserName = findUser.UserName;
+            GlobalUserInformation.Instance.UserAuthEnum = findUser.UserAuth;
+            
             ExecuteNavigate(
                 NavigationParametersHelper.TargetNavigationParameters("HomeView",
                     AppRegions.MainRegion));
@@ -107,8 +126,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            
         }
         finally
         {

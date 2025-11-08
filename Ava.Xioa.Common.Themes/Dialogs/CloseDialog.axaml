@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:vm="clr-namespace:Ava.Xioa.Common.Themes.Services.Services"
+             mc:Ignorable="d"
+             x:DataType="vm:ICloseDialogService"
+             x:Class="Ava.Xioa.Common.Themes.Dialogs.CloseDialog">
+    <suki:GroupBox Header="">
+        <StackPanel Classes="HeaderContent">
+            <RadioButton Classes="GigaChips" GroupName="R1" Content="退出登录" IsChecked="{Binding Logout}" />
+            <RadioButton Classes="GigaChips" GroupName="R1" Content="最小化到托盘" IsChecked="{Binding MiniSize}" />
+            <RadioButton Classes="GigaChips" GroupName="R1" Content="退出" IsChecked="{Binding Close}" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="9">
+                <Button HorizontalContentAlignment="Center"
+                        Classes="Rounded"
+                        Command="{Binding CancelCommand}"
+                        Content="取消" />
+
+                <Button HorizontalContentAlignment="Center"
+                        Classes="Rounded Flat"
+                        Command="{Binding OkCommand}"
+                        Content="确认" />
+            </StackPanel>
+
+        </StackPanel>
+    </suki:GroupBox>
+</UserControl>

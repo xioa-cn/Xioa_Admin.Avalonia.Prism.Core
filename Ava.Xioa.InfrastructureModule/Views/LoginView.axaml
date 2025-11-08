@@ -57,7 +57,7 @@
                 </suki:GroupBox.Header>
                 <Grid>
                     <suki:GlassCard
-                        Margin="15"
+                        Margin="0"
                         animations:SquishyOverExtensions.Enable="True"
                         animations:SquishyOverExtensions.Intensity="0.05"
                         animations:SquishyOverExtensions.SquishDepth="0.05">
