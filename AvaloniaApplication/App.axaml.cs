@@ -7,6 +7,7 @@ using Prism;
 using Prism.Ioc;
 using Ava.Xioa.Common.Extensions;
 using Ava.Xioa.Common.Models;
+using Ava.Xioa.Common.Utils;
 using Ava.Xioa.InfrastructureModule;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -85,6 +86,9 @@ public partial class App : PrismApplicationBase
     protected override AvaloniaObject CreateShell()
     {
         var mainView = Container.Resolve<MainView>();
+
+        GlobalEventAggregator.EventAggregator = Container.Resolve<IEventAggregator>();
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var mainWindowViewModel = Container.Resolve<MainWindowViewModel>();

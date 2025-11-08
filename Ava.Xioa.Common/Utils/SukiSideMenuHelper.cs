@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Ava.Xioa.Common.Models;
 using Avalonia.Collections;
+using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Material.Icons;
 using SukiUI.Controls;
 
@@ -18,6 +20,7 @@ public class SukiSideMenuHelper
         item1.Classes.Add("Compact");
         item1.Header = "欢迎";
         item1.IsVisible = false;
+       
         item1.Tag = "欢迎Welcome";
         item1.Icon = new Material.Icons.Avalonia.MaterialIcon
         {
@@ -69,7 +72,8 @@ public class SukiSideMenuHelper
             Width = 24,
             Height = 24
         };
-
+        menuItem.Bind(SelectingItemsControl.IsSelectedProperty,
+            new Binding("IsSelected") { Source = item, Mode = BindingMode.TwoWay });
         if (item.Children is not null)
         {
             foreach (NavigableMenuItemModel child in item.Children)
