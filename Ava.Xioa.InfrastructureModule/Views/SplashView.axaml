@@ -47,7 +47,6 @@
                         FontFamily="Arial"
                         FontSize="36"
                         FontWeight="Bold"
-                        Foreground="White"
                         Text="{i18n:Localize AppBaseOnName}">
                     </TextBlock>
                 </Grid>
@@ -60,7 +59,6 @@
                     Margin="0,0,0,20"
                     HorizontalAlignment="Center"
                     FontSize="28"
-                    Foreground="White"
                     Text="{i18n:Localize AppName}" />
                 <!--  底部小文字  -->
                 <TextBlock
@@ -69,7 +67,6 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     FontSize="15"
-                    Foreground="#CCFFFFFF"
                     Text="2024 © Xioa.Admin By Xioa." />
             </StackPanel>
 
@@ -88,7 +85,6 @@
                 Grid.Row="3"
                 Margin="0,20"
                 HorizontalAlignment="Center"
-                Foreground="LightGray"
                 Text="正在加载系统组件...">
             </TextBlock>
         </Grid>

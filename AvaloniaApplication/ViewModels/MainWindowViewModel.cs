@@ -80,8 +80,9 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         try
         {
             var findLastUseThemeInfo = this._systemThemesInformationRepository.DbSet.FirstOrDefault();
-            if (findLastUseThemeInfo == null) return;
             _themesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
+            if (findLastUseThemeInfo == null) return;
+           
             BackgroundStyle = SukiBackgroundStyleDesc.SukiBackgroundStyleDescs[findLastUseThemeInfo.BackgroundStyleKey];
             AnimationsEnabled = true;
             _themesServices.BackgroundAnimations = true;

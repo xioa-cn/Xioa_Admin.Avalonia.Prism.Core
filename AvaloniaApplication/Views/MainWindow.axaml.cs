@@ -77,7 +77,7 @@ public partial class MainWindow : SukiWindow
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        //mainWindowViewModel.Initialized();
+        _mainWindowViewModel.Initialized();
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)
