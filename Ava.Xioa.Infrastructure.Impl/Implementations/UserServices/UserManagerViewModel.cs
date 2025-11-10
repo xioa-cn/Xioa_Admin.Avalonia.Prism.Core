@@ -53,11 +53,11 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices
 
         UserInformation = new ObservableCollection<UserInformation>();
 
-        DeleteUserInformationCommand = new AsyncRelayCommand<UserInformation>(DeleteUserFunc);
+        DeleteUserInformationCommand = new AsyncDelegateCommand<UserInformation>(DeleteUserFunc);
         UpdateUserInformationCommand = new AsyncDelegateCommand<UserInformation>(UpdateFunc);
-        AddUserInformationCommand = new AsyncRelayCommand(AddUserFunc);
-        SearchUserInformationCommand = new AsyncRelayCommand(SearchFunc);
-        SaveUserInformationCommand = new AsyncRelayCommand(SaveFunc);
+        AddUserInformationCommand = new AsyncDelegateCommand(AddUserFunc);
+        SearchUserInformationCommand = new AsyncDelegateCommand(SearchFunc);
+        SaveUserInformationCommand = new AsyncDelegateCommand(SaveFunc);
     }
 
     #region Command
