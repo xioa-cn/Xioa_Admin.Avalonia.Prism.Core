@@ -12,9 +12,9 @@
     <Grid>
         <ContentControl
             regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Main}" />
-        <!-- 通知容器 -->
-        <suki:SukiToastHost Name="SukiToastHost"/>
         <!-- 对话框容器 -->
         <suki:SukiDialogHost Name="SukiDialogHost"/>
+        <!-- 通知容器 -->
+        <suki:SukiToastHost Name="SukiToastHost"/>
     </Grid>
 </UserControl>

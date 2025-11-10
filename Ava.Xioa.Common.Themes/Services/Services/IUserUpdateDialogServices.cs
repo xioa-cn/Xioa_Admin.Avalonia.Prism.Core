@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Ava.Xioa.Common.Models;
+using Ava.Xioa.Common.Themes.Services.Impl;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation.Mapper;
+using Avalonia.Collections;
+using SukiUI.Controls;
 
 namespace Ava.Xioa.Common.Themes.Services.Services;
 
 public interface IUserUpdateDialogServices : IDialogBaseable, IDialogBtnCommand
 {
-    string Account { get; set; }
-    string Password { get; set; }
-    string UserName { get; set; }
-    UserAuthEnum UserAuth { get; set; }
-
+    ViewUserInformation View { get; set; }
+    IAvaloniaReadOnlyList<CategoryViewModel> Categories { get; }
     UserInformation UserInformation { get; set; }
 
     Func<UserInformation?, Task<bool>>? OkFuncAsync { get; set; }

@@ -7,9 +7,23 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:IUserUpdateDialogServices"
              x:Class="Ava.Xioa.Common.Themes.Dialogs.UserUpdateDialog">
+    
+    <UserControl.Styles>
+       
+
+        <Style Selector="Grid.Row">
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Margin" Value="12,4,4,0" />
+        </Style>
+    </UserControl.Styles>
+
+    
     <suki:GroupBox Header="">
         <StackPanel Classes="HeaderContent">
-          
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Categories}" />
+            </ScrollViewer>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="9">
                 <Button HorizontalContentAlignment="Center"
                         Classes="Rounded"

@@ -14,6 +14,7 @@ using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation.Mapper;
 using Ava.Xioa.Infrastructure.Services.Services.UserServices;
 using Avalonia.Controls.Notifications;
 using Avalonia.Threading;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Dialogs;
 
@@ -69,7 +70,33 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices
 
     private async Task UpdateFunc(UserInformation? arg)
     {
-        dialog ??= _sukiDialogManager.CreateVmDialog(_userUpdateDialogServices);
+        if (arg is null)
+        {
+            ToastsService?.ShowError("修改", "选择得信息为空", 2000);
+            return;
+        }
+        
+        if (dialog is null)
+        {
+            dialog = _sukiDialogManager.CreateVmDialog(_userUpdateDialogServices);
+            _userUpdateDialogServices.OkFuncAsync = async information =>
+            {
+                if (information is null)
+                {
+                    return false;
+                }
+
+                await _userInformationRepository.DbSet.Where(item => item.Id == information.Id)
+                    .ExecuteUpdateAsync(item => item.SetProperty(
+                            x => x.Account, information.Account)
+                        .SetProperty(x => x.Password, information.Password)
+                        .SetProperty(x => x.UserName, information.UserName)
+                        .SetProperty(x => x.UserAuth, information.UserAuth));
+                return true;
+            };
+        }
+
+        _userUpdateDialogServices.SetUserInformation(arg);
         _userUpdateDialog ??= new UserUpdateDialog(_userUpdateDialogServices);
         await dialog.WithTitle("修改用户信息")
             .WithContent(_userUpdateDialog).OfType(NotificationType.Information)
