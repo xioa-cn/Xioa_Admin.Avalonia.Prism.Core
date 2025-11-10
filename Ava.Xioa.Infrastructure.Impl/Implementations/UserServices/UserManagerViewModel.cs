@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Input;
 using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Themes.Dialogs;
 using Ava.Xioa.Common.Themes.Services.Services;
@@ -14,7 +15,6 @@ using Ava.Xioa.Infrastructure.Services.Services.UserServices;
 using Avalonia.Controls.Notifications;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using Prism.Commands;
 using SukiUI.Dialogs;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.UserServices;
@@ -51,11 +51,11 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices
 
         UserInformation = new ObservableCollection<UserInformation>();
 
-        DeleteUserInformationCommand = new AsyncDelegateCommand<UserInformation>(DeleteUserFunc);
-        UpdateUserInformationCommand = new AsyncDelegateCommand<UserInformation>(UpdateFunc);
-        AddUserInformationCommand = new AsyncDelegateCommand(AddUserFunc);
-        SearchUserInformationCommand = new AsyncDelegateCommand(SearchFunc);
-        SaveUserInformationCommand = new AsyncDelegateCommand(SaveFunc);
+        DeleteUserInformationCommand = new AsyncRelayCommand<UserInformation>(DeleteUserFunc);
+        UpdateUserInformationCommand = new AsyncRelayCommand<UserInformation>(UpdateFunc);
+        AddUserInformationCommand = new AsyncRelayCommand(AddUserFunc);
+        SearchUserInformationCommand = new AsyncRelayCommand(SearchFunc);
+        SaveUserInformationCommand = new AsyncRelayCommand(SaveFunc);
     }
 
     #region Command
