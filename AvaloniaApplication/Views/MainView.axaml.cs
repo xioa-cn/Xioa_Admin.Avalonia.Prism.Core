@@ -11,5 +11,8 @@ public partial class MainView : UserControl
     {
         this.DataContext = viewViewModel;
         InitializeComponent();
+        
+        SukiDialogHost.Manager = viewViewModel.DialogManager;
+        SukiToastHost.Manager = viewViewModel.ToastManager;
     }
 }

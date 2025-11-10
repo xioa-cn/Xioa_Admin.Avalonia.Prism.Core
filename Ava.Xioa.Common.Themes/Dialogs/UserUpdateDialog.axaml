@@ -1,0 +1,26 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Ava.Xioa.Common.Themes.Services.Services"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:IUserUpdateDialogServices"
+             x:Class="Ava.Xioa.Common.Themes.Dialogs.UserUpdateDialog">
+    <suki:GroupBox Header="">
+        <StackPanel Classes="HeaderContent">
+          
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="9">
+                <Button HorizontalContentAlignment="Center"
+                        Classes="Rounded"
+                        Command="{Binding CancelCommand}"
+                        Content="取消" />
+
+                <Button HorizontalContentAlignment="Center"
+                        Classes="Rounded Flat"
+                        Command="{Binding OkCommand}"
+                        Content="确认" />
+            </StackPanel>
+        </StackPanel>
+    </suki:GroupBox>
+</UserControl>

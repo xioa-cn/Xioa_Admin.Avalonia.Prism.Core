@@ -11,10 +11,7 @@ public class ToastsService(ISukiToastManager sukiToastManager)
 {
     public void ShowToast(NotificationType toastType, string title, string message, TimeSpan? timeSpan = null)
     {
-        if (timeSpan is null)
-        {
-            timeSpan = TimeSpan.FromSeconds(3);
-        }
+        timeSpan ??= TimeSpan.FromSeconds(3);
 
         sukiToastManager.CreateToast()
             .WithTitle($"{title}!")
@@ -24,5 +21,32 @@ public class ToastsService(ISukiToastManager sukiToastManager)
             .Dismiss().After((TimeSpan)timeSpan)
             .Dismiss().ByClicking()
             .Queue();
+    }
+
+    public void ShowToast(NotificationType toastType, string title, string message, double milliseconds)
+    {
+        TimeSpan? timeSpan = TimeSpan.FromMilliseconds(milliseconds);
+
+        ShowToast(toastType, title, message, timeSpan);
+    }
+
+    public void ShowInformation(string title, string message, double milliseconds = 3000)
+    {
+        ShowToast(NotificationType.Information, title, message, milliseconds);
+    }
+
+    public void ShowSuccess(string title, string message, double milliseconds = 3000)
+    {
+        ShowToast(NotificationType.Success, title, message, milliseconds);
+    }
+
+    public void ShowWarning(string title, string message, double milliseconds = 3000)
+    {
+        ShowToast(NotificationType.Warning, title, message, milliseconds);
+    }
+
+    public void ShowError(string title, string message, double milliseconds = 3000)
+    {
+        ShowToast(NotificationType.Error, title, message, milliseconds);
     }
 }

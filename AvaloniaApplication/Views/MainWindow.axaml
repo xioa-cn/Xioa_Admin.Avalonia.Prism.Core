@@ -78,10 +78,10 @@
         </ContextMenu>
     </suki:SukiWindow.TitleBarContextMenu>
     <suki:SukiWindow.Hosts>
-        <!-- 通知容器 -->
-        <suki:SukiToastHost Manager="{Binding ToastManager}" />
-        <!-- 对话框容器 -->
-        <suki:SukiDialogHost Manager="{Binding DialogManager}" />
+        <!-- ~1~ 通知容器 @1@ -->
+        <!-- <suki:SukiToastHost Manager="{Binding ToastManager}" /> -->
+        <!-- ~1~ 对话框容器 @1@ -->
+        <!-- <suki:SukiDialogHost Manager="{Binding DialogManager}" /> -->
     </suki:SukiWindow.Hosts>
     <suki:SukiWindow.LogoContent>
         <Image Width="20"

@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Events;
@@ -42,6 +44,7 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
     [ObservableBindProperty] private WindowState _WindowState;
     [ObservableBindProperty] private WindowIcon _Icon;
     [ObservableBindProperty] private bool _IsMenuVisible;
+    [ObservableBindProperty] private bool _HomeRegionLoading;
 
     private readonly IEventAggregator _eventAggregator;
 
@@ -148,6 +151,20 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
     }
 
     public ObservableCollection<NavigableBarInfoModel> NavigableBarInfos { get; set; }
+
+    public void HomeRegionLoadingInvoke(Action action)
+    {
+        HomeRegionLoading = true;
+        action.Invoke();
+        HomeRegionLoading = false;
+    }
+
+    public async Task HomeRegionLoadingInvokeAsync(Func<Task> action)
+    {
+        HomeRegionLoading = true;
+        await action.Invoke();
+        HomeRegionLoading = false;
+    }
 
     public string ApplicationInformation =>
         $"{AppAuthor.DllCreateTime:yyyy} © AvaloniaApplication BY {AppAuthor.Author}. {AppAuthor.DllCreateTime.TimeYearMonthDayHourString()}";

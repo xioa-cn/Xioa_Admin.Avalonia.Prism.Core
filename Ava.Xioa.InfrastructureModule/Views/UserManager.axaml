@@ -2,7 +2,97 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.UserServices;assembly=Ava.Xioa.Infrastructure.Services"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:i18N="clr-namespace:Ava.Xioa.Common.Themes.I18n;assembly=Ava.Xioa.Common.Themes"
+             xmlns:mapper="clr-namespace:Ava.Xioa.Entities.SystemDbset.SystemThemesInformation.Mapper;assembly=Ava.Xioa.Entities"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:IUserServices"
              x:Class="Ava.Xioa.InfrastructureModule.Views.UserManager">
-    Welcome to Avalonia!
+    <suki:BusyArea Grid.Row="1" Name="BusySignIn"
+                   BusyText="{i18N:LocalizeExtension Loading}"
+                   IsBusy="{Binding Loading}">
+        <suki:GlassCard Margin="10">
+            <suki:GroupBox Header="用户列表">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                        <TextBox MinWidth="250" Watermark="查询信息" Text="{Binding SearchInformation}">
+                            <TextBox.InnerLeftContent>
+                                <avalonia:MaterialIcon Width="17" Height="17" Margin="5,0" VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource SukiLowText}" Kind="Search" />
+                            </TextBox.InnerLeftContent>
+                            <TextBox.KeyBindings>
+                                <KeyBinding Gesture="Enter" Command="{Binding SearchUserInformationCommand}" />
+                            </TextBox.KeyBindings>
+                        </TextBox>
+                        <Button suki:ButtonExtensions.Icon="{avalonia:MaterialIconExt Kind=Add}" Classes="Success"
+                                Content="添加用户"
+                                Command="{Binding AddUserInformationCommand}" />
+                    </StackPanel>
+                    <Grid Grid.Row="1">
+                        <DataGrid MinWidth="350"
+                                  LoadingRow="DataGridLoading_Row"
+                                  CanUserResizeColumns="{Binding IsDataGridColumnsResizable}"
+                                  ItemsSource="{Binding UserInformation}">
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridRowGroupHeader">
+                                    <Setter Property="IsItemCountVisible" Value="True" />
+                                </Style>
+                            </DataGrid.Styles>
+                            <DataGrid.Columns>
+                                <!-- 优化后的序列号列（无转换器、无遍历） -->
+                                <DataGridTextColumn
+                                    Width="auto"
+                                    Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
+                                    Header="序号" />
+                                <DataGridTextColumn
+                                    Binding="{Binding UserName}"
+                                    Header="用户名" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Account}"
+                                    Header="账户" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Password}"
+                                    Header="密码" />
+                                <DataGridTextColumn
+                                    Binding="{Binding UserAuth}"
+                                    Header="权限" />
+                                <DataGridTemplateColumn Header="操作" SortMemberPath="IntColumn">
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
+                                            <Button Classes="Basic Warning Accent" Margin="0,5"
+                                                    Command="{Binding ((vm:IUserServices)DataContext).UpdateUserInformationCommand, 
+                              RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding DataType=mapper:UserInformation}">
+                                                修改
+                                            </Button>
+                                            <Button Classes="Basic Danger Accent" Margin="0,5"
+                                                    Command="{Binding ((vm:IUserServices)DataContext).DeleteUserInformationCommand, 
+                              RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding DataType=mapper:UserInformation}">
+                                                删除
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+
+                    <DockPanel Grid.Row="2" Margin="20,20,0,0">
+                        <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsDataGridColumnsResizable}" />
+                        <TextBlock Margin="5,0"
+                                   VerticalAlignment="Center"
+                                   Text="重置列大小" />
+                    </DockPanel>
+                </Grid>
+            </suki:GroupBox>
+        </suki:GlassCard>
+    </suki:BusyArea>
 </UserControl>

@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.WindowServices;assembly=Ava.Xioa.Infrastructure.Services"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:models="clr-namespace:Ava.Xioa.Common.Models;assembly=Ava.Xioa.Common"
+             xmlns:i18N="clr-namespace:Ava.Xioa.Common.Themes.I18n;assembly=Ava.Xioa.Common.Themes"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:IMainWindowServices"
              x:Class="Ava.Xioa.InfrastructureModule.Components.NavigableMenuContent">
@@ -67,7 +68,7 @@
                         </Setter>
                     </Style>
                 </WrapPanel.Styles>
-                <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
+                <ScrollViewer IsVisible="{Binding IsMenuVisible}" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding NavigableBarInfos}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -100,8 +101,12 @@
                     </ItemsControl>
                 </ScrollViewer>
             </WrapPanel>
-            <ContentControl Grid.Row="1"
-                            regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
+            <suki:BusyArea Grid.Row="1" Name="BusySignIn"
+                           BusyText="{i18N:LocalizeExtension Loading}"
+                           IsBusy="{Binding HomeRegionLoading}">
+                <ContentControl 
+                                regions:RegionManager.RegionName="{Binding Source={x:Static const:AppRegions.Instance},Path=Home}" />
+            </suki:BusyArea>
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <TextBlock Margin="2" Text="{Binding ApplicationInformation}"></TextBlock>

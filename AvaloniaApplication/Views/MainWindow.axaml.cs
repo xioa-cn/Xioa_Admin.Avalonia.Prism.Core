@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Const;
 using Ava.Xioa.Common.Events;
@@ -6,9 +9,11 @@ using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Themes.Dialogs;
 using Ava.Xioa.Common.Themes.I18n;
 using Ava.Xioa.Common.Themes.Services.Services;
+using Ava.Xioa.Common.Themes.Utils;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using AvaloniaApplication.Utils;
 using AvaloniaApplication.ViewModels;
 using Material.Icons;
@@ -60,7 +65,7 @@ public partial class MainWindow : SukiWindow
         this.Width = 444;
         this.Height = 550;
         this.Loaded += OnLoaded;
-        InitializeComponent();
+        InitializeComponent(attachDevTools: false);
         this.WindowContentControl.Content = userControl;
 
         this.OnceExecutedLoaded(() =>
@@ -90,17 +95,26 @@ public partial class MainWindow : SukiWindow
     }
 
     private CloseDialog? _view;
+    private SukiDialogBuilder? dialog;
+
+    private object obj = new object();
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         if (GlobalUserInformation.Instance.IsLogin)
         {
-            var dialog = _mainWindowViewModel.DialogManager.CreateDialog();
-            _closeDialogService.SetDialog(dialog.Dialog);
-            _view ??= new CloseDialog(_closeDialogService);
-            dialog.WithTitle("关闭面板")
-                .WithContent(_view).OfType(NotificationType.Warning)
-                .TryShow();
+            Task.Run(async () =>
+            {
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    dialog ??= _mainWindowViewModel.DialogManager.CreateVmDialog(_closeDialogService);
+                    _view ??= new CloseDialog(_closeDialogService);
+                    await dialog.WithTitle("关闭面板")
+                        .WithContent(_view).OfType(NotificationType.Warning)
+                        .Dismiss().ByClickingBackground().WithAsync().TryShowAsync();
+                    await Task.Delay(1000);
+                });
+            });
         }
         else
         {

@@ -42,8 +42,6 @@ public partial class CloseDialogImpl : ReactiveObject, ICloseDialogService
     public ICommand CancelCommand { get; }
     public ICommand OkCommand { get; }
 
-    private ISukiDialog? _sukiDialog;
-
     public CloseDialogImpl()
     {
         CancelCommand = new RelayCommand(Cancel);
@@ -67,22 +65,19 @@ public partial class CloseDialogImpl : ReactiveObject, ICloseDialogService
             LogoutAction?.Invoke();
         }
 
-        CloseDialog();
+        this.CloseDialog();
     }
 
-    public void SetDialog(ISukiDialog sukiDialog)
-    {
-        _sukiDialog = sukiDialog;
-    }
+    public ISukiDialog? SukiDialog { get; set; }
 
     private void Cancel()
     {
         CloseDialog();
     }
 
-    private void CloseDialog()
+    public void CloseDialog()
     {
-        _sukiDialog?.Dismiss();
-        _sukiDialog?.ResetToDefault();
+        SukiDialog?.Dismiss();
+        SukiDialog?.ResetToDefault();
     }
 }

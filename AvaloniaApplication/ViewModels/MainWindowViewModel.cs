@@ -11,14 +11,12 @@ using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Prism.Events;
 using Prism.Navigation.Regions;
 using SukiUI.Dialogs;
-using SukiUI.Toasts;
 
 namespace AvaloniaApplication.ViewModels;
 
 [PrismViewModel(typeof(MainWindowViewModel))]
 public partial class MainWindowViewModel : ReactiveObject, IInitializedable
 {
-    public ISukiToastManager ToastManager { get; }
     public ISukiDialogManager DialogManager { get; }
 
     [ObservableBindProperty] private SukiBackgroundStyleDesc _backgroundStyle;
@@ -39,17 +37,16 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
     
     public IEventAggregator? EventAggregator { get; set; }
     
-    public MainWindowViewModel(ISukiToastManager toastManager, ISukiDialogManager dialogManager,
+    public MainWindowViewModel(
         IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository,
-        IMainWindowServices mainWindowServices, IRegionManager regionManager, IEventAggregator eventAggregator)
+        IMainWindowServices mainWindowServices, IRegionManager regionManager, IEventAggregator eventAggregator, ISukiDialogManager dialogManager)
     {
-        ToastManager = toastManager;
-        DialogManager = dialogManager;
         _themesServices = themesServices;
         _systemThemesInformationRepository = systemThemesInformationRepository;
         MainWindowServices = mainWindowServices;
         RegionManager = regionManager;
         EventAggregator = eventAggregator;
+        DialogManager = dialogManager;
         _themesServices.CustomBackgroundStyleChanged += value => CustomShaderFile = value;
         _themesServices.AnimationsEnabledChanged += value => AnimationsEnabled = (bool)value!;
         _themesServices.BackgroundTransitionsChanged += value => TransitionsEnabled = (bool)value!;

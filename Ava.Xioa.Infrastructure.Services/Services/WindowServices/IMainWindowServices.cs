@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using Ava.Xioa.Common.Models;
-using Ava.Xioa.Common.Services;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using SukiUI.Controls;
@@ -42,4 +42,10 @@ public interface IMainWindowServices
     bool ChangeAppFontFamily(string fontFamily);
 
     ObservableCollection<NavigableBarInfoModel> NavigableBarInfos { get; set; }
+
+    bool HomeRegionLoading { get; set; }
+
+    void HomeRegionLoadingInvoke(Action action);
+
+    Task HomeRegionLoadingInvokeAsync(Func<Task> action);
 }

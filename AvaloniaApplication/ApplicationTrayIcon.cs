@@ -123,6 +123,13 @@ public partial class App
     private void OpenMainWindow()
     {
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+
+        if (desktop.MainWindow is not null && desktop.MainWindow.IsVisible)
+        {
+             desktop.MainWindow.Hide();
+             return;
+        }
+
         desktop.MainWindow?.Show();
         desktop.MainWindow?.Activate();
 

@@ -8,5 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Ava.Xioa.Common\Ava.Xioa.Common.csproj" />
+      <ProjectReference Include="..\Ava.Xioa.Entities\Ava.Xioa.Entities.csproj" />
     </ItemGroup>
 </Project>
