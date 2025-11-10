@@ -1,5 +1,6 @@
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Const;
+using Ava.Xioa.Common.Events;
 using Ava.Xioa.Common.Extensions;
 using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Themes.Dialogs;
@@ -29,21 +30,29 @@ public partial class MainWindow : SukiWindow
 
     void NavigationCompleted(NavigationResult result)
     {
-        
     }
+
     public MainWindow(UserControl userControl, MainWindowViewModel mainWindowViewModel,
         ICloseDialogService closeDialogService)
     {
         this._mainWindowViewModel = mainWindowViewModel;
         _closeDialogService = closeDialogService;
 
-        _closeDialogService.CloseAction += () => { };
+        _closeDialogService.CloseAction += () =>
+        {
+            mainWindowViewModel.EventAggregator?.GetEvent<ExitApplicationEvent>().Publish(new TokenKeyPubSubEvent<Exit>(
+                "ExitApplication",
+                new Exit()
+                {
+                    ExitCode = 0
+                }));
+        };
         _closeDialogService.LogoutAction += () =>
         {
             GlobalUserInformation.Instance.UserAuthEnum = UserAuthEnum.None;
             mainWindowViewModel.RegionManager.RequestNavigate(AppRegions.MainRegion, "LoginView", NavigationCompleted);
         };
-        _closeDialogService.MiniSizeAction += this.Hide;
+        _closeDialogService.MiniSizeAction += () => { this.Hide(); };
 
         this.DataContext = mainWindowViewModel;
         this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -80,18 +89,17 @@ public partial class MainWindow : SukiWindow
         _mainWindowViewModel.Initialized();
     }
 
+    private CloseDialog? _view;
+
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         if (GlobalUserInformation.Instance.IsLogin)
         {
             var dialog = _mainWindowViewModel.DialogManager.CreateDialog();
             _closeDialogService.SetDialog(dialog.Dialog);
-            var view = new CloseDialog()
-            {
-                DataContext = _closeDialogService,
-            };
+            _view ??= new CloseDialog(_closeDialogService);
             dialog.WithTitle("关闭面板")
-                .WithContent(view).OfType(NotificationType.Warning)
+                .WithContent(_view).OfType(NotificationType.Warning)
                 .TryShow();
         }
         else

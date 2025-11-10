@@ -8,6 +8,7 @@ using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
+using Prism.Events;
 using Prism.Navigation.Regions;
 using SukiUI.Dialogs;
 using SukiUI.Toasts;
@@ -36,9 +37,11 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
 
     public IRegionManager RegionManager { get; set; }
     
+    public IEventAggregator? EventAggregator { get; set; }
+    
     public MainWindowViewModel(ISukiToastManager toastManager, ISukiDialogManager dialogManager,
         IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository,
-        IMainWindowServices mainWindowServices, IRegionManager regionManager)
+        IMainWindowServices mainWindowServices, IRegionManager regionManager, IEventAggregator eventAggregator)
     {
         ToastManager = toastManager;
         DialogManager = dialogManager;
@@ -46,6 +49,7 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         _systemThemesInformationRepository = systemThemesInformationRepository;
         MainWindowServices = mainWindowServices;
         RegionManager = regionManager;
+        EventAggregator = eventAggregator;
         _themesServices.CustomBackgroundStyleChanged += value => CustomShaderFile = value;
         _themesServices.AnimationsEnabledChanged += value => AnimationsEnabled = (bool)value!;
         _themesServices.BackgroundTransitionsChanged += value => TransitionsEnabled = (bool)value!;

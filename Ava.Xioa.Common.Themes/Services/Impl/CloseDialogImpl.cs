@@ -3,11 +3,12 @@ using System.Windows.Input;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Input;
 using Ava.Xioa.Common.Themes.Services.Services;
+using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Dialogs;
 
 namespace Ava.Xioa.Common.Themes.Services.Impl;
 
-[PrismService(typeof(ICloseDialogService))]
+[PrismService(typeof(ICloseDialogService), ServiceLifetime.Singleton)]
 public partial class CloseDialogImpl : ReactiveObject, ICloseDialogService
 {
     private bool _close;
@@ -51,25 +52,22 @@ public partial class CloseDialogImpl : ReactiveObject, ICloseDialogService
 
     private void Ok()
     {
-        _sukiDialog?.Dismiss();
-
         if (this._close)
         {
             CloseAction?.Invoke();
-            return;
         }
 
         if (this._miniSize)
         {
             MiniSizeAction?.Invoke();
-            return;
         }
 
         if (this._logout)
         {
             LogoutAction?.Invoke();
-            return;
         }
+
+        CloseDialog();
     }
 
     public void SetDialog(ISukiDialog sukiDialog)
@@ -79,6 +77,12 @@ public partial class CloseDialogImpl : ReactiveObject, ICloseDialogService
 
     private void Cancel()
     {
+        CloseDialog();
+    }
+
+    private void CloseDialog()
+    {
         _sukiDialog?.Dismiss();
+        _sukiDialog?.ResetToDefault();
     }
 }
