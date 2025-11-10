@@ -179,9 +179,11 @@ public sealed partial class AsyncRelayCommand<T> : IAsyncRelayCommand<T>, ICance
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool CanExecute(T? parameter)
     {
-        return this.canExecute?.Invoke(parameter) != false && (this.IsCancellationSupported ||
-                                                               this.ExecutionTask is null ||
-                                                               this.ExecutionTask.IsCompleted);
+        var res = this.canExecute?.Invoke(parameter) != false && (this.IsCancellationSupported ||
+                                                                  this.ExecutionTask is null ||
+                                                                  this.ExecutionTask.IsCompleted);
+
+        return res;
     }
 
     /// <summary>

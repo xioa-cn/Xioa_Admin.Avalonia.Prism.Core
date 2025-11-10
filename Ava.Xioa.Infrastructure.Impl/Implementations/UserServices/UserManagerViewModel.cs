@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Ava.Xioa.Common;
@@ -15,6 +16,7 @@ using Ava.Xioa.Infrastructure.Services.Services.UserServices;
 using Avalonia.Controls.Notifications;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Commands;
 using SukiUI.Dialogs;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.UserServices;
@@ -52,7 +54,7 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices
         UserInformation = new ObservableCollection<UserInformation>();
 
         DeleteUserInformationCommand = new AsyncRelayCommand<UserInformation>(DeleteUserFunc);
-        UpdateUserInformationCommand = new AsyncRelayCommand<UserInformation>(UpdateFunc);
+        UpdateUserInformationCommand = new AsyncDelegateCommand<UserInformation>(UpdateFunc);
         AddUserInformationCommand = new AsyncRelayCommand(AddUserFunc);
         SearchUserInformationCommand = new AsyncRelayCommand(SearchFunc);
         SaveUserInformationCommand = new AsyncRelayCommand(SaveFunc);
@@ -71,12 +73,10 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices
     {
         dialog ??= _sukiDialogManager.CreateVmDialog(_userUpdateDialogServices);
         _userUpdateDialog ??= new UserUpdateDialog(_userUpdateDialogServices);
-
         await dialog.WithTitle("修改用户信息")
             .WithContent(_userUpdateDialog).OfType(NotificationType.Information)
-            .WithAsync().TryShowAsync();
-        dialog.Dialog.Dismiss();
-        _sukiDialogManager.TryDismissDialog(dialog.Dialog);
+            .Dismiss().ByClickingBackground().WithAsync().TryShowAsync();
+        await Task.Delay(500);
     }
 
     private async Task AddUserFunc()

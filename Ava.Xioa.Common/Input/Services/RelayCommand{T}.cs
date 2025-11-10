@@ -8,7 +8,9 @@ public sealed partial class RelayCommand<T> : IRelayCommand<T>
     private readonly Action<T?> execute;
 
     private readonly Predicate<T?>? canExecute;
+    private bool isRunning;
 
+    public bool IsRunning => isRunning;
     public event EventHandler? CanExecuteChanged;
 
     public RelayCommand(Action<T?> execute)
@@ -40,7 +42,9 @@ public sealed partial class RelayCommand<T> : IRelayCommand<T>
 
     public void Execute(T? parameter)
     {
+        isRunning = true;
         this.execute(parameter);
+        isRunning = false;
     }
 
     public bool CanExecute(object? parameter)
@@ -49,12 +53,12 @@ public sealed partial class RelayCommand<T> : IRelayCommand<T>
         {
             return CanExecute(default);
         }
-        
+
         if (parameter is T typedParameter)
         {
             return CanExecute(typedParameter);
         }
-        
+
         return false;
     }
 
@@ -65,13 +69,13 @@ public sealed partial class RelayCommand<T> : IRelayCommand<T>
             Execute(default);
             return;
         }
-        
+
         if (parameter is T typedParameter)
         {
             Execute(typedParameter);
             return;
         }
-        
+
         throw new InvalidOperationException($"Parameter {parameter} cannot be converted to type {typeof(T)}");
     }
 }

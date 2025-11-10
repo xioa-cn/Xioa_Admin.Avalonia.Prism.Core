@@ -95,24 +95,30 @@ public partial class MainWindow : SukiWindow
     }
 
     private CloseDialog? _view;
-    private SukiDialogBuilder? dialog;
+    private SukiDialogBuilder? _dialog;
 
-    private object obj = new object();
-
-    protected override void OnClosing(WindowClosingEventArgs e)
+    protected override async void OnClosing(WindowClosingEventArgs e)
     {
+        e.Cancel = true;
         if (GlobalUserInformation.Instance.IsLogin)
         {
-            Task.Run(async () =>
+            if (_dialog is not null && _dialog.Dialog.CanDismissWithBackgroundClick)
+            {
+                return;
+            }
+
+            await Task.Run(async () =>
             {
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    dialog ??= _mainWindowViewModel.DialogManager.CreateVmDialog(_closeDialogService);
+                    _mainWindowViewModel.DialogManager.DismissDialog();
+                    _dialog = _mainWindowViewModel.DialogManager.CreateVmDialog(_closeDialogService);
                     _view ??= new CloseDialog(_closeDialogService);
-                    await dialog.WithTitle("关闭面板")
+                    await _dialog.WithTitle("关闭面板")
                         .WithContent(_view).OfType(NotificationType.Warning)
                         .Dismiss().ByClickingBackground().WithAsync().TryShowAsync();
-                    await Task.Delay(1000);
+                    await Task.Delay(500);
+                    _dialog = null;
                 });
             });
         }
@@ -120,7 +126,5 @@ public partial class MainWindow : SukiWindow
         {
             this.Hide();
         }
-
-        e.Cancel = true;
     }
 }

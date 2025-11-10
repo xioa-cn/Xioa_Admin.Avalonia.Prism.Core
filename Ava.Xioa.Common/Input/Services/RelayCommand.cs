@@ -9,6 +9,9 @@ public sealed partial class RelayCommand : IRelayCommand
     
     private readonly Func<bool>? canExecute;
 
+    private bool isRunning;
+    
+    public bool IsRunning => isRunning;
     public event EventHandler? CanExecuteChanged;
 
     public RelayCommand(Action execute)
@@ -29,7 +32,9 @@ public sealed partial class RelayCommand : IRelayCommand
 
     public void NotifyCanExecuteChanged()
     {
+        isRunning = true;
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        isRunning = false;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

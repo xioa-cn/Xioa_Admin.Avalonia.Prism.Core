@@ -10,7 +10,7 @@ namespace Ava.Xioa.Common.Input;
 /// 将异步方法中继到其调用者。
 /// </summary>
 public sealed partial class AsyncRelayCommand : IAsyncRelayCommand, ICancellationAwareCommand
-{
+{ 
     /// <summary>
     /// 要执行的异步委托。
     /// </summary>
