@@ -14,6 +14,7 @@ using Ava.Xioa.InfrastructureModule;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using AvaloniaApplication.ViewModels;
+using FlowModules;
 using Microsoft.Extensions.Configuration;
 using Prism.Container.DryIoc;
 using Prism.Events;
@@ -41,7 +42,8 @@ public partial class App : PrismApplicationBase
 
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
     {
-        moduleCatalog.AddModule(typeof(InfrastructureModule));
+        moduleCatalog.AddModule(typeof(InfrastructureModule))
+            .AddAutoModule();
     }
 
     protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)

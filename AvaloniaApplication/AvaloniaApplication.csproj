@@ -19,7 +19,7 @@
 		<EmbeddedResource Include="Assets\space.sksl" />
 		<None Remove="router.json" />
 		<AvaloniaResource Include="router.json">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</AvaloniaResource>
 	</ItemGroup>
 	
@@ -32,6 +32,7 @@
 	  <ProjectReference Include="..\Ava.Xioa.Connectlayer\Ava.Xioa.Connectlayer.csproj" />
 	  <ProjectReference Include="..\Ava.Xioa.Infrastructure.Services\Ava.Xioa.Infrastructure.Services.csproj" />
 	  <ProjectReference Include="..\Ava.Xioa.InfrastructureModule\Ava.Xioa.InfrastructureModule.csproj" />
+	  <ProjectReference Include="..\FlowModules\FlowModules.csproj" />
 	  <ProjectReference Include="..\ObservableBind.Generator\ObservableBind.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 

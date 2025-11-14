@@ -20,6 +20,13 @@
           "Region": "HomeRegion"
         }
       ]
+    },
+    {
+      "Key" : "流程图例",
+      "Header": "流程图例",
+      "IconKind": 6885,
+      "NavigationName": "FlowView",
+      "Region": "HomeRegion"
     }
   ]
 }

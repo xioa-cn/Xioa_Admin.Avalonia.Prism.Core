@@ -25,9 +25,11 @@ public partial class Program
         string moduleFilePath = Path.Combine(projectPath, $"{moduleFileName}.cs");
         string namespaceName = projectName; // 使用项目名作为命名空间
         string classContent = $@"using Ava.Xioa.Common.Modularity;
+using Ava.Xioa.Common.Attributes;
 
 namespace {namespaceName};
 
+[AutoModule(nameof({moduleFileName}))]
 public class {moduleFileName}: PrismAutoModule<{moduleFileName}>
 {{
     // 模块核心功能实现

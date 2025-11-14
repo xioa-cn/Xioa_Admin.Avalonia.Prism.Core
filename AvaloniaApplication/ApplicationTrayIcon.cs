@@ -56,7 +56,7 @@ public partial class App
         using var memStream = new MemoryStream(Encoding.UTF8.GetBytes(svgContent));
 
         // 加载修改后的SVG
-        var svg = new SKSvg();
+        var svg = new Svg.Skia.SKSvg();
         svg.Load(memStream);
 
         // 创建一个适当大小的位图
