@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 
 namespace Ava.Xioa.Common.Extensions;
 
@@ -15,5 +16,10 @@ public static class ControlExtensions
             control.Loaded -= loadedHandler;
         };
         control.Loaded += loadedHandler;
+    }
+
+    public static void AfterLoad(this Control control, Action loadFunc)
+    {
+        Dispatcher.UIThread.Post(loadFunc, DispatcherPriority.Input);
     }
 }

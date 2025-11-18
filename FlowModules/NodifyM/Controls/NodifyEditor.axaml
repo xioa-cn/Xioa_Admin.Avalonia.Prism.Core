@@ -1,0 +1,102 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:NodifyM.Avalonia.Controls">
+    <Design.PreviewWith>
+        <controls:NodifyEditor>
+
+
+        </controls:NodifyEditor>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|NodifyEditor">
+
+        <!-- Set Defaults -->
+        <Setter Property="ConnectionTemplate"
+                Value="{StaticResource ConnectionTemplate}" />
+        <Setter Property="PendingConnectionTemplate"
+                Value="{StaticResource PendingConnectionTemplate}" />
+        <Setter Property="GridLineTemplate"
+                Value="{StaticResource GridLineTemplate}">
+        </Setter>
+        <Setter Property="AlignmentLineTemplate"
+                Value="{StaticResource AlignmentLineTemplate}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+
+                <Border
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                    <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}">
+                        <Rectangle x:Name="SelectionRent" IsVisible="False"
+                                   Stroke="{StaticResource GroupingNode.BackgroundBrush}">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{DynamicResource GroupingNode.BackgroundColor}" Opacity="0.3" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <ItemsPresenter RenderTransform="{TemplateBinding ViewTranslateTransform}"
+                                        ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        <ContentPresenter ZIndex="-2" ContentTemplate="{TemplateBinding GridLineTemplate}" />
+                        <ContentPresenter Name="PendingConnection" Content="{TemplateBinding PendingConnection}"
+                                          ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
+                        <ItemsControl
+                            ItemsSource="{TemplateBinding Connections}"
+                            ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                            IsTabStop="False">
+                            <ItemsControl.Styles>
+                                <Style Selector="ItemsControl">
+                                    <Setter Property="ZIndex"
+                                            Value="-1" />
+                                </Style>
+                            </ItemsControl.Styles>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas
+                                        Width="{Binding $parent[Canvas].Bounds.Width}"
+                                        Height="{Binding $parent[Canvas].Bounds.Height}"
+                                        RenderTransform="{Binding $parent[controls:NodifyEditor].ViewTranslateTransform}" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <ItemsControl
+                            ItemsSource="{TemplateBinding AlignmentLine}"
+                            ItemTemplate="{TemplateBinding AlignmentLineTemplate}"
+                            IsTabStop="False">
+                            <ItemsControl.Styles>
+                                <Style Selector="ItemsControl">
+                                    <Setter Property="ZIndex"
+                                            Value="2" />
+                                </Style>
+                            </ItemsControl.Styles>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas
+                                        Width="{Binding $parent[Canvas].Bounds.Width}"
+                                        Height="{Binding $parent[Canvas].Bounds.Height}"
+                                        RenderTransform="{Binding $parent[controls:NodifyEditor].ViewTranslateTransform}" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Canvas>
+
+
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <Canvas x:Name="PART_ItemsHost" Background="{TemplateBinding Background}" Name="NodeItemsPresenter">
+
+                </Canvas>
+            </ItemsPanelTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Azure"></Setter>
+    </Style>
+    <Style Selector="controls|NodifyEditor > ContentPresenter">
+
+        <Setter Property="Canvas.Left" Value="{ReflectionBinding Location.X }" />
+        <Setter Property="Canvas.Top" Value="{ReflectionBinding Location.Y }" />
+
+    </Style>
+
+</Styles>

@@ -14,10 +14,16 @@
     </ItemGroup>
 
    <ItemGroup>
-     <PackageReference Include="Northwoods.GoDiagram.Avalonia" Version="10.1.0" />
+     <Folder Include="Converters\" />
+     <Folder Include="NodifyM\" />
    </ItemGroup>
 
    <ItemGroup>
-     <Folder Include="Models\" />
+     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+     <PackageReference Include="System.Reactive" Version="6.0.1" />
+   </ItemGroup>
+
+   <ItemGroup>
+     <AdditionalFiles Include="Styles\ControlStyles.axaml" />
    </ItemGroup>
 </Project>

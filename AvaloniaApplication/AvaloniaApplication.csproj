@@ -22,10 +22,6 @@
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</AvaloniaResource>
 	</ItemGroup>
-	
-	<ItemGroup>
-	  <PackageReference Include="Svg.Skia" Version="3.2.1" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Ava.Xioa.Common.Themes\Ava.Xioa.Common.Themes.csproj" />

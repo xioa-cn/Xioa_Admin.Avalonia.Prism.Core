@@ -38,7 +38,7 @@
         <StyleInclude Source="avares://Ava.Xioa.Common.Themes/Styles/TextStyles.axaml" />
         <StyleInclude Source="avares://Ava.Xioa.Common.Themes/Styles/GlassCardStyles.axaml" />
         <StyleInclude Source="avares://Ava.Xioa.Common.Themes/Styles/MaterialIconStyles.axaml" />
-
         <avalonia:MaterialIconStyles />
+        <StyleInclude Source="avares://FlowModules/Styles/ControlStyles.axaml"></StyleInclude>
     </Application.Styles>
 </prism:PrismApplicationBase>
