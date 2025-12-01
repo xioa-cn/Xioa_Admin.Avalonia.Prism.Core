@@ -1,4 +1,5 @@
-﻿using Ava.Xioa.Common;
+﻿using System;
+using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Models;
 using Ava.Xioa.Entities.Models;
@@ -6,6 +7,7 @@ using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation.Mapper;
 
 namespace Ava.Xioa.Connectlayer.Global;
 
+[Obsolete]
 public partial class GlobalLoginInformation : ReactiveObject
 {
     private static GlobalLoginInformation? _globalLoginInformation;

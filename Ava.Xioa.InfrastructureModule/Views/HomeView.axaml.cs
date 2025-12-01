@@ -22,7 +22,7 @@ public partial class HomeView : UserControl
             toastsService.ShowToast(
                 NotificationType.Success, 
                 "Hello",
-                GetDayText.ApplicationSayHello(GlobalLoginInformation.Instance.UserName)
+                GetDayText.ApplicationSayHello(GlobalUserInformation.Instance.UserName!)
             );
         });
     }
