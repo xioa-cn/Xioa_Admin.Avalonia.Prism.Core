@@ -176,6 +176,22 @@ public partial class FlowViewModel : NodifyEditorViewModelBase
     }
     
     [ObservableProperty] private double _zoom = 1;
+    [ObservableProperty] private double _offsetX;
+    [ObservableProperty] private double _offsetY;
+    
+    [RelayCommand]
+    private void ZoomToFitAll()
+    {
+        // 获取NodifyEditor实例并调用ZoomToFitAll
+        // 这里需要从View获取Editor实例，暂时留空
+        // 可以在XAML中直接绑定到Editor.ZoomToFitAll()
+    }
+    
+    [RelayCommand]
+    private void ResetView()
+    {
+        Zoom = 1;
+    }
     
     // [RelayCommand]
     // private void ResetView()

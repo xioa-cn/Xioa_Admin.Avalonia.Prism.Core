@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
@@ -31,8 +32,9 @@ public class NodifyEditor : SelectingItemsControl
     public static readonly AvaloniaProperty<double> ZoomProperty =
         AvaloniaProperty.Register<NodifyEditor, double>(nameof(Zoom), 1d);
 
-    public static readonly StyledProperty<RelativePoint> ZoomCenterProperty = AvaloniaProperty.Register<NodifyEditor, RelativePoint>(
-        nameof(ZoomCenter),new RelativePoint(0.5, 0.5, RelativeUnit.Relative));
+    public static readonly StyledProperty<RelativePoint> ZoomCenterProperty =
+        AvaloniaProperty.Register<NodifyEditor, RelativePoint>(
+            nameof(ZoomCenter), new RelativePoint(0.5, 0.5, RelativeUnit.Relative));
 
     public RelativePoint ZoomCenter
     {
@@ -47,7 +49,8 @@ public class NodifyEditor : SelectingItemsControl
         AvaloniaProperty.Register<NodifyEditor, double>(nameof(OffsetY), 1d);
 
     public static readonly StyledProperty<TranslateTransform> ViewTranslateTransformProperty =
-        AvaloniaProperty.Register<NodifyEditor, TranslateTransform>(nameof(ViewTranslateTransform),defaultValue: new TranslateTransform(0, 0));
+        AvaloniaProperty.Register<NodifyEditor, TranslateTransform>(nameof(ViewTranslateTransform),
+            defaultValue: new TranslateTransform(0, 0));
 
     public static readonly AvaloniaProperty<IEnumerable> ConnectionsProperty =
         AvaloniaProperty.Register<NodifyEditor, IEnumerable>(nameof(Connections));
@@ -95,7 +98,6 @@ public class NodifyEditor : SelectingItemsControl
         AddHandler(Connector.PendingConnectionCompletedEvent, OnConnectionCompleted);
         AddHandler(BaseNode.LocationChangedEvent, OnNodeLocationChanged);
         AddHandler(BaseConnection.DisconnectEvent, OnRemoveConnection);
-        
     }
 
     static NodifyEditor()
@@ -138,6 +140,30 @@ public class NodifyEditor : SelectingItemsControl
                 ZoomChanged?.Invoke(nodifyEditor,
                     new ZoomChangedEventArgs(newZoom, newZoom,
                         nodifyEditor.OffsetX, nodifyEditor.OffsetY));
+            }
+        });
+
+        // OffsetX 属性变化时更新变换
+        OffsetXProperty.Changed.Subscribe(args =>
+        {
+            if (args.Sender is NodifyEditor nodifyEditor)
+            {
+                if (nodifyEditor.ViewTranslateTransform != null)
+                {
+                    nodifyEditor.ViewTranslateTransform.X = args.NewValue.Value;
+                }
+            }
+        });
+
+        // OffsetY 属性变化时更新变换
+        OffsetYProperty.Changed.Subscribe(args =>
+        {
+            if (args.Sender is NodifyEditor nodifyEditor)
+            {
+                if (nodifyEditor.ViewTranslateTransform != null)
+                {
+                    nodifyEditor.ViewTranslateTransform.Y = args.NewValue.Value;
+                }
             }
         });
     }
@@ -539,7 +565,7 @@ public class NodifyEditor : SelectingItemsControl
             _nowScale *= 1.1d;
             _nowScale = Math.Min(10d, _nowScale);
         }
-        
+
         OffsetX += (Zoom - _nowScale) * position.X / _nowScale;
         ViewTranslateTransform.X = OffsetX;
         OffsetY += (Zoom - _nowScale) * position.Y / _nowScale;
@@ -1078,6 +1104,152 @@ public class NodifyEditor : SelectingItemsControl
         {
             AutoPanningTimer.Stop();
         }
+    }
+
+    /// <summary>
+    /// 公共方法：重置视图到初始状态
+    /// </summary>
+    public void ResetViewToDefault()
+    {
+        ResetView();
+    }
+    
+    private void ResetView(double zoom = 1, double offsetX = 0, double offsetY = 0)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            // 直接设置Zoom，但不让ZoomChanged事件修改Offset
+            // 先保存当前的nowScale，避免触发ZoomProperty.Changed事件
+            var oldNowScale = _nowScale;
+            _nowScale = zoom; // 提前设置，防止触发Zoom事件
+
+            Zoom = zoom;
+
+            // 设置Offset并更新Transform
+            OffsetX = offsetX;
+            OffsetY = offsetY;
+
+            if (ViewTranslateTransform != null)
+            {
+                ViewTranslateTransform.X = offsetX;
+                ViewTranslateTransform.Y = offsetY;
+            }
+
+            if (ScaleTransform != null)
+            {
+                ScaleTransform.ScaleX = zoom;
+                ScaleTransform.ScaleY = zoom;
+            }
+        }, DispatcherPriority.Render);
+    }
+
+  
+    /// <summary>
+    /// 缩放以适应所有节点
+    /// </summary>
+    public void ZoomToFitAll()
+    {
+        // 检查基本条件
+        if (Items == null || Items.Count == 0 || Width <= 0 || Height <= 0)
+            return;
+
+        // 获取节点容器
+        var nodeContainer = this.GetChildOfType<Canvas>("NodeItemsPresenter");
+        if (nodeContainer == null || nodeContainer.Children.Count == 0)
+            return;
+
+        // 初始化边界值
+        double minX = double.MaxValue, minY = double.MaxValue;
+        double maxX = double.MinValue, maxY = double.MinValue;
+        bool hasValidNodes = false;
+
+        // 遍历所有节点控件，计算边界
+        foreach (var container in nodeContainer.Children)
+        {
+            // 获取节点控件
+            var nodeControl = container.GetVisualChildren().FirstOrDefault() as BaseNode;
+            if (nodeControl != null)
+            {
+                // 获取节点位置和尺寸
+                var location = nodeControl.Location;
+                var width = nodeControl.Bounds.Width;
+                var height = nodeControl.Bounds.Height;
+
+                // 检查节点尺寸是否有效
+                if (width > 0 && height > 0)
+                {
+                    // 更新边界值
+                    minX = Math.Min(minX, location.X);
+                    minY = Math.Min(minY, location.Y);
+                    maxX = Math.Max(maxX, location.X + width);
+                    maxY = Math.Max(maxY, location.Y + height);
+                    hasValidNodes = true;
+                }
+            }
+        }
+
+        // 确保有有效节点
+        if (!hasValidNodes || minX == double.MaxValue || minY == double.MaxValue || 
+            maxX == double.MinValue || maxY == double.MinValue)
+            return;
+
+        // 计算内容区域大小
+        double contentWidth = maxX - minX;
+        double contentHeight = maxY - minY;
+
+        // 确保内容区域不为零
+        if (contentWidth <= 0 || contentHeight <= 0)
+            return;
+
+        // 计算视口区域（减去边距）
+        double margin = Math.Min(Width, Height) * 0.05; // 使用较小的边距
+        double viewWidth = Width - margin * 2;
+        double viewHeight = Height - margin * 2;
+
+        // 确保视口区域有效
+        if (viewWidth <= 0 || viewHeight <= 0)
+            return;
+
+        // 计算缩放比例
+        double scaleX = viewWidth / contentWidth;
+        double scaleY = viewHeight / contentHeight;
+        double newZoom = Math.Min(scaleX, scaleY);
+
+        // 限制缩放范围，避免过小或过大
+        newZoom = Math.Max(0.3, Math.Min(newZoom, 1.5)); // 调整缩放范围
+
+        // 计算内容中心点
+        double contentCenterX = (minX + maxX) / 2;
+        double contentCenterY = (minY + maxY) / 2;
+
+        // 计算新的偏移量使内容居中
+        // 参考 OnLoaded 方法中的计算方式
+        double newOffsetX = -minX + (Width - contentWidth * newZoom) / 2;
+        double newOffsetY = -minY + (Height - contentHeight * newZoom) / 2;
+
+        // 应用新的视图参数
+        // 使用 _nowScale 来避免触发 ZoomProperty.Changed 事件中的 Width/Height 调整
+        _nowScale = newZoom;
+        Zoom = newZoom;
+        OffsetX = newOffsetX;
+        OffsetY = newOffsetY;
+        
+        // 更新变换
+        if (ViewTranslateTransform != null)
+        {
+            ViewTranslateTransform.X = OffsetX;
+            ViewTranslateTransform.Y = OffsetY;
+        }
+        
+        if (ScaleTransform != null)
+        {
+            ScaleTransform.ScaleX = newZoom;
+            ScaleTransform.ScaleY = newZoom;
+        }
+        
+        // 触发缩放改变事件
+        ZoomChanged?.Invoke(this,
+            new ZoomChangedEventArgs(ScaleTransform.ScaleX, ScaleTransform.ScaleY, OffsetX, OffsetY));
     }
 
     #endregion

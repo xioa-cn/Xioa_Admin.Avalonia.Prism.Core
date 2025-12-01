@@ -9,7 +9,7 @@ public class AppInformation
         get { return _instance ??= new AppInformation(); }
     }
 
-    public string ApplicationName { get; set; } = "Ava.XioaDemo";
+    public string ApplicationName { get; set; } = "Application";
     
     public string SplashIndexView { get; set; } = "LoginView";
 }

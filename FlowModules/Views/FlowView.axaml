@@ -23,18 +23,26 @@
     <!-- </controls:KnotNode.ContextMenu> -->
     <Grid>
         <StackPanel ZIndex="1" HorizontalAlignment="Left">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Spacing="10">
                 <TextBlock Text="{Binding Zoom,StringFormat=Zoom: {0:N2}}"></TextBlock>
-                <!-- <TextBlock Text="{Binding OffsetX,StringFormat=OffsetX: {0:N2}}"></TextBlock> -->
-                <!-- <TextBlock Text="{Binding OffsetY,StringFormat=OffsetY: {0:N2}}"></TextBlock> -->
+                <TextBlock Text="{Binding OffsetX,StringFormat=OffsetX: {0:N2}}"></TextBlock>
+                <TextBlock Text="{Binding OffsetY,StringFormat=OffsetY: {0:N2}}"></TextBlock>
             </StackPanel>
 
             <Button Content="Add Node" Command="{Binding AddNodeCommand}"></Button>
+            <Button Content="Zoom To Fit">
+                <Button.Command>
+                    <!-- 直接调用Editor的ZoomToFitAll方法，不通过ViewModel -->
+                    <Binding RelativeSource="{RelativeSource AncestorType=controls:NodifyEditor}"
+                           Path="ZoomToFitAll" />
+                </Button.Command>
+            </Button>
+            <Button Content="Reset View" Click="ResetViewClick"></Button>
             <!-- <TextBlock Text="{Binding #Editor.SelectedItem}"></TextBlock> -->
-            <!-- <Slider Maximum="10" Minimum="0.1" Value="{Binding Zoom,TargetNullValue=1,Mode=TwoWay}" Name="Slider" -->
-            <!--         Width="200"> -->
-            <!-- </Slider> -->
-            <!-- <Button Content="Reset View" Command="{Binding ResetViewCommand}" /> -->
+            <Slider Maximum="10" Minimum="0.1" Value="{Binding Zoom,TargetNullValue=1,Mode=TwoWay}" Name="Slider"
+                    Width="200">
+            </Slider>
+            <Button Content="FitAll" Click="FitAllContentClick" ></Button>
 
         </StackPanel>
 
@@ -44,6 +52,8 @@
                                Connections="{Binding Connections}"
                                PendingConnection="{Binding PendingConnection}"
                                Zoom="{Binding Zoom,Mode=TwoWay}"
+                               OffsetX="{Binding OffsetX,Mode=TwoWay}"
+                               OffsetY="{Binding OffsetY,Mode=TwoWay}"
                                DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
 
             <controls:NodifyEditor.Resources>
