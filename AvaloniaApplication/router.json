@@ -18,6 +18,13 @@
           "IconKind": 85,
           "NavigationName": "UserManager",
           "Region": "HomeRegion"
+        },
+        {
+          "Key": "TabDemo",
+          "Header": "TabDemo",
+          "IconKind": 85,
+          "NavigationName": "TabItemDemo",
+          "Region": "HomeRegion"
         }
       ]
     },

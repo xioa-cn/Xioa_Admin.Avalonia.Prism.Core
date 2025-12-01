@@ -1,0 +1,51 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Ava.Xioa.InfrastructureModule.Views.TabItemDemo">
+    <UserControl.Styles>
+        <StyleInclude Source="avares://SukiUI/Theme/TouchStyles/TouchStyles.axaml" />
+    </UserControl.Styles>
+    <TabControl Classes="Menu" TabStripPlacement="Left">
+        <TabItem Classes="VerticalMenu">
+            <TabItem.Header>
+                <StackPanel Spacing="7">
+                    <avalonia:MaterialIcon Width="32"
+                                           Height="32"
+                                           Kind="ViewDashboardOutline" />
+                    <TextBlock FontSize="18"
+                               FontWeight="DemiBold"
+                               Text="Controls" />
+                </StackPanel>
+            </TabItem.Header>
+        </TabItem>
+        <TabItem Classes="VerticalMenu">
+            <TabItem.Header>
+                <StackPanel Spacing="7">
+                    <avalonia:MaterialIcon Width="32"
+                                           Height="32"
+                                           Kind="PersonOutline" />
+                    <TextBlock FontSize="18"
+                               FontWeight="DemiBold"
+                               Text="Profile" />
+                </StackPanel>
+            </TabItem.Header>
+        </TabItem>
+        <TabItem Classes="VerticalMenu">
+            <TabItem.Header>
+                <StackPanel Spacing="7">
+                    <avalonia:MaterialIcon Width="32"
+                                           Height="32"
+                                           Kind="ChartLine" />
+                    <TextBlock FontSize="18"
+                               FontWeight="DemiBold"
+                               Text="Statistics" />
+                </StackPanel>
+            </TabItem.Header>
+        </TabItem>
+  
+      
+    </TabControl>
+</UserControl>
