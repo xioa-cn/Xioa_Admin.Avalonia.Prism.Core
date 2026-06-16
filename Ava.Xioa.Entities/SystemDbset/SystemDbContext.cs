@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Ava.Xioa.Entities.SystemDbset;
 
-[AutoDbContext(ServiceLifetime.Singleton)]
+[AutoDbContext(ServiceLifetime.Scoped)]
 public class SystemDbContext : EfDbContext.EfDbContext, ISqliteNormalable
 {
     protected override string ConnectionString { get; }

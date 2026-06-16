@@ -27,6 +27,12 @@ namespace AvaloniaApplication;
 
 public partial class App : PrismApplicationBase
 {
+    private readonly string[] _startupArgs;
+    public App(string[] args)
+    {
+        _startupArgs = args;
+    }
+    
     public override void Initialize()
     {
         SubscribeMessage();
@@ -42,8 +48,10 @@ public partial class App : PrismApplicationBase
 
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
     {
-        moduleCatalog.AddModule(typeof(InfrastructureModule))
-            .AddAutoModule();
+        // moduleCatalog.AddModule(typeof(InfrastructureModule))
+        //     .AddAutoModule();
+
+        moduleCatalog.AddConfigModule(AppDomain.CurrentDomain.BaseDirectory);
     }
 
     protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
@@ -68,6 +76,7 @@ public partial class App : PrismApplicationBase
         containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
 
         containerRegistry.RegisterInstance<IConfiguration>(configuration);
+        containerRegistry.RegisterInstance(new StartupArguments(_startupArgs));
 
         containerRegistry.RegisterInstance<SystemDbConfig>(configuration.GetSection("SystemDb").Get<SystemDbConfig>()
                                                            ?? throw new Exception("SystemDb配置项缺失"));
@@ -119,13 +128,13 @@ public partial class App : PrismApplicationBase
 
     private void DisableAvaloniaDataAnnotationValidation()
     {
-        var dataValidationPluginsToRemove =
-            BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
-
-        foreach (var plugin in dataValidationPluginsToRemove)
-        {
-            BindingPlugins.DataValidators.Remove(plugin);
-        }
+        // var dataValidationPluginsToRemove =
+        //     BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
+        //
+        // foreach (var plugin in dataValidationPluginsToRemove)
+        // {
+        //     BindingPlugins.DataValidators.Remove(plugin);
+        // }
     }
 
     public override void OnFrameworkInitializationCompleted()

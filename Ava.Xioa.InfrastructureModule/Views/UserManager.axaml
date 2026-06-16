@@ -64,18 +64,18 @@
                                     Binding="{Binding UserAuth}"
                                     Header="权限" />
                                 <DataGridTemplateColumn Header="操作" SortMemberPath="IntColumn">
-                                    <DataTemplate>
+                                    <DataTemplate x:DataType="mapper:UserInformation">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
                                             <Button Classes="Basic Warning Accent" Margin="0,5"
                                                     Command="{Binding ((vm:IUserServices)DataContext).UpdateUserInformationCommand, 
                               RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                    CommandParameter="{Binding DataType=mapper:UserInformation}">
+                                                    CommandParameter="{Binding .}">
                                                 修改
                                             </Button>
                                             <Button Classes="Basic Danger Accent" Margin="0,5"
                                                     Command="{Binding ((vm:IUserServices)DataContext).DeleteUserInformationCommand, 
                               RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                    CommandParameter="{Binding DataType=mapper:UserInformation}">
+                                                    CommandParameter="{Binding .}">
                                                 删除
                                             </Button>
                                         </StackPanel>

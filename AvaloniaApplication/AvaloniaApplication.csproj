@@ -13,6 +13,9 @@
 		<AvaloniaResource Include="Assets\**" />
 		<None Remove="Langs\EN_US.json" />
 		<EmbeddedResource Include="Langs\EN_US.json" />
+		<None Update="modules.config">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>

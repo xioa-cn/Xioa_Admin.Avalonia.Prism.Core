@@ -15,14 +15,14 @@ sealed class Program
         AppAuthor.DllCreateTime = System.IO.File.GetLastWriteTime(typeof(Program).Assembly.Location);
         if (!App.Detection)
         {
-            BuildAvaloniaApp()
+            BuildAvaloniaApp(args)
                 .StartWithClassicDesktopLifetime(args);
         }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    public static AppBuilder BuildAvaloniaApp(string[] args)
+        => AppBuilder.Configure(() => new App(args))
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();

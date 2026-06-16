@@ -11,18 +11,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.3.8" />
-        <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
+        <PackageReference Include="Avalonia" Version="12.0.4" />
+        <PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
+        <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.4" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="Avalonia.Diagnostics" Version="11.3.8">
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.3.17">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Markdown.Avalonia.Tight" Version="11.0.2" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
+        <PackageReference Include="Markdown.Avalonia.Tight" Version="12.0.0-a3" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="3.0.3-nightly.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.20" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.20" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.20" />
@@ -34,8 +34,8 @@
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.9" />
         <PackageReference Include="Prism.Avalonia" Version="9.0.537.11130" />
         <PackageReference Include="Prism.Core" Version="9.0.537" />
-        <PackageReference Include="SukiUI" Version="6.0.4-nightly20251128" />
-        <PackageReference Include="SukiUI.Dock" Version="6.0.4-nightly20251107" />
+        <PackageReference Include="SukiUI" Version="7.0.1" />
+        <PackageReference Include="SukiUI.Dock" Version="7.0.1" />
         <PackageReference Include="Svg.Skia" Version="3.2.1" />
     </ItemGroup>
 

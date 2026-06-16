@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Ava.Xioa.Common;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Models;
+using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
 using Ava.Xioa.Infrastructure.Services.Services.RouterServices;
 using Avalonia.Collections;
 using Prism.Events;
+using Prism.Navigation;
 using Prism.Navigation.Regions;
 using SukiUI.Controls;
 
@@ -17,10 +20,11 @@ namespace Ava.Xioa.Infrastructure.Impl.Implementations.HomeServices;
 public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigableMenuServices
 {
     [ObservableBindProperty] private object? _selectedView;
-
+    private readonly IToastsService _toastsService;
     public NavigableMenuViewModel(IEventAggregator? eventAggregator, IRegionManager regionManager,
-        IRouterServices routerServices) : base(eventAggregator, regionManager)
+        IRouterServices routerServices, IToastsService toastsService) : base(eventAggregator, regionManager)
     {
+        _toastsService = toastsService;
         // var r= routerServices.PrismApplicationRouter();
         //  NavigableMenuItemModel[] menu =
         //  [
@@ -59,15 +63,10 @@ public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigab
     {
         if (value is null) return;
 
-        if (value is string stringkey)
-        {
-            var findPage = FindMenuItemByKey(NavigableMenuItems, stringkey);
 
-            if (findPage is not null && !findPage.HasChildren)
-            {
-                ExecuteNavigate(NavigationParametersHelper.TargetNavigationParametersWithHeader(findPage.NavigationName,
-                    findPage.Region, findPage.Header));
-            }
+        if (value is string valueKey)
+        {
+            GetKeyParameterExecuteNavigate(valueKey);
 
             return;
         }
@@ -75,14 +74,18 @@ public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigab
 
         if (value is SukiSideMenuItem nav && nav.Tag is string key)
         {
-            var findPage = FindMenuItemByKey(NavigableMenuItems, key);
-
-            if (findPage is not null && !findPage.HasChildren)
-            {
-                ExecuteNavigate(NavigationParametersHelper.TargetNavigationParametersWithHeader(findPage.NavigationName,
-                    findPage.Region, findPage.Header));
-            }
+            GetKeyParameterExecuteNavigate(key);
         }
+    }
+
+    private void GetKeyParameterExecuteNavigate(string key)
+    {
+        var findPage = FindMenuItemByKey(NavigableMenuItems, key);
+        if (findPage is null || findPage.HasChildren) return;
+        var navigationParameters = NavigationParametersHelper.TargetNavigationParametersWithHeader(
+            findPage.NavigationName,
+            findPage.Region, findPage.Header);
+        ExecuteNavigate(navigationParameters);
     }
 
 
@@ -92,24 +95,24 @@ public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigab
     {
         if (menuItems == null) return null;
 
-        // 先查询当前层级（顶层或某一层子菜单）
-        var matchItem = menuItems.FirstOrDefault(item => item.Key == targetKey);
-        if (matchItem != null)
-        {
-            return matchItem; // 找到匹配项，直接返回
-        }
-
-        // 若当前层级无匹配，递归查询每个子菜单
         foreach (var item in menuItems)
         {
-            var childMatch = FindMenuItemByKey(item.Children, targetKey);
-            if (childMatch != null)
-            {
-                return childMatch; // 子菜单中找到匹配项，返回
-            }
+            // 当前节点命中直接返回，替代 FirstOrDefault
+            if (item.Key == targetKey)
+                return item;
+
+            // 递归搜子节点
+            var childResult = FindMenuItemByKey(item.Children, targetKey);
+            if (childResult is not null)
+                return childResult;
         }
 
         // 所有层级均无匹配，返回 null
         return null;
+    }
+
+    protected override void OnNavigationFailed(NavigationContext? context, Exception? error)
+    {
+        _toastsService.ShowError("Error",$"页面导航失败 {error?.Message}");
     }
 }

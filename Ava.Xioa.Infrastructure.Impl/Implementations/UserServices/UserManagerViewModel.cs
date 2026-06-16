@@ -42,7 +42,7 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices
 
     private readonly IUserInformationRepository _userInformationRepository;
 
-    public UserManagerViewModel(IUserInformationRepository userInformationRepository, ToastsService toastsService,
+    public UserManagerViewModel(IUserInformationRepository userInformationRepository, IToastsService toastsService,
         IUserUpdateDialogServices userUpdateDialogServices, ISukiDialogManager sukiDialogManager) :
         base(toastsService)
     {

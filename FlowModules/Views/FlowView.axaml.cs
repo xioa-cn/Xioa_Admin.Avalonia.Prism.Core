@@ -20,11 +20,11 @@ public partial class FlowView : UserControl
 
     private void ResetViewClick(object? sender, RoutedEventArgs e)
     {
-        Editor.ResetViewToDefault();
+        // Editor.ResetViewToDefault();
     }
 
     private void FitAllContentClick(object? sender, RoutedEventArgs e)
     {
-        Editor.ZoomToFitAll();
+        // Editor.ZoomToFitAll();
     }
 }

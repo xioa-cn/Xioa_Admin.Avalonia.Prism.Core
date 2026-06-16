@@ -8,6 +8,7 @@ using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
+using Microsoft.EntityFrameworkCore;
 using Prism.Events;
 using Prism.Navigation.Regions;
 using SukiUI.Dialogs;
@@ -76,11 +77,11 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         _themesServices.BackgroundStyle = value;
     }
 
-    public void Initialized()
+    public async void Initialized()
     {
         try
         {
-            var findLastUseThemeInfo = this._systemThemesInformationRepository.DbSet.FirstOrDefault();
+            var findLastUseThemeInfo = await this._systemThemesInformationRepository.DbSet.FirstOrDefaultAsync();
             _themesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
             if (findLastUseThemeInfo == null) return;
            

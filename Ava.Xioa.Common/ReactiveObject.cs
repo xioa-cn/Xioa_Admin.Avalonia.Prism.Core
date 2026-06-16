@@ -11,9 +11,9 @@ public partial class ReactiveObject : ObservableBindBase
     {
     }
 
-    protected readonly ToastsService? ToastsService;
+    protected readonly IToastsService? ToastsService;
 
-    public ReactiveObject(ToastsService? toastsService)
+    public ReactiveObject(IToastsService? toastsService)
     {
         ToastsService = toastsService;
     }

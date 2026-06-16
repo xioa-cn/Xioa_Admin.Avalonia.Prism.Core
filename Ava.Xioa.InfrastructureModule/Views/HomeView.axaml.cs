@@ -12,7 +12,7 @@ namespace Ava.Xioa.InfrastructureModule.Views;
 [PrismRegisterForNavigation(navigationName: nameof(HomeView), region: AppRegions.MainRegion, zIndex: 9998)]
 public partial class HomeView : UserControl
 {
-    public HomeView(IHomeServices homeServices, ToastsService toastsService)
+    public HomeView(IHomeServices homeServices, IToastsService toastsService)
     {
         this.DataContext = homeServices;
         InitializeComponent();

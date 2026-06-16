@@ -34,7 +34,7 @@ public abstract class ReactiveLoading : ReactiveObject
     {
     }
 
-    public ReactiveLoading(ToastsService? toastsService) : base(toastsService)
+    public ReactiveLoading(IToastsService? toastsService) : base(toastsService)
     {
         
     }

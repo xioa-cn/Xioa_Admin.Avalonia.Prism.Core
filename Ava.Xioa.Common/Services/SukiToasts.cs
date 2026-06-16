@@ -6,8 +6,18 @@ using SukiUI.Toasts;
 
 namespace Ava.Xioa.Common.Services;
 
-[PrismService(typeof(ToastsService), Lifetime = ServiceLifetime.Singleton)]
-public class ToastsService(ISukiToastManager sukiToastManager)
+public interface IToastsService
+{
+    void ShowToast(NotificationType toastType, string title, string message, TimeSpan? timeSpan = null);
+    void ShowToast(NotificationType toastType, string title, string message, double milliseconds);
+    void ShowInformation(string title, string message, double milliseconds = 3000);
+    void ShowSuccess(string title, string message, double milliseconds = 3000);
+    void ShowWarning(string title, string message, double milliseconds = 3000);
+    void ShowError(string title, string message, double milliseconds = 3000);
+}
+
+[PrismService(typeof(IToastsService), Lifetime = ServiceLifetime.Singleton)]
+public class ToastsService(ISukiToastManager sukiToastManager) : IToastsService
 {
     public void ShowToast(NotificationType toastType, string title, string message, TimeSpan? timeSpan = null)
     {

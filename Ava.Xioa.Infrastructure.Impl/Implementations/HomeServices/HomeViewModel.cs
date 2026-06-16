@@ -23,7 +23,7 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
 
     public HomeViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, IMainWindowServices mainWindowServices,
         INavigableMenuServices navigableMenuServices, HotKeyServices hotKeyServices,
-        ToastsService toastsService) : base(eventAggregator,regionManager,
+        IToastsService toastsService) : base(eventAggregator,regionManager,
         mainWindowServices)
     {
         _mainWindowServices = mainWindowServices;

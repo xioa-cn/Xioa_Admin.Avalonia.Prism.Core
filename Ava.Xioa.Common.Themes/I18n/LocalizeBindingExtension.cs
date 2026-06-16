@@ -16,12 +16,15 @@ public class LocalizeBindingExtension : MarkupExtension
     private AvaloniaProperty? _targetProperty;
     private AvaloniaObject _targetObject;
     private IDisposable? _languageChangeSubscription; // 语言变化事件的可释放订阅
-    private readonly BindingBase _binding;
+    private readonly ReflectionBinding _binding;
 
     public LocalizeBindingExtension(BindingBase binding)
     {
-        _binding = binding;
-        _binding.Mode = BindingMode.OneWay;
+        if (binding is ReflectionBinding reflectionBinding)
+        {
+            _binding = reflectionBinding;
+            _binding.Mode = BindingMode.OneWay;
+        }
     }
 
 
