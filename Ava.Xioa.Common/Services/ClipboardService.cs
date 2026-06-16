@@ -1,4 +1,5 @@
 ﻿using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Utils;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
@@ -14,19 +15,19 @@ public class ClipboardService(IApplicationLifetime liftime)
         if (string.IsNullOrEmpty(text))
             return;
 
-        IClipboard? clipboard = null;
+        IClipboard? clipboard = OperatingSystemUtil.GetCurrentTopLevel()?.Clipboard;
 
-        if (liftime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            clipboard = TopLevel.GetTopLevel(desktop.MainWindow)?.Clipboard;
-            ;
-        }
-
-        else if (liftime is ISingleViewApplicationLifetime singleView)
-        {
-            clipboard = TopLevel.GetTopLevel(singleView.MainView)?.Clipboard;
-            // singleView.MainView?.Clipboard?.SetTextAsync(text);
-        }
+        // if (liftime is IClassicDesktopStyleApplicationLifetime desktop)
+        // {
+        //     clipboard = TopLevel.GetTopLevel(desktop.MainWindow)?.Clipboard;
+        //     ;
+        // }
+        //
+        // else if (liftime is ISingleViewApplicationLifetime singleView)
+        // {
+        //     clipboard = TopLevel.GetTopLevel(singleView.MainView)?.Clipboard;
+        //     // singleView.MainView?.Clipboard?.SetTextAsync(text);
+        // }
 
 
         clipboard?.SetTextAsync(text);

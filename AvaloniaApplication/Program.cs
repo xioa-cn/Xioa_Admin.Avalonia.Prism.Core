@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using System;
 using Ava.Xioa.Common.Utils;
+using Avalonia.Dialogs;
 
 namespace AvaloniaApplication;
 
@@ -22,8 +23,12 @@ sealed class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp(string[] args)
-        => AppBuilder.Configure(() => new App(args))
+    {
+        var appBuilder = AppBuilder.Configure(() => new App(args))
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+        
+        return appBuilder;
+    }
 }

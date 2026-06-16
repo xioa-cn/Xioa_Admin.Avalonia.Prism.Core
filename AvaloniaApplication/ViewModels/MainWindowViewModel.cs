@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common;
 using Ava.Xioa.Common.Services;
+using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
@@ -59,18 +60,7 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         _themesServices.BackgroundAnimations = value;
     }
 
-    public bool ApplicationLifetime => IsDesktopPlatform();
-
-    /// <summary>
-    /// 判断是否为桌面平台（Windows/macOS/Linux/BSD）
-    /// </summary>
-    private static bool IsDesktopPlatform()
-    {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-               || RuntimeInformation.IsOSPlatform(OSPlatform.Create("macOS"))
-               || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-               || RuntimeInformation.IsOSPlatform(OSPlatform.Create("BSD"));
-    }
+    public bool ApplicationLifetime => OperatingSystemUtil.IsDesktopPlatform();
 
     partial void OnBackgroundStyleChanged(SukiBackgroundStyleDesc value)
     {
