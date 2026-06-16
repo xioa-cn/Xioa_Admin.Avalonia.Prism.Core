@@ -17,6 +17,7 @@ using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using Prism.Navigation.Regions;
@@ -109,7 +110,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
                 return;
             }
 
-            var findUser = _userInformationRepository.DbSet.FirstOrDefault(item => item.Account == this._account);
+            var findUser = await _userInformationRepository.DbSet.FirstOrDefaultAsync(item => item.Account == this._account);
             if (findUser == null)
             {
                 _sukiDialogManager.SetMessage("帳號不存在", "登录报错").OfType(NotificationType.Error).TryShow();

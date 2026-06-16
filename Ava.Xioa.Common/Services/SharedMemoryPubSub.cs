@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -11,283 +12,262 @@ namespace Ava.Xioa.Common.Services;
 public class SharedMemoryPubSub : ISharedMemoryPubSub
 {
     #region 常量定义
-
-    // 内存布局相关常量
-    private const int MAX_MESSAGES = 100; // 最大消息数量
-    private const int MESSAGE_SIZE = 1040; // 单条消息大小：4(ID) + 4(Topic) + 8(Timestamp) + 1024(Data)
-    private const int HEADER_SIZE = 16; // 头部信息大小：4(WritePos) + 4(ReadPos) + 4(MsgCount) + 4(CurrentMsgId)
-    private const int MESSAGE_TIMEOUT_MS = 5000; // 消息过期时间：5秒
-
+    private const int MAX_MESSAGES = 100;
+    private const int MESSAGE_SIZE = 1040; // 4(ID)+4(Topic)+8(Timestamp)+1024(Data)
+    private const int HEADER_SIZE = 16;    // 4(WritePos) + 4(ReadPos) + 4(MsgCount) + 4(CurrentMsgId)
+    private const int MESSAGE_TIMEOUT_MS = 5000;
     #endregion
 
     #region 私有字段
+    private readonly string _name;
+    private readonly string _mmapFilePath;
+    private readonly MemoryMappedFile _mmf;
+    private readonly MemoryMappedViewAccessor _accessor;
+    private readonly Mutex _rwMutex;
+    private readonly PeriodicTimer _cleanupTimer;
+    private readonly Task? _cleanupTask;
+    private bool _disposed;
 
-    private readonly string _name; // 共享内存名称
-    private readonly MemoryMappedFile _mmf; // 内存映射文件
-    private readonly MemoryMappedViewAccessor _accessor; // 内存访问器
-    private readonly EventWaitHandle _messageEvent; // 消息通知事件
-    private readonly PeriodicTimer _cleanupTimer; // 清理定时器
-    private readonly Task? _cleanupTask; // 清理任务
-    private bool _disposed; // 释放标记
-
-    // 订阅者管理
-    // 结构：Dictionary<主题ID, Dictionary<订阅ID, 订阅信息>>
     private readonly ConcurrentDictionary<int, ConcurrentDictionary<Guid, SubscriptionInfo>> _subscribers
         = new ConcurrentDictionary<int, ConcurrentDictionary<Guid, SubscriptionInfo>>();
-
     #endregion
 
     #region 构造函数
-
-    /// <summary>
-    /// 初始化共享内存发布订阅系统
-    /// </summary>
-    /// <param name="name">共享内存名称，相同名称的实例共享同一块内存</param>
     public SharedMemoryPubSub(string name)
     {
         _name = name;
-        var totalSize = HEADER_SIZE + (MAX_MESSAGES * MESSAGE_SIZE);
+        string tempDir = Path.GetTempPath();
+        _mmapFilePath = Path.Combine(tempDir, $"sm_pubsub_{name}.dat");
+        long totalSize = HEADER_SIZE + (MAX_MESSAGES * MESSAGE_SIZE);
 
-        // 创建或打开共享内存
-        _mmf = MemoryMappedFile.CreateOrOpen(name, totalSize);
+        if (!File.Exists(_mmapFilePath))
+        {
+            // 关键：FileShare.ReadWrite 允许多进程同时读写
+            using var fs = new FileStream(
+                _mmapFilePath,
+                FileMode.Create,
+                FileAccess.ReadWrite,
+                FileShare.ReadWrite);
+            fs.SetLength(totalSize);
+        }
+
+        _mmf = MemoryMappedFile.CreateFromFile(
+            _mmapFilePath,
+            FileMode.OpenOrCreate,
+            null,
+            totalSize);
         _accessor = _mmf.CreateViewAccessor();
 
+        string mutexName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? $"Global\\SM_RW_{name}"
+            : $"Local_SM_RW_{name}";
+        _rwMutex = new Mutex(false, mutexName);
 
-        string eventName;
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        _rwMutex.WaitOne();
+        try
         {
-            // Windows 可加 Global\ 前缀（跨会话访问）
-            eventName = $"Global\\{name}_Event";
+            if (_accessor.ReadInt32(0) == 0)
+            {
+                _accessor.Write(0, HEADER_SIZE);
+                _accessor.Write(4, HEADER_SIZE);
+                _accessor.Write(8, 0);
+                _accessor.Write(12, 0);
+            }
         }
-        else
+        finally
         {
-            // Linux/macOS 无需前缀，直接用唯一名称
-            eventName = $"{name}_Event";
-        }
-
-        _messageEvent = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
-
-        // 创建或打开全局命名事件，用于消息通知
-        _messageEvent = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
-
-        // 初始化头部信息（仅在首次创建时执行）
-        if (_accessor.ReadInt32(0) == 0)
-        {
-            _accessor.Write(0, HEADER_SIZE); // WritePos：写入位置
-            _accessor.Write(4, HEADER_SIZE); // ReadPos：读取位置
-            _accessor.Write(8, 0); // MsgCount：消息数量
-            _accessor.Write(12, 0); // CurrentMsgId：当前消息ID
+            _rwMutex.ReleaseMutex();
         }
 
-        // 启动清理任务
         _cleanupTimer = new PeriodicTimer(TimeSpan.FromSeconds(1));
         _cleanupTask = StartCleanupTask();
     }
-
     #endregion
 
-    #region 发布订阅方法
-
-    /// <summary>
-    /// 发布消息到指定主题
-    /// </summary>
-    /// <param name="topicId">主题ID</param>
-    /// <param name="data">消息数据（最大1024字节）</param>
+    #region 发布订阅
     public void Publish(int topicId, byte[] data)
     {
         if (data == null || data.Length > 1024)
-            throw new ArgumentException("数据长度无效");
+            throw new ArgumentException("数据长度不能大于1024");
 
-        // 读取当前内存状态
-        int writePos = _accessor.ReadInt32(0); // 当前写入位置
-        int msgCount = _accessor.ReadInt32(8); // 当前消息数量
-        int currentMsgId = _accessor.ReadInt32(12); // 当前消息ID
-
-        // 检查缓冲区是否已满
-        if (msgCount >= MAX_MESSAGES)
+        long totalBufferSize = HEADER_SIZE + MAX_MESSAGES * MESSAGE_SIZE;
+        _rwMutex.WaitOne();
+        try
         {
-            throw new InvalidOperationException("缓冲区已满");
+            int writePos = _accessor.ReadInt32(0);
+            int msgCount = _accessor.ReadInt32(8);
+            int currentMsgId = _accessor.ReadInt32(12);
+
+            if (msgCount >= MAX_MESSAGES)
+                throw new InvalidOperationException("共享内存缓冲区已满");
+
+            _accessor.Write(writePos, currentMsgId + 1);
+            _accessor.Write(writePos + 4, topicId);
+            _accessor.Write(writePos + 8, DateTime.UtcNow.Ticks);
+            _accessor.WriteArray(writePos + 16, data, 0, data.Length);
+
+            int nextWritePos = writePos + MESSAGE_SIZE;
+            if (nextWritePos >= totalBufferSize)
+                nextWritePos = HEADER_SIZE;
+
+            _accessor.Write(0, nextWritePos);
+            _accessor.Write(8, msgCount + 1);
+            _accessor.Write(12, currentMsgId + 1);
+
+            // 【关键修复1】强制刷新内存视图到磁盘，其他进程立刻可见
+            _accessor.Flush();
         }
-
-        // 写入消息内容
-        _accessor.Write(writePos, currentMsgId + 1); // 消息ID
-        _accessor.Write(writePos + 4, topicId); // 主题ID
-        _accessor.Write(writePos + 8, DateTime.UtcNow.Ticks); // 时间戳
-        _accessor.WriteArray(writePos + 16, data, 0, data.Length); // 消息数据
-
-        // 计算下一个写入位置（循环缓冲区）
-        int nextWritePos = (writePos + MESSAGE_SIZE) % (HEADER_SIZE + (MAX_MESSAGES * MESSAGE_SIZE));
-        if (nextWritePos < HEADER_SIZE) nextWritePos = HEADER_SIZE;
-
-        // 更新头部信息
-        _accessor.Write(0, nextWritePos); // 更新写入位置
-        _accessor.Write(8, msgCount + 1); // 更新消息数量
-        _accessor.Write(12, currentMsgId + 1); // 更新消息ID
+        finally
+        {
+            _rwMutex.ReleaseMutex();
+        }
     }
 
-    /// <summary>
-    /// 订阅指定主题的消息
-    /// </summary>
-    /// <param name="topicId">主题ID</param>
-    /// <param name="handler">消息处理函数</param>
-    /// <returns>订阅对象，可通过Dispose取消订阅</returns>
     public IDisposable Subscribe(int topicId, Action<(int MessageId, int TopicId, byte[] Data)> handler)
     {
-        var subscriptionId = Guid.NewGuid();
+        var subId = Guid.NewGuid();
         var cts = new CancellationTokenSource();
-
-        var subscriptionInfo = new SubscriptionInfo
+        var info = new SubscriptionInfo
         {
-            Id = subscriptionId,
+            Id = subId,
             Handler = handler,
             Cts = cts
         };
 
-        // 获取或创建主题的订阅者集合
-        var topicSubscribers = _subscribers.GetOrAdd(topicId,
-            _ => new ConcurrentDictionary<Guid, SubscriptionInfo>());
+        var topicDict = _subscribers.GetOrAdd(topicId, _ => new ConcurrentDictionary<Guid, SubscriptionInfo>());
+        topicDict.TryAdd(subId, info);
 
-        // 添加订阅者
-        topicSubscribers.TryAdd(subscriptionId, subscriptionInfo);
+        Debug.WriteLine($"[{_name}] 新增订阅 Topic:{topicId} SubId:{subId}");
+        StartSubscriptionLoop(topicId, info);
 
-        Debug.WriteLine($"[{_name}] 添加订阅: Topic={topicId}, SubscriberId={subscriptionId}");
-
-        // 启动消息监听任务
-        StartSubscriptionTask(topicId, subscriptionInfo);
-
-        return new Subscription(this, topicId, subscriptionId);
+        return new Subscription(this, topicId, subId);
     }
 
-    /// <summary>
-    /// 取消指定主题的所有订阅
-    /// </summary>
-    /// <param name="topicId">主题ID</param>
     public void Unsubscribe(int topicId)
     {
-        if (_subscribers.TryRemove(topicId, out var topicSubscribers))
+        if (_subscribers.TryRemove(topicId, out var subs))
         {
-            foreach (var subscriber in topicSubscribers.Values)
+            foreach (var s in subs.Values)
             {
-                subscriber.Cts.Cancel();
-                subscriber.Cts.Dispose();
+                s.Cts.Cancel();
+                s.Cts.Dispose();
             }
-
-            Debug.WriteLine($"[{_name}] 已取消主题 {topicId} 的所有订阅");
+            Debug.WriteLine($"[{_name}] 取消主题全部订阅 Topic:{topicId}");
         }
     }
-
     #endregion
 
-    #region 私有辅助方法
-
-    /// <summary>
-    /// 清理过期消息的任务
-    /// </summary>
+    #region 内部任务逻辑
     private async Task StartCleanupTask()
     {
+        long totalBufferSize = HEADER_SIZE + MAX_MESSAGES * MESSAGE_SIZE;
         while (await _cleanupTimer.WaitForNextTickAsync())
         {
             try
             {
+                _rwMutex.WaitOne(500);
                 int readPos = _accessor.ReadInt32(4);
                 int msgCount = _accessor.ReadInt32(8);
-
                 if (msgCount == 0) continue;
 
                 int currentPos = readPos;
-                int cleanupCount = 0;
-                long currentTime = DateTime.UtcNow.Ticks;
-                bool isBufferAlmostFull = msgCount >= MAX_MESSAGES * 0.8; // 缓冲区使用超过80%
+                int cleanCount = 0;
+                long now = DateTime.UtcNow.Ticks;
+                bool nearFull = msgCount >= MAX_MESSAGES * 0.8;
 
-                // 遍历消息，检查是否需要清理
                 for (int i = 0; i < msgCount; i++)
                 {
-                    long messageTime = _accessor.ReadInt64(currentPos + 8);
-                    long messageAge = (currentTime - messageTime) / TimeSpan.TicksPerMillisecond;
+                    long msgTick = _accessor.ReadInt64(currentPos + 8);
+                    long elapseMs = (now - msgTick) / TimeSpan.TicksPerMillisecond;
 
-                    // 清理条件：消息过期或缓冲区即将满时的旧消息
-                    if (messageAge > MESSAGE_TIMEOUT_MS ||
-                        (isBufferAlmostFull && messageAge > MESSAGE_TIMEOUT_MS / 2))
+                    if (elapseMs > MESSAGE_TIMEOUT_MS || (nearFull && elapseMs > MESSAGE_TIMEOUT_MS / 2))
                     {
-                        cleanupCount++;
+                        cleanCount++;
                     }
                     else
                     {
-                        // 缓冲区快满时，确保至少清理20%的空间
-                        if (isBufferAlmostFull && cleanupCount < msgCount * 0.2)
+                        if (nearFull && cleanCount < msgCount * 0.2)
                         {
-                            cleanupCount++;
+                            cleanCount++;
                             continue;
                         }
-
                         break;
                     }
 
-                    currentPos = (currentPos + MESSAGE_SIZE) % (HEADER_SIZE + (MAX_MESSAGES * MESSAGE_SIZE));
-                    if (currentPos < HEADER_SIZE) currentPos = HEADER_SIZE;
+                    currentPos += MESSAGE_SIZE;
+                    if (currentPos >= totalBufferSize)
+                        currentPos = HEADER_SIZE;
                 }
 
-                // 执行清理
-                if (cleanupCount > 0)
+                if (cleanCount > 0)
                 {
-                    int newReadPos = (readPos + (cleanupCount * MESSAGE_SIZE)) %
-                                     (HEADER_SIZE + (MAX_MESSAGES * MESSAGE_SIZE));
-                    if (newReadPos < HEADER_SIZE) newReadPos = HEADER_SIZE;
+                    int newReadPos = readPos + cleanCount * MESSAGE_SIZE;
+                    if (newReadPos >= totalBufferSize)
+                        newReadPos = HEADER_SIZE;
 
                     _accessor.Write(4, newReadPos);
-                    _accessor.Write(8, msgCount - cleanupCount);
-
-                    Debug.WriteLine(
-                        $"[{_name}] 已清理 {cleanupCount} 条消息, 原因: {(isBufferAlmostFull ? "缓冲区接近满载" : "消息过期")}");
+                    _accessor.Write(8, msgCount - cleanCount);
+                    _accessor.Flush(); // 清理后也要刷新
+                    Debug.WriteLine($"[{_name}] 清理过期消息 {cleanCount} 条");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[{_name}] 清理任务异常: {ex.Message}");
+                Debug.WriteLine($"[{_name}] 清理异常：{ex.Message}");
+            }
+            finally
+            {
+                if (_rwMutex.WaitOne(0))
+                    _rwMutex.ReleaseMutex();
             }
         }
     }
 
-    /// <summary>
-    /// 启动订阅消息监听任务
-    /// </summary>
-    private void StartSubscriptionTask(int topicId, SubscriptionInfo subscription)
+    private void StartSubscriptionLoop(int topicId, SubscriptionInfo sub)
     {
+        long totalBufferSize = HEADER_SIZE + MAX_MESSAGES * MESSAGE_SIZE;
         Task.Run(async () =>
         {
             int lastMsgId = 0;
-
-            while (!subscription.Cts.Token.IsCancellationRequested)
+            while (!sub.Cts.Token.IsCancellationRequested)
             {
+                bool hasNewMsg = false;
                 try
                 {
-                    _messageEvent.WaitOne(100); // 等待新消息或超时
-
-                    int readPos = _accessor.ReadInt32(4);
-                    int msgCount = _accessor.ReadInt32(8);
-
-                    if (msgCount > 0)
+                    _rwMutex.WaitOne(50); // 缩短锁等待
+                    try
                     {
-                        int currentPos = readPos;
+                        int readPos = _accessor.ReadInt32(4);
+                        int msgCount = _accessor.ReadInt32(8);
+                        if (msgCount == 0)
+                        {
+                            // 无消息，短暂休眠
+                            await Task.Delay(20, sub.Cts.Token);
+                            continue;
+                        }
+
+                        int cur = readPos;
                         for (int i = 0; i < msgCount; i++)
                         {
-                            // 读取消息
-                            int msgId = _accessor.ReadInt32(currentPos);
-                            int msgTopicId = _accessor.ReadInt32(currentPos + 4);
+                            int mid = _accessor.ReadInt32(cur);
+                            int tid = _accessor.ReadInt32(cur + 4);
 
-                            // 处理新消息
-                            if (msgId > lastMsgId && msgTopicId == topicId)
+                            if (mid > lastMsgId && tid == topicId)
                             {
                                 byte[] data = new byte[1024];
-                                _accessor.ReadArray(currentPos + 16, data, 0, data.Length);
-
-                                subscription.Handler((msgId, msgTopicId, data));
-                                lastMsgId = msgId;
+                                _accessor.ReadArray(cur + 16, data, 0, data.Length);
+                                sub.Handler((mid, tid, data));
+                                lastMsgId = mid;
+                                hasNewMsg = true;
                             }
 
-                            currentPos = (currentPos + MESSAGE_SIZE) % (HEADER_SIZE + (MAX_MESSAGES * MESSAGE_SIZE));
-                            if (currentPos < HEADER_SIZE) currentPos = HEADER_SIZE;
+                            cur += MESSAGE_SIZE;
+                            if (cur >= totalBufferSize) cur = HEADER_SIZE;
                         }
+                    }
+                    finally
+                    {
+                        _rwMutex.ReleaseMutex();
                     }
                 }
                 catch (OperationCanceledException)
@@ -296,91 +276,71 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[{_name}] 订阅处理异常: {ex.Message}");
-                    await Task.Delay(100, subscription.Cts.Token);
+                    Debug.WriteLine($"[{_name}] 订阅异常：{ex.Message}");
                 }
+
+                // 【关键修复2】有新消息立刻循环，无消息仅休眠20ms，大幅降低丢消息概率
+                if (!hasNewMsg)
+                    await Task.Delay(20, sub.Cts.Token);
             }
-        }, subscription.Cts.Token);
+        }, sub.Cts.Token);
     }
 
-    /// <summary>
-    /// 取消特定ID的订阅
-    /// </summary>
-    /// <param name="topicId">主题ID</param>
-    /// <param name="subscriptionId">订阅ID</param>
-    private void UnsubscribeById(int topicId, Guid subscriptionId)
+    private void WakeAllSubscribers()
     {
-        if (_subscribers.TryGetValue(topicId, out var topicSubscribers))
-        {
-            if (topicSubscribers.TryRemove(subscriptionId, out var subscription))
-            {
-                subscription.Cts.Cancel();
-                subscription.Cts.Dispose();
-                Debug.WriteLine($"[{_name}] 已取消订阅: Topic={topicId}, SubscriberId={subscriptionId}");
-            }
+    }
 
-            // 如果主题没有订阅者了，移除主题
-            if (topicSubscribers.IsEmpty)
+    private void UnsubscribeById(int topicId, Guid subId)
+    {
+        if (_subscribers.TryGetValue(topicId, out var dict))
+        {
+            if (dict.TryRemove(subId, out var info))
             {
-                _subscribers.TryRemove(topicId, out _);
+                info.Cts.Cancel();
+                info.Cts.Dispose();
+                Debug.WriteLine($"[{_name}] 取消订阅 Topic:{topicId} SubId:{subId}");
             }
+            if (dict.IsEmpty)
+                _subscribers.TryRemove(topicId, out _);
         }
     }
-
     #endregion
 
-    #region 内部类
-
-    /// <summary>
-    /// 订阅信息类
-    /// </summary>
+    #region 内部模型与释放
     private class SubscriptionInfo
     {
-        public Guid Id { get; set; } // 订阅ID
-        public Action<(int MessageId, int TopicId, byte[] Data)> Handler { get; set; } // 消息处理函数
-        public CancellationTokenSource Cts { get; set; } // 取消令牌
+        public Guid Id { get; set; }
+        public Action<(int MessageId, int TopicId, byte[] Data)> Handler { get; set; }
+        public CancellationTokenSource Cts { get; set; }
     }
 
-    /// <summary>
-    /// 订阅对象，用于管理订阅生命周期
-    /// </summary>
     private class Subscription : IDisposable
     {
-        private readonly SharedMemoryPubSub _pubSub;
-        private readonly int _topicId;
-        private readonly Guid _subscriptionId;
-
-        public Subscription(SharedMemoryPubSub pubSub, int topicId, Guid subscriptionId)
+        private readonly SharedMemoryPubSub _owner;
+        private readonly int _topic;
+        private readonly Guid _subId;
+        public Subscription(SharedMemoryPubSub owner, int topic, Guid subId)
         {
-            _pubSub = pubSub;
-            _topicId = topicId;
-            _subscriptionId = subscriptionId;
+            _owner = owner;
+            _topic = topic;
+            _subId = subId;
         }
-
-        public void Dispose()
-        {
-            _pubSub.UnsubscribeById(_topicId, _subscriptionId);
-        }
+        public void Dispose() => _owner.UnsubscribeById(_topic, _subId);
     }
 
-    #endregion
-
-    #region IDisposable实现
-
-    /// <summary>
-    /// 释放资源
-    /// </summary>
     public void Dispose()
     {
-        if (!_disposed)
-        {
-            _cleanupTimer?.Dispose();
-            _accessor?.Dispose();
-            _mmf?.Dispose();
-            _messageEvent?.Dispose();
-            _disposed = true;
-        }
-    }
+        if (_disposed) return;
 
+        foreach (var topic in _subscribers.Keys)
+            Unsubscribe(topic);
+
+        _cleanupTimer?.Dispose();
+        _accessor?.Dispose();
+        _mmf?.Dispose();
+        _rwMutex?.Dispose();
+
+        _disposed = true;
+    }
     #endregion
 }

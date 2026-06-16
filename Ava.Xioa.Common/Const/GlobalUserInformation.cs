@@ -2,7 +2,7 @@
 
 namespace Ava.Xioa.Common.Const;
 
-public class GlobalUserInformation
+public partial class GlobalUserInformation : ObservableBindBase
 {
     private static GlobalUserInformation? _instance;
 
@@ -11,11 +11,29 @@ public class GlobalUserInformation
         get => _instance ??= new GlobalUserInformation();
     }
 
-    public UserAuthEnum UserAuthEnum { get; set; } = UserAuthEnum.None;
+    private UserAuthEnum _userAuthEnum = UserAuthEnum.None;
+
+    public UserAuthEnum UserAuthEnum
+    {
+        get => _userAuthEnum;
+        set => SetProperty(ref _userAuthEnum, value);
+    }
 
     public bool IsLogin => this.UserAuthEnum != UserAuthEnum.None;
 
-    public string? Account { get; set; }
+    private string? _account = string.Empty;
 
-    public string? UserName { get; set; }
+    public string? Account
+    {
+        get => _account;
+        set => SetProperty(ref _account, value);
+    }
+
+    private string? _userName = string.Empty;
+
+    public string? UserName
+    {
+        get => _userName;
+        set => SetProperty(ref _userName, value);
+    }
 }

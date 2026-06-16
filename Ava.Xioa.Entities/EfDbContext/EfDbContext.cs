@@ -12,6 +12,7 @@ public abstract class EfDbContext : DbContext
 {
     protected abstract string ConnectionString { get; }
     public string DbFilePath { get; set; }
+
     public bool QueryTracking
     {
         set
@@ -48,22 +49,48 @@ public abstract class EfDbContext : DbContext
         try
         {
             // 获取所有项目引用的程序集
-            var compilationLibrary = DependencyContext
-                .Default?
-                .CompileLibraries
-                .Where(x => !x.Serviceable && x.Type != "package" && x.Type == "project");
-
-            if (compilationLibrary != null)
-                foreach (var compilation in compilationLibrary)
+            var businessAssemblies = AssemblyLoadContext.Default.Assemblies.ToList()
+                .Where(asm =>
                 {
-                    // 通过反射加载指定类型的实体
-                    // 查找所有继承自指定类型的类，并注册到EF Core中
-                    AssemblyLoadContext.Default
-                        .LoadFromAssemblyName(new AssemblyName(compilation.Name))
-                        .GetTypes().Where(x => x.GetTypeInfo().BaseType != null
-                                               && x.BaseType == (type)).ToList()
-                        .ForEach(t => { modelBuilder.Entity(t); });
+                    string name = asm.GetName().Name ?? string.Empty;
+                    return
+                        !name.StartsWith("Microsoft.")
+                        && !name.StartsWith("System.")
+                        && !name.StartsWith("Npgsql.")
+                        && !name.StartsWith("Prism.")
+                        && !name.StartsWith("SukiUI.")
+                        && !name.StartsWith("Pomelo.");
+                })
+                .ToList();
+
+            foreach (var asm in businessAssemblies)
+            {
+                Type?[] allTypes;
+                try
+                {
+                    allTypes = asm.GetTypes();
                 }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    // 部分程序集存在无法加载的类型，跳过异常类型
+                    allTypes = ex.Types.Where(t => t != null).ToArray();
+                }
+
+                if (allTypes.Length == 0) continue;
+
+                // 匹配所有非抽象、继承自基类的实体
+                var entityTypes = allTypes
+                    .Where(t =>
+                        t is not null && t.IsClass
+                                      && !t.IsAbstract
+                                      && t.IsSubclassOf(type))
+                    .ToList();
+
+                foreach (var entityType in entityTypes)
+                {
+                    modelBuilder.Entity(entityType ?? throw new TypeLoadException());
+                }
+            }
 
             base.OnModelCreating(modelBuilder);
         }

@@ -1,54 +1,96 @@
-﻿using System.Text;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Services;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 
 namespace AvaloniaApplication;
 
-public partial class App
+public partial class App : IExitService
 {
-    public static SharedMemoryPubSub? _sharedMemoryPubSub;
+    #region 常量
 
-    private const string AppOpen = "OPEN";
+    private const string AppOpenSignal = "OPEN";
+    private const string MutexKey = "sdk-sk-ava0616";
 
-    public static bool Detection
+    #endregion
+
+    #region 全局持有资源（关键，防止释放失效）
+
+    private Mutex? _appSingleMutex;
+    private SharedMemoryPubSub? _memoryPubSub;
+    private IDisposable? _wakeSubscribe; // 保存订阅句柄用于释放
+
+    #endregion
+
+    /// <summary>
+    /// 返回 true 代表已有程序在运行；false 为本程序首个实例
+    /// </summary>
+    public bool IsAnotherInstanceRunning
     {
         get
         {
-            _sharedMemoryPubSub ??= new SharedMemoryPubSub(nameof(AvaloniaApplication));
-            string? mName = System.Diagnostics.Process.GetCurrentProcess().MainModule?.ModuleName;
-            string? pName = System.IO.Path.GetFileNameWithoutExtension(mName);
-            if (System.Diagnostics.Process.GetProcessesByName(pName).Length > 1)
+            // 跨平台适配Mutex名称
+            string mutexName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? $"Global\\{MutexKey}"
+                : $"Local_{MutexKey}";
+
+            // 全局保存Mutex，不能局部变量
+            _appSingleMutex = new Mutex(true, mutexName, out var isNewInstance);
+            InitSharedMemoryIfNull();
+            if (!isNewInstance)
             {
-                _sharedMemoryPubSub.Publish(MessageTopics.STATUS_UPDATE,
-                    Encoding.UTF8.GetBytes(AppOpen)
-                );
+                // 第二个进程：发唤醒信号然后退出
+
+                _memoryPubSub!.Publish(MessageTopics.STATUS_UPDATE, Encoding.UTF8.GetBytes(AppOpenSignal));
+                Thread.Sleep(500);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            // 首个进程：初始化共享内存 + 订阅唤醒消息
+            SubscribeWakeSignal();
+            return false;
         }
     }
 
-    private void SubscribeMessage()
+    /// <summary>懒加载共享内存</summary>
+    private void InitSharedMemoryIfNull()
     {
-        _sharedMemoryPubSub!.Subscribe(MessageTopics.STATUS_UPDATE, OnApplicationOpen);
+        _memoryPubSub ??= new SharedMemoryPubSub(nameof(AvaloniaApplication));
     }
 
-    private void OnApplicationOpen((int MessageId, int TopicId, byte[] Data) obj)
+    /// <summary>订阅其他进程发来的唤醒指令</summary>
+    private void SubscribeWakeSignal()
     {
-        if (obj.TopicId != MessageTopics.STATUS_UPDATE)
-            return;
-        // 将消息的数据转换为字符串
-        var ms = Encoding.UTF8.GetString(obj.Data).TrimEnd('\0');
-        // 如果字符串等于AppOpen，则调用App.MainShow()方法
-        if (ms != AppOpen)
-        {
-            return;
-        }
+        // 保存订阅对象，程序退出释放
+        _wakeSubscribe = _memoryPubSub!.Subscribe(MessageTopics.STATUS_UPDATE, OnReceiveWakeMsg);
+    }
 
-        Dispatcher.UIThread.Invoke(OpenMainWindow);
+    /// <summary>收到唤醒消息，切UI线程唤起主窗口</summary>
+    private void OnReceiveWakeMsg((int MessageId, int TopicId, byte[] Data) msg)
+    {
+        if (msg.TopicId != MessageTopics.STATUS_UPDATE)
+            return;
+
+        string content = Encoding.UTF8.GetString(msg.Data).TrimEnd('\0');
+        if (content != AppOpenSignal)
+            return;
+
+        // 切换UI线程恢复窗口
+        Dispatcher.UIThread.Post(OpenMainWindow);
+    }
+
+    public void Exit()
+    {
+        // 释放订阅
+        _wakeSubscribe?.Dispose();
+        // 释放共享内存PubSub
+        _memoryPubSub?.Dispose();
+        // 释放单实例互斥锁
+        _appSingleMutex?.ReleaseMutex();
+        _appSingleMutex?.Dispose();
     }
 }

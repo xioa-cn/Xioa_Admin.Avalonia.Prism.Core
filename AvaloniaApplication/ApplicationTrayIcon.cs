@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ava.Xioa.Common.Events;
 using Ava.Xioa.Common.Input;
+using Ava.Xioa.Common.Utils;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform;
@@ -117,7 +118,7 @@ public partial class App
     private void ExitApplication(int exitCode = 0)
     {
         this.Exit(exitCode);
-        Environment.Exit(exitCode);
+        EnvironmentUtils.Exit(exitCode);
     }
 
     private void OpenMainWindow()
