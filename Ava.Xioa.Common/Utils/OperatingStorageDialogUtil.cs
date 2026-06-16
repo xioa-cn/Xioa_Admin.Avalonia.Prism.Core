@@ -117,7 +117,7 @@ public static class OperatingStorageDialogUtil
     /// <summary>
     /// 多选文件弹窗
     /// </summary>
-    public static async Task<List<string>> SelectFilesMultiple(
+    public static async Task<IEnumerable<string>> SelectFilesMultiple(
         string title = "选择多个文件",
         string? startFolder = null,
         string filter = "所有文件|*.*")
