@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using System;
 using Ava.Xioa.Common.Utils;
+using Avalonia.Controls;
 using Avalonia.Dialogs;
 
 namespace AvaloniaApplication;
@@ -17,7 +18,7 @@ static class Program
 
         var app = new App(args);
 
-        if (app.IsAnotherInstanceRunning)
+        if (!IsInDesignMode() && app.IsAnotherInstanceRunning)
         {
             return;
         }
@@ -26,10 +27,15 @@ static class Program
             .StartWithClassicDesktopLifetime(args);
     }
 
+    /// <summary>判断当前是否为XAML预览设计器进程</summary>
+    public static bool IsInDesignMode()
+    {
+        return Design.IsDesignMode;
+    }
+
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp(this App app, string[] args)
     {
-        
         var appBuilder = AppBuilder.Configure(() => app)
             .UsePlatformDetect()
             .WithInterFont()

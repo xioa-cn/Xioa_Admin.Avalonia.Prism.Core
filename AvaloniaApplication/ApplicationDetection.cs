@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Services;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 
@@ -33,6 +34,8 @@ public partial class App : IExitService
     {
         get
         {
+            if (Design.IsDesignMode) return false;
+            
             // 跨平台适配Mutex名称
             string mutexName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? $"Local\\{MutexKey}"

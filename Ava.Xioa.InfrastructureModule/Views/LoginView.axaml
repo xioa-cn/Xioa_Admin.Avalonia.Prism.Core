@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:suki="https://github.com/kikipoulet/SukiUI"
     xmlns:viewModels="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.LoginServices;assembly=Ava.Xioa.Infrastructure.Services"
-
+    
     x:DataType="viewModels:ILoginServices"
     mc:Ignorable="d">
     <suki:BusyArea Name="BusySignIn"
