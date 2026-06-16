@@ -20,10 +20,12 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
 
     #region 私有字段
     private readonly string _name;
-    private readonly string _mmapFilePath;
+    private readonly string? _mmapFilePath;
+    private readonly FileStream? _mmapFileStream;
     private readonly MemoryMappedFile _mmf;
     private readonly MemoryMappedViewAccessor _accessor;
     private readonly Mutex _rwMutex;
+    private readonly EventWaitHandle? _messageEvent;
     private readonly PeriodicTimer _cleanupTimer;
     private readonly Task? _cleanupTask;
     private bool _disposed;
@@ -36,32 +38,43 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
     public SharedMemoryPubSub(string name)
     {
         _name = name;
-        string tempDir = Path.GetTempPath();
-        _mmapFilePath = Path.Combine(tempDir, $"sm_pubsub_{name}.dat");
         long totalSize = HEADER_SIZE + (MAX_MESSAGES * MESSAGE_SIZE);
 
-        if (!File.Exists(_mmapFilePath))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            // 关键：FileShare.ReadWrite 允许多进程同时读写
-            using var fs = new FileStream(
+            _mmf = MemoryMappedFile.CreateOrOpen($"SM_{name}", totalSize);
+        }
+        else
+        {
+            string tempDir = Path.GetTempPath();
+            _mmapFilePath = Path.Combine(tempDir, $"sm_pubsub_{name}.dat");
+            _mmapFileStream = new FileStream(
                 _mmapFilePath,
-                FileMode.Create,
+                FileMode.OpenOrCreate,
                 FileAccess.ReadWrite,
                 FileShare.ReadWrite);
-            fs.SetLength(totalSize);
+
+            if (_mmapFileStream.Length < totalSize)
+                _mmapFileStream.SetLength(totalSize);
+
+            _mmf = MemoryMappedFile.CreateFromFile(
+                _mmapFileStream,
+                null,
+                totalSize,
+                MemoryMappedFileAccess.ReadWrite,
+                HandleInheritability.None,
+                false);
         }
 
-        _mmf = MemoryMappedFile.CreateFromFile(
-            _mmapFilePath,
-            FileMode.OpenOrCreate,
-            null,
-            totalSize);
         _accessor = _mmf.CreateViewAccessor();
 
         string mutexName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? $"Global\\SM_RW_{name}"
+            ? $"Local\\SM_RW_{name}"
             : $"Local_SM_RW_{name}";
         _rwMutex = new Mutex(false, mutexName);
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            _messageEvent = new EventWaitHandle(false, EventResetMode.AutoReset, $"Local\\SM_EVT_{name}");
 
         _rwMutex.WaitOne();
         try
@@ -101,10 +114,13 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
             if (msgCount >= MAX_MESSAGES)
                 throw new InvalidOperationException("共享内存缓冲区已满");
 
+            var buffer = new byte[1024];
+            Buffer.BlockCopy(data, 0, buffer, 0, data.Length);
+
             _accessor.Write(writePos, currentMsgId + 1);
             _accessor.Write(writePos + 4, topicId);
             _accessor.Write(writePos + 8, DateTime.UtcNow.Ticks);
-            _accessor.WriteArray(writePos + 16, data, 0, data.Length);
+            _accessor.WriteArray(writePos + 16, buffer, 0, buffer.Length);
 
             int nextWritePos = writePos + MESSAGE_SIZE;
             if (nextWritePos >= totalBufferSize)
@@ -116,6 +132,7 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
 
             // 【关键修复1】强制刷新内存视图到磁盘，其他进程立刻可见
             _accessor.Flush();
+            _messageEvent?.Set();
         }
         finally
         {
@@ -131,7 +148,8 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
         {
             Id = subId,
             Handler = handler,
-            Cts = cts
+            Cts = cts,
+            LastMessageId = GetCurrentMessageId()
         };
 
         var topicDict = _subscribers.GetOrAdd(topicId, _ => new ConcurrentDictionary<Guid, SubscriptionInfo>());
@@ -163,9 +181,13 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
         long totalBufferSize = HEADER_SIZE + MAX_MESSAGES * MESSAGE_SIZE;
         while (await _cleanupTimer.WaitForNextTickAsync())
         {
+            var lockTaken = false;
             try
             {
-                _rwMutex.WaitOne(500);
+                lockTaken = _rwMutex.WaitOne(500);
+                if (!lockTaken)
+                    continue;
+
                 int readPos = _accessor.ReadInt32(4);
                 int msgCount = _accessor.ReadInt32(8);
                 if (msgCount == 0) continue;
@@ -217,7 +239,7 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
             }
             finally
             {
-                if (_rwMutex.WaitOne(0))
+                if (lockTaken)
                     _rwMutex.ReleaseMutex();
             }
         }
@@ -228,46 +250,50 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
         long totalBufferSize = HEADER_SIZE + MAX_MESSAGES * MESSAGE_SIZE;
         Task.Run(async () =>
         {
-            int lastMsgId = 0;
+            int lastMsgId = sub.LastMessageId;
             while (!sub.Cts.Token.IsCancellationRequested)
             {
                 bool hasNewMsg = false;
+                var lockTaken = false;
                 try
                 {
-                    _rwMutex.WaitOne(50); // 缩短锁等待
+                    lockTaken = _rwMutex.WaitOne(50); // 缩短锁等待
+                    if (!lockTaken)
+                    {
+                        await Task.Delay(20, sub.Cts.Token);
+                        continue;
+                    }
+
                     try
                     {
                         int readPos = _accessor.ReadInt32(4);
                         int msgCount = _accessor.ReadInt32(8);
-                        if (msgCount == 0)
+                        if (msgCount > 0)
                         {
-                            // 无消息，短暂休眠
-                            await Task.Delay(20, sub.Cts.Token);
-                            continue;
-                        }
-
-                        int cur = readPos;
-                        for (int i = 0; i < msgCount; i++)
-                        {
-                            int mid = _accessor.ReadInt32(cur);
-                            int tid = _accessor.ReadInt32(cur + 4);
-
-                            if (mid > lastMsgId && tid == topicId)
+                            int cur = readPos;
+                            for (int i = 0; i < msgCount; i++)
                             {
-                                byte[] data = new byte[1024];
-                                _accessor.ReadArray(cur + 16, data, 0, data.Length);
-                                sub.Handler((mid, tid, data));
-                                lastMsgId = mid;
-                                hasNewMsg = true;
-                            }
+                                int mid = _accessor.ReadInt32(cur);
+                                int tid = _accessor.ReadInt32(cur + 4);
 
-                            cur += MESSAGE_SIZE;
-                            if (cur >= totalBufferSize) cur = HEADER_SIZE;
+                                if (mid > lastMsgId && tid == topicId)
+                                {
+                                    byte[] data = new byte[1024];
+                                    _accessor.ReadArray(cur + 16, data, 0, data.Length);
+                                    sub.Handler((mid, tid, data));
+                                    lastMsgId = mid;
+                                    hasNewMsg = true;
+                                }
+
+                                cur += MESSAGE_SIZE;
+                                if (cur >= totalBufferSize) cur = HEADER_SIZE;
+                            }
                         }
                     }
                     finally
                     {
-                        _rwMutex.ReleaseMutex();
+                        if (lockTaken)
+                            _rwMutex.ReleaseMutex();
                     }
                 }
                 catch (OperationCanceledException)
@@ -281,7 +307,12 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
 
                 // 【关键修复2】有新消息立刻循环，无消息仅休眠20ms，大幅降低丢消息概率
                 if (!hasNewMsg)
-                    await Task.Delay(20, sub.Cts.Token);
+                {
+                    if (_messageEvent is not null)
+                        _messageEvent.WaitOne(100);
+                    else
+                        await Task.Delay(20, sub.Cts.Token);
+                }
             }
         }, sub.Cts.Token);
     }
@@ -304,6 +335,19 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
                 _subscribers.TryRemove(topicId, out _);
         }
     }
+
+    private int GetCurrentMessageId()
+    {
+        _rwMutex.WaitOne();
+        try
+        {
+            return _accessor.ReadInt32(12);
+        }
+        finally
+        {
+            _rwMutex.ReleaseMutex();
+        }
+    }
     #endregion
 
     #region 内部模型与释放
@@ -312,6 +356,7 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
         public Guid Id { get; set; }
         public Action<(int MessageId, int TopicId, byte[] Data)> Handler { get; set; }
         public CancellationTokenSource Cts { get; set; }
+        public int LastMessageId { get; set; }
     }
 
     private class Subscription : IDisposable
@@ -336,8 +381,10 @@ public class SharedMemoryPubSub : ISharedMemoryPubSub
             Unsubscribe(topic);
 
         _cleanupTimer?.Dispose();
+        _messageEvent?.Dispose();
         _accessor?.Dispose();
         _mmf?.Dispose();
+        _mmapFileStream?.Dispose();
         _rwMutex?.Dispose();
 
         _disposed = true;

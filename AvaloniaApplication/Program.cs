@@ -19,7 +19,7 @@ static class Program
 
         if (app.IsAnotherInstanceRunning)
         {
-            throw new Exception("检测到程序正在运行，请关闭所有程序后重新运行");
+            return;
         }
 
         app.BuildAvaloniaApp(args)

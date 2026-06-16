@@ -35,7 +35,7 @@ public partial class App : IExitService
         {
             // 跨平台适配Mutex名称
             string mutexName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? $"Global\\{MutexKey}"
+                ? $"Local\\{MutexKey}"
                 : $"Local_{MutexKey}";
 
             // 全局保存Mutex，不能局部变量
@@ -59,7 +59,7 @@ public partial class App : IExitService
     /// <summary>懒加载共享内存</summary>
     private void InitSharedMemoryIfNull()
     {
-        _memoryPubSub ??= new SharedMemoryPubSub(nameof(AvaloniaApplication));
+        _memoryPubSub ??= new SharedMemoryPubSub(MutexKey);
     }
 
     /// <summary>订阅其他进程发来的唤醒指令</summary>
@@ -80,7 +80,7 @@ public partial class App : IExitService
             return;
 
         // 切换UI线程恢复窗口
-        Dispatcher.UIThread.Post(OpenMainWindow);
+        Dispatcher.UIThread.Post(ShowMainWindow);
     }
 
     public void Exit()
