@@ -7,6 +7,7 @@ using Ava.Xioa.Common.Const;
 using Ava.Xioa.Common.Events;
 using Ava.Xioa.Common.Input;
 using Ava.Xioa.Common.Models;
+using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Entities.SystemDbset;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
@@ -186,7 +187,8 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
         await Login();
     }
 
-    private async Task<bool> IfAdminSettingApplication(string account, string password)
+    [LogAspect]
+    public async Task<bool> IfAdminSettingApplication(string account, string password)
     {
         if (account != "xioa" || password != "xioa") return false;
 

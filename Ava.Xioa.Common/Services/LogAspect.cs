@@ -1,58 +1,51 @@
-﻿using AspectInjector.Broker;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Rougamo;
+using Rougamo.Context;
 
 namespace Ava.Xioa.Common.Services;
 
-[Aspect(Scope.Global)]
-public class LogAspect
+// 允许标记类+方法
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
+public class LogAspect : AsyncMoAttribute
 {
-    /// <summary>方法执行前打印日志</summary>
-    [Advice(Kind.Before, Targets = Target.Method)]
-    public void LogBefore(
-        [Argument(Source.Name)] string methodName,
-        [Argument(Source.Arguments)] object[] args,
-        [Argument(Source.Attribute)] LogAttribute logAttr
-    )
+    public LogAspect()
     {
-        Console.WriteLine($"[日志前置] {logAttr.Desc} 方法:{methodName} 参数:{string.Join(",", args)}");
+       
     }
 
-    /// <summary>方法执行完成后打印日志+耗时</summary>
-    [Advice(Kind.Around, Targets = Target.Method)]
-    public object LogAround(AdviceContext ctx)
+    // 进入方法（异步标准钩子）
+    public override ValueTask OnEntryAsync(MethodContext context)
     {
-        var sw = Stopwatch.StartNew();
+        var type = context.Method.DeclaringType;
+        var argsStr = context.Arguments == null || !context.Arguments.Any()
+            ? "无参数"
+            : string.Join(",", context.Arguments.Select(x => x?.ToString() ?? "null"));
 
-        // 执行原始方法
-        var result = ctx.Proceed();
-
-        sw.Stop();
-        Console.WriteLine($"[日志后置] 方法:{ctx.Method.Name} 耗时:{sw.ElapsedMilliseconds}ms 返回值:{result}");
-
-        return result;
+        Debug.WriteLine($"【进入】{type?.Name}.{context.Method.Name} 参数：{argsStr}");
+        return base.OnEntryAsync(context);
     }
 
-    /// <summary>异常拦截日志</summary>
-    [Advice(Kind.Error, Targets = Target.Method)]
-    public void LogError(
-        [Argument(Source.Exception)] Exception ex,
-        [Argument(Source.Name)] string methodName
-    )
+    // 方法正常返回（异步钩子）
+    public override ValueTask OnSuccessAsync(MethodContext context)
     {
-        Console.WriteLine($"[日志异常] 方法:{methodName} 异常:{ex.Message}");
+        Debug.WriteLine($"【成功】{context.Method.Name} 返回值：{context.ReturnValue ?? "null"}");
+        return base.OnSuccessAsync(context);
     }
-}
 
-/// <summary>标记需要日志切面的方法</summary>
-[Injection(typeof(LogAspect))]
-[AttributeUsage(AttributeTargets.Method)]
-public sealed class LogAttribute : Attribute
-{
-    public string Desc { get; }
-
-    public LogAttribute(string desc)
+    // 异常（异步钩子）
+    public override ValueTask OnExceptionAsync(MethodContext context)
     {
-        Desc = desc;
+        Debug.WriteLine($"【异常】{context.Method.Name} 错误信息：{context.Exception?.Message}");
+        return base.OnExceptionAsync(context);
+    }
+
+    // 最终退出（异步钩子）
+    public override ValueTask OnExitAsync(MethodContext context)
+    {
+        Debug.WriteLine($"【退出】{context.Method.Name}");
+        return base.OnExitAsync(context);
     }
 }

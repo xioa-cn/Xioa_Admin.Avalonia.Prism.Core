@@ -1,0 +1,9 @@
+<Project>
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Ava.Xioa.Common' and '$(MSBuildProjectName)' != 'ObservableBind.Generator'">
+    <PackageReference Include="Fody" Version="6.8.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Rougamo.Fody" Version="5.0.2" />
+  </ItemGroup>
+</Project>

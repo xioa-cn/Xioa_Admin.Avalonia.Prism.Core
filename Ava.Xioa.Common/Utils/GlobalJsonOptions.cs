@@ -17,6 +17,6 @@ public class GlobalJsonOptions
     // 类加载完成后锁定
     static GlobalJsonOptions()
     {
-        SerializeOptions.MakeReadOnly();
+        // SerializeOptions.MakeReadOnly();
     }
 }
