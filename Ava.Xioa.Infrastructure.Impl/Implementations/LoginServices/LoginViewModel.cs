@@ -99,7 +99,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
             var isAdmin = await IfAdminSettingApplication(this._account, this._password);
 
             GlobalUserInformation.Instance.Account = this._account;
-            
+
             if (isAdmin)
             {
                 GlobalUserInformation.Instance.UserName = "XIOA";
@@ -111,15 +111,17 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
                 return;
             }
 
-            var findUser = await _userInformationRepository.DbSet.FirstOrDefaultAsync(item => item.Account == this._account);
+            var findUser =
+                await _userInformationRepository.DbSet.FirstOrDefaultAsync(item => item.Account == this._account);
             if (findUser == null)
             {
                 _sukiDialogManager.SetMessage("帳號不存在", "登录报错").OfType(NotificationType.Error).TryShow();
                 return;
             }
+
             GlobalUserInformation.Instance.UserName = findUser.UserName;
             GlobalUserInformation.Instance.UserAuthEnum = findUser.UserAuth;
-            
+
             ExecuteNavigate(
                 NavigationParametersHelper.TargetNavigationParameters("HomeView",
                     AppRegions.MainRegion));
@@ -128,7 +130,6 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
         }
         catch (Exception e)
         {
-            
         }
         finally
         {
