@@ -14,23 +14,39 @@ static class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        AppAuthor.DllCreateTime = System.IO.File.GetLastWriteTime(typeof(Program).Assembly.Location);
-
-        var app = new App(args);
-
-        if (!IsInDesignMode() && app.IsAnotherInstanceRunning)
+        if (!IsInDesignMode())
         {
-            return;
-        }
+            AppAuthor.DllCreateTime = System.IO.File.GetLastWriteTime(typeof(Program).Assembly.Location);
 
-        app.BuildAvaloniaApp(args)
-            .StartWithClassicDesktopLifetime(args);
+            var app = new App(args);
+
+            if (app.IsAnotherInstanceRunning)
+            {
+                return;
+            }
+
+            app.BuildAvaloniaApp(args)
+                .StartWithClassicDesktopLifetime(args);
+        }
+        else
+        {
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
+        }
     }
 
     /// <summary>判断当前是否为XAML预览设计器进程</summary>
     public static bool IsInDesignMode()
     {
         return Design.IsDesignMode;
+    }
+
+    public static AppBuilder BuildAvaloniaApp()
+    {
+        return AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace();
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

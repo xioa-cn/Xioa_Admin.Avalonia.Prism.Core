@@ -26,25 +26,25 @@
                         <TranslateTransform />
                     </Image.RenderTransform>
                     <!-- 原生动画：上下跳动（通过关键帧双向定义实现反向） -->
-                    <!-- <Image.Styles> -->
-                    <!--     <Style Selector="Image"> -->
-                    <!--         <Style.Animations> -->
-                    <!--             <Animation -->
-                    <!--                 Duration="0:0:3" -->
-                    <!--                 IterationCount="Infinite"> -->
-                    <!--                 <KeyFrame Cue="0%"> -->
-                    <!--                     <Setter Property="(TranslateTransform.Y)" Value="0" /> -->
-                    <!--                 </KeyFrame> -->
-                    <!--                 <KeyFrame Cue="50%"> -->
-                    <!--                     <Setter Property="(TranslateTransform.Y)" Value="-20" /> -->
-                    <!--                 </KeyFrame> -->
-                    <!--                 <KeyFrame Cue="100%"> -->
-                    <!--                     <Setter Property="(TranslateTransform.Y)" Value="0" /> -->
-                    <!--                 </KeyFrame> -->
-                    <!--             </Animation> -->
-                    <!--         </Style.Animations> -->
-                    <!--     </Style> -->
-                    <!-- </Image.Styles> -->
+                    <Image.Styles>
+                        <Style Selector="Image">
+                            <Style.Animations>
+                                <Animation
+                                    Duration="0:0:3"
+                                    IterationCount="Infinite">
+                                    <KeyFrame Cue="0%">
+                                        <Setter Property="(TranslateTransform.Y)" Value="0" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="50%">
+                                        <Setter Property="(TranslateTransform.Y)" Value="-20" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="100%">
+                                        <Setter Property="(TranslateTransform.Y)" Value="0" />
+                                    </KeyFrame>
+                                </Animation>
+                            </Style.Animations>
+                        </Style>
+                    </Image.Styles>
                 </Image>
             </Grid>
 

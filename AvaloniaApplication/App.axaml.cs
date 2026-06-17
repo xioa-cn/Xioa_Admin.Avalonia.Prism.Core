@@ -32,6 +32,11 @@ public partial class App : PrismApplicationBase
     {
         _startupArgs = args;
     }
+
+    public App()
+    {
+        _startupArgs = [];
+    }
     
     public override void Initialize()
     {
