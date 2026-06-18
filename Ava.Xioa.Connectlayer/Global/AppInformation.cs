@@ -2,7 +2,7 @@
 
 namespace Ava.Xioa.Connectlayer.Global;
 
-public class AppInformation : IAvaloniaI18nSerivce
+public class AppInformation : IAvaloniaI18Nable
 {
     private static AppInformation? _instance;
 

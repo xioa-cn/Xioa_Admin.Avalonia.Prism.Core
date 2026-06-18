@@ -2,18 +2,18 @@
 
 namespace Ava.Xioa.Common.Themes.I18n;
 
-public interface IAvaloniaI18nSerivce
+public interface IAvaloniaI18Nable
 {
 }
 
 public static class IAvaloniaI18nHelper
 {
-    public static string Tr(this IAvaloniaI18nSerivce avaloniaI18NHelper, string key)
+    public static string Tr(this IAvaloniaI18Nable avaloniaI18NHelper, string key)
     {
         return I18nManager.Instance.GetString(key);
     }
 
-    public static string Tr(this IAvaloniaI18nSerivce avaloniaI18NHelper, string key, string defaultValue)
+    public static string Tr(this IAvaloniaI18Nable avaloniaI18NHelper, string key, string defaultValue)
     {
         return I18nManager.Instance.GetString(key, defaultValue);
     }
