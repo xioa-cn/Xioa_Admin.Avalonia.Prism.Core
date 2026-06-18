@@ -2,29 +2,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:Ava.Xioa.Common.Themes.Services.Services"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:vm="clr-namespace:Ava.Xioa.Common.Themes.Services.Services"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="vm:IUserUpdateDialogServices"
-             x:Class="Ava.Xioa.Common.Themes.Dialogs.UserUpdateDialog">
-    
-    <UserControl.Styles>
-       
-
-        <Style Selector="Grid.Row">
-            <Setter Property="Height" Value="40" />
-            <Setter Property="Margin" Value="12,4,4,0" />
-        </Style>
-    </UserControl.Styles>
-
-    
+             x:DataType="vm:ITextInstructionService" FontWeight="Bold"
+             x:Class="Ava.Xioa.Connectlayer.Dialogs.TextInstructionDialog">
     <suki:GroupBox Header="">
         <StackPanel Classes="HeaderContent">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Categories}" />
-            </ScrollViewer>
-            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="9">
+            <TextBlock FontWeight="Bold" FontSize="15"
+                       Text="{Binding Title}">
+            </TextBlock>
+
+            <TextBlock FontWeight="SemiLight" FontSize="12" Foreground="{DynamicResource ErrorBrush}"
+                       Text="{Binding Message}">
+            </TextBlock>
+
+            <StackPanel Margin="0,50,0,0" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="9">
                 <Button HorizontalContentAlignment="Center"
                         Classes="Rounded"
                         Command="{Binding CancelCommand}"
@@ -35,6 +28,7 @@
                         Command="{Binding OkCommand}"
                         Content="确认" />
             </StackPanel>
+
         </StackPanel>
     </suki:GroupBox>
 </UserControl>

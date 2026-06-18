@@ -13,6 +13,8 @@ using Ava.Xioa.Common.Utils;
 using Ava.Xioa.InfrastructureModule;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Diagnostics;
+using Avalonia.Input;
 using AvaloniaApplication.ViewModels;
 using FlowModules;
 using Microsoft.Extensions.Configuration;
@@ -160,5 +162,9 @@ public partial class App : PrismApplicationBase
                 , ThreadOption.UIThread, true,
                 filter => filter.TokenKey == "ExitApplication");
         }
+        
+#if DEBUG
+        this.AttachDeveloperTools();
+#endif
     }
 }

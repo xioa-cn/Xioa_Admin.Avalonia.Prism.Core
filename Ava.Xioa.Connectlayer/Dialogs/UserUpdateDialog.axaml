@@ -1,0 +1,105 @@
+﻿<UserControl
+    x:Class="Ava.Xioa.Common.Themes.Dialogs.UserUpdateDialog"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Enum="clr-namespace:Ava.Xioa.Common.Models;assembly=Ava.Xioa.Common"
+    xmlns:System="clr-namespace:System;assembly=System.Runtime"
+    xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i18N="clr-namespace:Ava.Xioa.Common.Themes.I18n;assembly=Ava.Xioa.Common.Themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:suki="https://github.com/kikipoulet/SukiUI"
+    xmlns:vm="clr-namespace:Ava.Xioa.Common.Themes.Services.Services"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:IUserUpdateDialogServices"
+    FontWeight="Bold"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <collections:AvaloniaList x:Key="AuthList" x:TypeArguments="Enum:UserAuthEnum">
+            <Enum:UserAuthEnum>Admin</Enum:UserAuthEnum>
+            <Enum:UserAuthEnum>Engineer</Enum:UserAuthEnum>
+            <Enum:UserAuthEnum>Employee</Enum:UserAuthEnum>
+        </collections:AvaloniaList>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="Grid.Row">
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Margin" Value="12,4,4,0" />
+        </Style>
+    </UserControl.Styles>
+
+
+    <suki:GroupBox Header="">
+        <StackPanel Classes="HeaderContent">
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="100"
+                    VerticalAlignment="Center"
+                    Text="{i18N:LocalizeExtension Account}" />
+                <TextBox
+                    Width="200"
+                    VerticalAlignment="Center" IsHitTestVisible="False"
+                    IsReadOnly="True" HorizontalAlignment="Left"
+                    Text="{Binding View.Account}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="100"
+                    VerticalAlignment="Center"
+                    Text="{i18N:LocalizeExtension UserName}" />
+                <TextBox
+                    Width="200" HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Text="{Binding View.UserName}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="100"
+                    VerticalAlignment="Center"
+                    Text="{i18N:LocalizeExtension Password}" />
+                <TextBox
+                    Width="200" HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Text="{Binding View.Password}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="100"
+                    VerticalAlignment="Center"
+                    Text="{i18N:LocalizeExtension Auth}" />
+                <ComboBox
+                    Width="200" Padding="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    ItemsSource="{StaticResource AuthList}"
+                    SelectedValue="{Binding View.UserAuth}">
+                </ComboBox>
+            </StackPanel>
+
+
+            <StackPanel
+                Margin="0,50,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="9">
+                <Button
+                    HorizontalContentAlignment="Center"
+                    Classes="Rounded"
+                    Command="{Binding CancelCommand}"
+                    Content="{i18N:LocalizeExtension Cancel}" />
+
+                <Button
+                    HorizontalContentAlignment="Center"
+                    Classes="Rounded Flat"
+                    Command="{Binding OkCommand}"
+                    Content="{i18N:LocalizeExtension Confirm}" />
+            </StackPanel>
+        </StackPanel>
+    </suki:GroupBox>
+</UserControl>

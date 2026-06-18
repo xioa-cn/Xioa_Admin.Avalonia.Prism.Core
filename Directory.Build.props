@@ -1,9 +1,13 @@
 <Project>
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'Ava.Xioa.Common' and '$(MSBuildProjectName)' != 'ObservableBind.Generator'">
-    <PackageReference Include="Fody" Version="6.8.1">
+    <PackageReference Include="Fody" Version="6.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Rougamo.Fody" Version="5.0.2" />
+
+
+    <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="12.0.4" PrivateAssets="All" Publish="True" />
+    <!--<PackageReference Include="HotAvalonia" Version="3.1.1" PrivateAssets="All" Publish="True" />-->
   </ItemGroup>
 </Project>

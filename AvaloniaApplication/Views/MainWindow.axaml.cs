@@ -67,7 +67,7 @@ public partial class MainWindow : SukiWindow
         this.Width = 444;
         this.Height = 550;
         this.Loaded += OnLoaded;
-        InitializeComponent(attachDevTools: false);
+        InitializeComponent();
         this.WindowContentControl.Content = userControl;
 
         this.OnceExecutedLoaded(() =>

@@ -4,7 +4,7 @@ namespace Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 
 public class SukiBackgroundStyleDesc
 {
-    public SukiBackgroundStyle SukiBackgroundStyle { get; set; }
+    public SukiBackgroundStyle SukiBackgroundStyle { get; set; } = SukiBackgroundStyle.Bubble;
     public string Description { get; set; }
 
     public int Key { get; set; }

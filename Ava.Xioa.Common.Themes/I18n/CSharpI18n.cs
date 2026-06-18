@@ -25,12 +25,12 @@ public class CSharpI18n
     /// 后台使用使用I18n
     /// </summary>
     /// <returns></returns>
-    public static (Func<string, string> L, string usingLang) UseI18n()
+    public static (Func<string, string> Tr, string usingLang) UseI18n()
     {
         return (I18nManager.Instance.GetString, I18nManager.Instance.UsingLanguage);
     }
 
-    public static (Func<string, string, string> L, string usingLang) UseI18nOfDefault()
+    public static (Func<string, string, string> Tr, string usingLang) UseI18nOfDefault()
     {
         return (I18nManager.Instance.GetString, I18nManager.Instance.UsingLanguage);
     }

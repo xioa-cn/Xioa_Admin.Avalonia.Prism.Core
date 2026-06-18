@@ -48,21 +48,21 @@
                             <DataGrid.Columns>
                                 <!-- 优化后的序列号列（无转换器、无遍历） -->
                                 <DataGridTextColumn
-                                    Width="auto"
+                                    Width="auto" IsReadOnly="True"
                                     Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Header}"
                                     Header="序号" />
-                                <DataGridTextColumn
-                                    Binding="{Binding UserName}"
-                                    Header="用户名" />
-                                <DataGridTextColumn
-                                    Binding="{Binding Account}"
-                                    Header="账户" />
-                                <DataGridTextColumn
-                                    Binding="{Binding Password}"
-                                    Header="密码" />
-                                <DataGridTextColumn
-                                    Binding="{Binding UserAuth}"
-                                    Header="权限" />
+                                <DataGridTextColumn IsReadOnly="True"
+                                                    Binding="{Binding UserName}"
+                                                    Header="用户名" />
+                                <DataGridTextColumn IsReadOnly="True"
+                                                    Binding="{Binding Account}"
+                                                    Header="账户" />
+                                <DataGridTextColumn IsReadOnly="True"
+                                                    Binding="{Binding Password}"
+                                                    Header="密码" />
+                                <DataGridTextColumn IsReadOnly="True"
+                                                    Binding="{Binding UserAuth}"
+                                                    Header="权限" />
                                 <DataGridTemplateColumn Header="操作" SortMemberPath="IntColumn">
                                     <DataTemplate x:DataType="mapper:UserInformation">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
