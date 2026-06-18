@@ -1,4 +1,4 @@
-﻿namespace Ava.Xioa.Common.Const;
+﻿namespace Ava.Xioa.Connectlayer.Global;
 
 public class AppRegions
 {

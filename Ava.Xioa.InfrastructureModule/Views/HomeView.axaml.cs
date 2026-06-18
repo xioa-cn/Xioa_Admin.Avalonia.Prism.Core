@@ -9,7 +9,7 @@ using Avalonia.Controls.Notifications;
 
 namespace Ava.Xioa.InfrastructureModule.Views;
 
-[PrismRegisterForNavigation(navigationName: nameof(HomeView), region: AppRegions.MainRegion, zIndex: 9998)]
+[PrismRegisterForNavigation(navigationName: AvaRouter.HomeView, region: AppRegions.MainRegion, zIndex: 9998)]
 public partial class HomeView : UserControl
 {
     public HomeView(IHomeServices homeServices, IToastsService toastsService)

@@ -3,12 +3,13 @@ using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Const;
 using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
+using Ava.Xioa.Connectlayer.Global;
 using Ava.Xioa.Infrastructure.Services.Services.SplashServices;
 using Avalonia.Interactivity;
 
 namespace Ava.Xioa.InfrastructureModule.Views
 {
-    [PrismRegisterForNavigation(navigationName: nameof(SplashView), region: AppRegions.MainRegion, zIndex: 9999)]
+    [PrismRegisterForNavigation(navigationName: AvaRouter.SplashView, region: AppRegions.MainRegion, zIndex: 9999)]
     public partial class SplashView : UserControl
     {
         public SplashView(ISplashServices splashServices)

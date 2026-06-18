@@ -8,7 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:suki="https://github.com/kikipoulet/SukiUI"
     xmlns:viewModels="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.LoginServices;assembly=Ava.Xioa.Infrastructure.Services"
-    
+    xmlns:const1="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Connectlayer"
+    xmlns:global="clr-namespace:Ava.Xioa.Connectlayer.Global;assembly=Ava.Xioa.Connectlayer"
+
     x:DataType="viewModels:ILoginServices"
     mc:Ignorable="d">
     <suki:BusyArea Name="BusySignIn"
@@ -56,7 +58,7 @@
                     <TextBlock
                         FontSize="20"
                         FontWeight="Bold"
-                        Text="{Binding Source={x:Static const:AppInformation.Instance}, Path=ApplicationName}" />
+                        Text="{Binding Source={x:Static global:AppInformation.Instance}, Path=ApplicationName}" />
                 </suki:GroupBox.Header>
                 <Grid>
                     <suki:GlassCard

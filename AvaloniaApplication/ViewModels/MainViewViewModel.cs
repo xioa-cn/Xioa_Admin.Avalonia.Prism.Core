@@ -2,6 +2,7 @@
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Const;
 using Ava.Xioa.Common.Utils;
+using Ava.Xioa.Connectlayer.Global;
 using Prism.Events;
 using Prism.Navigation.Regions;
 using SukiUI.Dialogs;
@@ -22,7 +23,7 @@ public class MainViewViewModel : NavigableViewModelObject
         ToastManager = toastManager;
         DialogManager = dialogManager;
         var navigationParameters =
-            NavigationParametersHelper.TargetNavigationParameters("SplashView", AppRegions.MainRegion);
+            NavigationParametersHelper.TargetNavigationParameters(AvaRouter.SplashView, AppRegions.MainRegion);
         base.ExecuteNavigate(navigationParameters);
     }
 }

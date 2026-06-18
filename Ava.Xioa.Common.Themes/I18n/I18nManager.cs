@@ -269,6 +269,22 @@ public class I18nManager
         return $"[{key}]";
     }
 
+    public string GetString(string key, string defaultValue)
+    {
+        if (_currentLangDict?.TryGetValue(key, out var value) == true)
+        {
+            // 如果找到值，则将其转换为字符串并返回
+            return value.ToString();
+        }
+
+        if (!string.IsNullOrEmpty(defaultValue))
+        {
+            return defaultValue;
+        }
+
+        return $"[{key}]";
+    }
+
     private Func<string, string>? _extensionKeyValue;
 
     public void ExtensionValueFunc(Func<string, string> func)

@@ -11,6 +11,7 @@ using Ava.Xioa.Common.Themes.I18n;
 using Ava.Xioa.Common.Themes.Services.Services;
 using Ava.Xioa.Common.Themes.Utils;
 using Ava.Xioa.Common.Utils;
+using Ava.Xioa.Connectlayer.Global;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
@@ -56,7 +57,7 @@ public partial class MainWindow : SukiWindow
         _closeDialogService.LogoutAction += () =>
         {
             GlobalUserInformation.Instance.UserAuthEnum = UserAuthEnum.None;
-            mainWindowViewModel.RegionManager.RequestNavigate(AppRegions.MainRegion, "LoginView", NavigationCompleted);
+            mainWindowViewModel.RegionManager.RequestNavigate(AppRegions.MainRegion, AvaRouter.LoginView, NavigationCompleted);
         };
         _closeDialogService.MiniSizeAction += () => { this.Hide(); };
 

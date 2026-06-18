@@ -9,6 +9,7 @@ using Ava.Xioa.Common.Input;
 using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
+using Ava.Xioa.Connectlayer.Global;
 using Ava.Xioa.Entities.SystemDbset;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation.Mapper;
@@ -105,7 +106,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
                 GlobalUserInformation.Instance.UserName = "XIOA";
                 GlobalUserInformation.Instance.UserAuthEnum = UserAuthEnum.Admin;
                 ExecuteNavigate(
-                    NavigationParametersHelper.TargetNavigationParameters("HomeView",
+                    NavigationParametersHelper.TargetNavigationParameters(AvaRouter.HomeView,
                         AppRegions.MainRegion));
                 AutoMethodVm();
                 return;
@@ -123,7 +124,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
             GlobalUserInformation.Instance.UserAuthEnum = findUser.UserAuth;
 
             ExecuteNavigate(
-                NavigationParametersHelper.TargetNavigationParameters("HomeView",
+                NavigationParametersHelper.TargetNavigationParameters(AvaRouter.HomeView,
                     AppRegions.MainRegion));
 
             AutoMethodVm();

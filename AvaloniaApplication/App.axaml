@@ -6,11 +6,13 @@
                             xmlns:suki="https://github.com/kikipoulet/SukiUI"
                             xmlns:local="using:AvaloniaApplication"
                             xmlns:prism="clr-namespace:Prism;assembly=Prism.Avalonia"
+                            xmlns:const1="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Connectlayer"
+                            xmlns:global="clr-namespace:Ava.Xioa.Connectlayer.Global;assembly=Ava.Xioa.Connectlayer"
                             RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
     <TrayIcon.Icons>
         <TrayIcons>
-            <TrayIcon ToolTipText="{Binding Source={x:Static const:AppInformation.Instance}, Path=ApplicationName}">
+            <TrayIcon ToolTipText="{Binding Source={x:Static global:AppInformation.Instance}, Path=ApplicationName}">
             </TrayIcon>
         </TrayIcons>
     </TrayIcon.Icons>
