@@ -15,7 +15,7 @@ public partial class Program
 
         // 标题与分割线
         WriteSeparatorLine();
-        WriteColorLine("===== 项目创建工具（.NET 8）=====", ConsoleColor.Magenta);
+        WriteColorLine("===== 项目创建工具（.NET 10）=====", ConsoleColor.Magenta);
         WriteSeparatorLine();
 
         // 自动搜索 .sln
@@ -49,7 +49,7 @@ public partial class Program
 
         // 固定配置
         string projectType = "classlib";
-        string framework = "net8.0";
+        string framework = "net10.0";
         WriteColorLine($"\n配置确认：类型={projectType} | 框架={framework}", COLOR_WARNING);
         if (!string.IsNullOrEmpty(solutionFolder))
         {
