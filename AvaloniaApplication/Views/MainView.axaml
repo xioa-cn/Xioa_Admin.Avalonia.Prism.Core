@@ -6,13 +6,13 @@
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             xmlns:regions="http://prismlibrary.com/"
              xmlns:global="clr-namespace:Ava.Xioa.Connectlayer.Global;assembly=Ava.Xioa.Connectlayer"
+             xmlns:regions1="clr-namespace:Prism.Navigation.Regions;assembly=Prism"
              x:DataType="vm:MainViewViewModel"
              x:Class="AvaloniaApplication.Views.MainView">
     <Grid>
-        <ContentControl
-            regions:RegionManager.RegionName="{Binding Source={x:Static global:AppRegions.Instance},Path=Main}" />
+        <ContentControl 
+            regions1:RegionManager.RegionName="{Binding Source={x:Static global:AppRegions.Instance},Path=Main}" />
         <!-- 对话框容器 -->
         <suki:SukiDialogHost Name="SukiDialogHost"/>
         <!-- 通知容器 -->

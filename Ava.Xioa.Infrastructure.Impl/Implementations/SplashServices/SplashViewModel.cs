@@ -9,6 +9,7 @@ using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
 using Prism.Events;
+using Prism.Navigation;
 using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.SplashServices;

@@ -47,14 +47,20 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.9" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.9" />
-        <PackageReference Include="Prism.Avalonia" Version="9.0.537.11130" />
-        <PackageReference Include="Prism.Core" Version="9.0.537" />
         <PackageReference Include="Rougamo.Fody" Version="5.0.2">
            
         </PackageReference>
         <PackageReference Include="SukiUI" Version="7.0.1" />
         <PackageReference Include="SukiUI.Dock" Version="7.0.1" />
         <PackageReference Include="Svg.Skia" Version="3.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Prism\Prism.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common\" />
     </ItemGroup>
 
    

@@ -74,7 +74,7 @@
                     VerticalAlignment="Center"
                     Text="{i18N:LocalizeExtension Auth}" />
                 <ComboBox
-                    Width="200" Padding="0"
+                    Width="210" Margin="-5,0,0,0"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
                     ItemsSource="{StaticResource AuthList}"

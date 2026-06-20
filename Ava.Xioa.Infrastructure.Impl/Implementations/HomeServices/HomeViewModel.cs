@@ -1,5 +1,7 @@
 ﻿using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Services;
+using Ava.Xioa.Common.Utils;
+using Ava.Xioa.Connectlayer.Global;
 using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
@@ -7,23 +9,28 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Core.Mvvm;
 using Prism.Events;
+using Prism.Navigation;
 using Prism.Navigation.Regions;
 using SukiUI.Controls;
 
 namespace Ava.Xioa.Infrastructure.Impl.Implementations.HomeServices;
 
 [PrismViewModel(typeof(IHomeServices), ServiceLifetime.Singleton)]
-public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
+public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices, IVmLoaded
 {
     private readonly IMainWindowServices _mainWindowServices;
 
     public IMainWindowServices MainWindowServices => _mainWindowServices;
     public INavigableMenuServices NavigableMenuServices { get; }
 
-    public HomeViewModel(IRegionManager regionManager,IEventAggregator eventAggregator, IMainWindowServices mainWindowServices,
+    private readonly OnceLoaded _onLoaded;
+
+    public HomeViewModel(IRegionManager regionManager, IEventAggregator eventAggregator,
+        IMainWindowServices mainWindowServices,
         INavigableMenuServices navigableMenuServices, HotKeyServices hotKeyServices,
-        IToastsService toastsService) : base(eventAggregator,regionManager,
+        IToastsService toastsService) : base(eventAggregator, regionManager,
         mainWindowServices)
     {
         _mainWindowServices = mainWindowServices;
@@ -38,7 +45,7 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
                 }
             },
             "Close_Full_Screen");
-        
+
         hotKeyServices.SetPageHotKey(new KeyGesture(Key.F, KeyModifiers.Control),
             () =>
             {
@@ -48,6 +55,15 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
                 }
             },
             "Open_Full_Screen");
+
+        _onLoaded = new OnceLoaded();
+
+        _onLoaded.SetOnLoaded(() =>
+        {
+            ExecuteNavigate(
+                NavigationParametersHelper.TargetNavigationParameters(AvaRouter.HomeWelcome,
+                    AppRegions.HomeRegion));
+        });
     }
 
     protected override Size AfterChangeSize { get; } = new Size(1536, 808);
@@ -66,5 +82,15 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices
         _mainWindowServices.IsMenuVisible = true;
         _mainWindowServices.TitleBarVisibilityOnFullScreen = SukiWindow.TitleBarVisibilityMode.Visible;
         base.OnNavigatedTo(navigationContext);
+    }
+
+    public void Load()
+    {
+        _onLoaded.Load();
+    }
+
+    public void Unload()
+    {
+        _onLoaded.Unload();
     }
 }

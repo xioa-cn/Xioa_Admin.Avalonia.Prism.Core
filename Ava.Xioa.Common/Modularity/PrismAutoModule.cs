@@ -1,4 +1,4 @@
-﻿using Ava.Xioa.Common.Extensions;
+using Ava.Xioa.Common.Extensions;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Navigation.Regions;

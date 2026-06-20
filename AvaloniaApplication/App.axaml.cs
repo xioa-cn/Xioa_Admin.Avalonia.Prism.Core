@@ -12,13 +12,14 @@ using Ava.Xioa.Common.Themes.Services.Services;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.InfrastructureModule;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Diagnostics;
 using Avalonia.Input;
 using AvaloniaApplication.ViewModels;
 using FlowModules;
+using HotAvalonia;
 using Microsoft.Extensions.Configuration;
-using Prism.Container.DryIoc;
 using Prism.Events;
 using Prism.Modularity;
 using Prism.Navigation.Regions;
@@ -30,6 +31,7 @@ namespace AvaloniaApplication;
 public partial class App : PrismApplicationBase
 {
     private readonly string[] _startupArgs;
+
     public App(string[] args)
     {
         _startupArgs = args;
@@ -39,17 +41,12 @@ public partial class App : PrismApplicationBase
     {
         _startupArgs = [];
     }
-    
+
     public override void Initialize()
     {
         ConfigureLangManager();
         AvaloniaXamlLoader.Load(this);
         base.Initialize();
-    }
-
-    protected override IContainerExtension CreateContainerExtension()
-    {
-        return new DryIocContainerExtension();
     }
 
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -67,6 +64,7 @@ public partial class App : PrismApplicationBase
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        if (Design.IsDesignMode) return;
         IConfiguration configuration = new ConfigurationManager()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -128,6 +126,9 @@ public partial class App : PrismApplicationBase
     {
         DisableAvaloniaDataAnnotationValidation();
         base.OnInitialized();
+        
+        this.UseHotReload();
+        
         // var regionManager = Container.Resolve<IRegionManager>();
         // regionManager.RequestNavigate("SplashView", AppRegions.MainRegion);
     }
@@ -146,7 +147,7 @@ public partial class App : PrismApplicationBase
     public override void OnFrameworkInitializationCompleted()
     {
         RegisterGlobalExceptionHandler();
-        
+
         base.OnFrameworkInitializationCompleted();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -162,7 +163,7 @@ public partial class App : PrismApplicationBase
                 , ThreadOption.UIThread, true,
                 filter => filter.TokenKey == "ExitApplication");
         }
-        
+
 #if DEBUG
         this.AttachDeveloperTools();
 #endif

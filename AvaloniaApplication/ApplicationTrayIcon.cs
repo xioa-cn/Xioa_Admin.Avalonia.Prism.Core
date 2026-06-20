@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using CommunityToolkit.Mvvm.Input;
 using Prism.Events;
 using Prism.Ioc;
 using SkiaSharp;

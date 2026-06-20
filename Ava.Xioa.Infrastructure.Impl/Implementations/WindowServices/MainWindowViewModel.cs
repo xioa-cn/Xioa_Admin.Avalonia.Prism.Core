@@ -100,10 +100,6 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
         if (window == null)
             return;
 
-        // 确保窗口尺寸已确定（如果是动态尺寸，先更新布局）
-        window.Measure(Size.Infinity);
-        window.Arrange(new Rect(window.DesiredSize));
-
         // 获取主屏幕工作区（排除任务栏等）
         var screen = window.Screens.ScreenFromVisual(window);
         if (screen == null)

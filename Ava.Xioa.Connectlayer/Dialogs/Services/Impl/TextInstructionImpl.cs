@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common.Input;
 using Ava.Xioa.Common.Themes.Services.Services;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Dialogs;
 

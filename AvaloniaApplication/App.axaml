@@ -1,13 +1,13 @@
-<prism:PrismApplicationBase xmlns="https://github.com/avaloniaui"
+<prism1:PrismApplicationBase xmlns="https://github.com/avaloniaui"
                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                             x:Class="AvaloniaApplication.App"
                             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
                             xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
                             xmlns:suki="https://github.com/kikipoulet/SukiUI"
                             xmlns:local="using:AvaloniaApplication"
-                            xmlns:prism="clr-namespace:Prism;assembly=Prism.Avalonia"
                             xmlns:const1="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Connectlayer"
                             xmlns:global="clr-namespace:Ava.Xioa.Connectlayer.Global;assembly=Ava.Xioa.Connectlayer"
+                            xmlns:prism1="clr-namespace:Prism;assembly=Prism"
                             RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
     <TrayIcon.Icons>
@@ -43,4 +43,4 @@
         <avalonia:MaterialIconStyles />
         <StyleInclude Source="avares://FlowModules/Styles/ControlStyles.axaml"></StyleInclude>
     </Application.Styles>
-</prism:PrismApplicationBase>
+</prism1:PrismApplicationBase>
