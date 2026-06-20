@@ -1,4 +1,7 @@
-﻿namespace Prism.Navigation;
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Prism.Navigation;
 
 public interface IConfirmNavigationRequest : INavigationAware
 {

@@ -1,4 +1,7 @@
-﻿namespace Prism.Events;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Prism.Events;
 
 public class EventAggregator : IEventAggregator
 {

@@ -1,4 +1,6 @@
-﻿namespace Prism.Navigation;
+﻿using System.Collections.Generic;
+
+namespace Prism.Navigation;
 
 public interface INavigationParameters : IEnumerable<KeyValuePair<string, object?>>
 {

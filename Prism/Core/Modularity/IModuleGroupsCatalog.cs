@@ -1,4 +1,6 @@
-﻿namespace Prism.Modularity;
+﻿using System.Collections.Generic;
+
+namespace Prism.Modularity;
 
 public interface IModuleGroupsCatalog
 {

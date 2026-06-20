@@ -1,4 +1,6 @@
-﻿namespace Prism.Modularity;
+﻿using System;
+
+namespace Prism.Modularity;
 
 public interface IModuleManager
 {

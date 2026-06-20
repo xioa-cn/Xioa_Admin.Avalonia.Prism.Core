@@ -1,4 +1,6 @@
-﻿using Prism.Ioc;
+﻿using System;
+using System.Threading.Tasks;
+using Prism.Ioc;
 
 namespace Prism.Navigation.Regions;
 

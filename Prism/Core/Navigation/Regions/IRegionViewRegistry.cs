@@ -1,4 +1,7 @@
-﻿namespace Prism.Navigation.Regions;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Prism.Navigation.Regions;
 
 public interface IRegionViewRegistry
 {

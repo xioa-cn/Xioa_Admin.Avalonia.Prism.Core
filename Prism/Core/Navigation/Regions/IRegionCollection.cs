@@ -1,4 +1,6 @@
-﻿namespace Prism.Navigation.Regions;
+﻿using System.Collections.Generic;
+
+namespace Prism.Navigation.Regions;
 
 public interface IRegionCollection : IEnumerable<IRegion>
 {

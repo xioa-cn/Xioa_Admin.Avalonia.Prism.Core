@@ -1,4 +1,7 @@
-﻿namespace Prism.Modularity;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Prism.Modularity;
 
 public sealed class ModuleInfo : IModuleInfo, IModuleCatalogItem
 {

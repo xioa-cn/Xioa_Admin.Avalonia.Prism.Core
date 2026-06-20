@@ -1,4 +1,7 @@
-﻿namespace Prism.Mvvm;
+﻿using System;
+using System.Threading;
+
+namespace Prism.Mvvm;
 
 public sealed class ViewModelLocationScope : IDisposable
 {

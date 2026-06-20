@@ -1,4 +1,7 @@
-﻿namespace Prism.Mvvm;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Prism.Mvvm;
 
 public sealed class ViewModelLocationScopeNode
 {

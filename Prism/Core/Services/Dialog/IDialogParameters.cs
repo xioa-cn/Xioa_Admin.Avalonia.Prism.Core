@@ -1,4 +1,6 @@
-﻿namespace Prism.Dialogs;
+﻿using System.Collections.Generic;
+
+namespace Prism.Dialogs;
 
 public interface IDialogParameters : IEnumerable<KeyValuePair<string, object?>>
 {

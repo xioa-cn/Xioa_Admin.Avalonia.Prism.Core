@@ -1,4 +1,6 @@
-﻿namespace Prism.Ioc;
+﻿using System;
+
+namespace Prism.Ioc;
 
 public sealed class ContainerResolutionException : InvalidOperationException
 {

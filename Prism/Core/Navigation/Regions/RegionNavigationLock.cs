@@ -1,4 +1,8 @@
-﻿namespace Prism.Navigation.Regions;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Prism.Navigation.Regions;
 
 internal sealed class RegionNavigationLock
 {

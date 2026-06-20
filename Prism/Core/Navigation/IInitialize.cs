@@ -1,4 +1,6 @@
-﻿namespace Prism.Navigation;
+﻿using System.Threading.Tasks;
+
+namespace Prism.Navigation;
 
 public interface IInitialize
 {

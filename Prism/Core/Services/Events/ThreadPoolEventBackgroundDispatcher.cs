@@ -1,4 +1,7 @@
-﻿namespace Prism.Events;
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Prism.Events;
 
 public sealed class ThreadPoolEventBackgroundDispatcher : IEventBackgroundDispatcher
 {

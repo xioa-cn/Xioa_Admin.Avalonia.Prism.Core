@@ -1,4 +1,6 @@
-﻿namespace Prism.Dialogs;
+﻿using System;
+
+namespace Prism.Dialogs;
 
 public interface IDialogService
 {

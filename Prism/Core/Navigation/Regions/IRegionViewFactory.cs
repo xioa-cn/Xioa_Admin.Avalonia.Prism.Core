@@ -1,4 +1,6 @@
-﻿namespace Prism.Navigation.Regions;
+﻿using System;
+
+namespace Prism.Navigation.Regions;
 
 public interface IRegionViewFactory
 {

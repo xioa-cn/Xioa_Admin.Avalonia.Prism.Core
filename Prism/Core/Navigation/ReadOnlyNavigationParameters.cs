@@ -1,4 +1,8 @@
-﻿namespace Prism.Navigation;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Prism.Navigation;
 
 public sealed class ReadOnlyNavigationParameters : Dictionary<string, object?>, INavigationParameters, IDictionary<string, object?>
 {

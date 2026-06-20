@@ -1,3 +1,5 @@
+using System;
+
 namespace Prism.Ioc;
 
 public interface IDynamicContainerRegistry

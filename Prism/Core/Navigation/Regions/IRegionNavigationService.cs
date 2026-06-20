@@ -1,4 +1,7 @@
-﻿namespace Prism.Navigation.Regions;
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Prism.Navigation.Regions;
 
 public interface IRegionNavigationService
 {

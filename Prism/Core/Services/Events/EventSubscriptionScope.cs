@@ -1,4 +1,6 @@
-﻿namespace Prism.Events;
+﻿using System.Collections.Generic;
+
+namespace Prism.Events;
 
 public sealed class EventSubscriptionScope : IEventSubscriptionScope
 {

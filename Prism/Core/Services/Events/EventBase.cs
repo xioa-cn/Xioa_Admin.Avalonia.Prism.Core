@@ -1,4 +1,8 @@
-﻿namespace Prism.Events;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Prism.Events;
 
 public abstract class EventBase
 {

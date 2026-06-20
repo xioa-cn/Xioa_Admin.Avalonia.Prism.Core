@@ -1,4 +1,7 @@
-﻿namespace Prism;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Prism;
 
 public static class BindableBaseOptions
 {

@@ -1,4 +1,6 @@
-﻿namespace Prism.Mvvm;
+﻿using System;
+
+namespace Prism.Mvvm;
 
 public sealed class ViewModelLocationScopeChangedEventArgs : EventArgs
 {

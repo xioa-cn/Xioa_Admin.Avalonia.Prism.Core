@@ -1,4 +1,6 @@
-﻿namespace Prism.Dialogs;
+﻿using System.Threading.Tasks;
+
+namespace Prism.Dialogs;
 
 public interface IDialogAnimation
 {

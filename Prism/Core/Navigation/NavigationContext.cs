@@ -1,4 +1,6 @@
-﻿namespace Prism.Navigation;
+﻿using System;
+
+namespace Prism.Navigation;
 
 public sealed class NavigationContext
 {

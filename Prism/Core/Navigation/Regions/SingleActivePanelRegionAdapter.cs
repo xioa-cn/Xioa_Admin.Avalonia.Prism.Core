@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System.Linq;
+using Avalonia.Controls;
 
 namespace Prism.Navigation.Regions;
 

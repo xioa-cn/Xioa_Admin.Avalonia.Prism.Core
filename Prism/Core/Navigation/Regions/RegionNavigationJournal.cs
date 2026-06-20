@@ -1,4 +1,8 @@
-﻿namespace Prism.Navigation.Regions;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Prism.Navigation.Regions;
 
 public sealed class RegionNavigationJournal : IRegionNavigationJournal
 {
