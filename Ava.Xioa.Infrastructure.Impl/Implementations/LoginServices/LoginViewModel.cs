@@ -22,6 +22,7 @@ using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Core.Mvvm;
 using Prism.Events;
 using Prism.Navigation;
 using Prism.Navigation.Regions;
@@ -47,6 +48,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
     private readonly INowUserInformationRepository _nowUserInformationRepository;
 
     private readonly ISukiDialogManager _sukiDialogManager;
+    private readonly OnceLoadedAsync _onLoaded;
 
     public LoginViewModel(IEventAggregator eventAggregator, IRegionManager regionManager,
         IMainWindowServices mainWindowServices,
@@ -62,6 +64,31 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
         LoginCommand = new AsyncRelayCommand(Login);
 
         ExitCommand = new RelayCommand(Exit);
+
+        _onLoaded = new OnceLoadedAsync();
+
+        _onLoaded.SetOnLoaded(async () =>
+        {
+            if (!_nowUserInformationRepository.DbIsExist)
+            {
+                return;
+            }
+
+            var nowUser = _nowUserInformationRepository.DbSet.FirstOrDefault();
+
+            if (nowUser is null) return;
+
+            this.Account = nowUser.Account;
+
+            if (!nowUser.RememberPassword) return;
+            this.Password = nowUser.Password;
+            this.IsRemember = nowUser.RememberPassword;
+
+            if (!nowUser.AutoLogin) return;
+            this.IsAutoLogin = nowUser.AutoLogin;
+
+            await Login();
+        });
     }
 
     private void Exit()
@@ -75,8 +102,8 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        _mainWindowServices.IsTitleBarVisible = true;
-        _mainWindowServices.ShowTitlebarBackground = true;
+        _mainWindowServices.IsTitleBarVisible = false;
+        _mainWindowServices.ShowTitlebarBackground = false;
         _mainWindowServices.CanMove = true;
         _mainWindowServices.ShowInTaskbar = true;
         _mainWindowServices.CanFullScreen = false;
@@ -87,7 +114,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
         _mainWindowServices.ShowBottomBorder = false;
         _mainWindowServices.IsMenuVisible = false;
         _mainWindowServices.TitleBarVisibilityOnFullScreen = SukiWindow.TitleBarVisibilityMode.Hidden;
-        _mainWindowServices.WindowState = WindowState.Normal;
+        // _mainWindowServices.WindowState = WindowState.Normal;
         base.OnNavigatedTo(navigationContext);
     }
 
@@ -111,6 +138,15 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
                     NavigationParametersHelper.TargetNavigationParameters(AvaRouter.HomeView,
                         AppRegions.MainRegion));
                 AutoMethodVm();
+                
+                await _sukiDialogManager.CreateDialog()
+                    .WithTitle("Application Settings")
+                    .WithContent("Whether to initialize the DB related configuration")
+                    .WithActionButton("Yes", async (_) =>
+                        await _systemDbContext.DbFileExistOrCreateAsync(), true)
+                    .WithActionButton("No", _ => { }, true)
+                    .TryShowAsync();
+
                 return;
             }
 
@@ -128,7 +164,6 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
             ExecuteNavigate(
                 NavigationParametersHelper.TargetNavigationParameters(AvaRouter.HomeView,
                     AppRegions.MainRegion));
-
             AutoMethodVm();
         }
         catch (Exception e)
@@ -166,44 +201,24 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
         _nowUserInformationRepository.DbContext.SaveChanges();
     }
 
-    protected override Size AfterChangeSize { get; } = new Size(888, 550);
-
-    public async void Loaded()
-    {
-        if (!_nowUserInformationRepository.DbIsExist)
-        {
-            return;
-        }
-
-        var nowUser = _nowUserInformationRepository.DbSet.FirstOrDefault();
-
-        if (nowUser is null) return;
-
-        this.Account = nowUser.Account;
-
-        if (!nowUser.RememberPassword) return;
-        this.Password = nowUser.Password;
-        this.IsRemember = nowUser.RememberPassword;
-
-        if (!nowUser.AutoLogin) return;
-        this.IsAutoLogin = nowUser.AutoLogin;
-
-        await Login();
-    }
+    protected override Size? AfterChangeSize { get; } = new Size(888, 550);
 
     [LogAspect]
     public async Task<bool> IfAdminSettingApplication(string account, string password)
     {
         if (account != "xioa" || password != "xioa") return false;
 
-        _sukiDialogManager.CreateDialog()
-            .WithTitle("Application Settings")
-            .WithContent("Whether to initialize the DB related configuration")
-            .WithActionButton("Yes", async (_) =>
-                await _systemDbContext.DbFileExistOrCreateAsync(), true)
-            .WithActionButton("No", _ => { }, true)
-            .TryShow();
-
+       
         return true;
+    }
+
+    public async Task LoadAsync()
+    {
+        await _onLoaded.LoadAsync();
+    }
+
+    public Task UnloadAsync()
+    {
+        return Task.CompletedTask;
     }
 }

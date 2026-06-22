@@ -6,13 +6,16 @@ namespace Ava.Xioa.Common.Attributes;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class PrismRegisterForNavigationAttribute : Attribute
 {
-    public PrismRegisterForNavigationAttribute(string navigationName, string region,
+    public Type? ViewModelType { get; set; }
+
+    public PrismRegisterForNavigationAttribute(string navigationName, string region, Type? viewModelType = null,
         ProgrammingVersion version = ProgrammingVersion.EnabledStandby, int zIndex = -1)
     {
         NavigationName = navigationName;
         Region = region;
         ZIndex = zIndex;
         Version = version;
+        ViewModelType = viewModelType;
     }
 
     public int ZIndex { get; set; }

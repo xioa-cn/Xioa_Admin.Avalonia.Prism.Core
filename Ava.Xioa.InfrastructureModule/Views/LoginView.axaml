@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
-                <Image Source="../Assets/bg.png" Margin="60" Stretch="Uniform">
+                <Image Source="../Assets/bg.png" VerticalAlignment="Center" Margin="60" Stretch="Uniform">
                     <Image.RenderTransform>
                         <TranslateTransform />
                     </Image.RenderTransform>
@@ -64,7 +64,7 @@
                     <suki:GlassCard
                         Margin="0"
                         >
-                        <StackPanel>
+                        <StackPanel VerticalAlignment="Center">
                             <TextBlock
                                 Margin="0,20,0,45"
                                 HorizontalAlignment="Center"

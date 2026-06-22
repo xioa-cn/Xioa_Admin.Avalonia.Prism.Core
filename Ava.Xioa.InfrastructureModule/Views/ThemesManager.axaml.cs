@@ -6,12 +6,11 @@ using Avalonia.Controls;
 
 namespace Ava.Xioa.InfrastructureModule.Views;
 
-[PrismRegisterForNavigation(navigationName: AvaRouter.ThemesManager, region: AppRegions.HomeRegion)]
+[PrismRegisterForNavigation(navigationName: AvaRouter.ThemesManager, region: AppRegions.HomeRegion,typeof(IThemesServices))]
 public partial class ThemesManager : UserControl
 {
-    public ThemesManager(IThemesServices themesServices)
+    public ThemesManager()
     {
-        this.DataContext = themesServices;
         InitializeComponent();
     }
 }

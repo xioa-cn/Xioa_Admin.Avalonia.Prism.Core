@@ -420,7 +420,7 @@ public sealed class RegionManager : IRegionManager
     {
         source = ResolveNavigationRoute(source, navigationParameters);
         var navigationLock = RentNavigationLock(regionName);
-        if (navigationLock is null || !await navigationLock.WaitAsync().ConfigureAwait(false))
+        if (navigationLock is null || !await navigationLock.WaitAsync(NavigationTimeout).ConfigureAwait(false))
         {
             navigationLock?.ReleaseRent(releaseSemaphore: false);
             return new NavigationResult(false);
@@ -457,8 +457,11 @@ public sealed class RegionManager : IRegionManager
             var content =
                 await RunOnUiThreadAsync(() => SelectNavigationTarget(regionName, targetCandidates, navigationContext))
                     .ConfigureAwait(false);
+
             if (ReferenceEquals(oldContent, content))
             {
+                await RunOnUiThreadAsync(() => WireNavigationViewModel(content, source))
+                    .ConfigureAwait(false);
                 await RunOnUiThreadAsync(() => NotifyRepeatedNavigationAsync(content, navigationContext))
                     .ConfigureAwait(false);
                 if (recordJournal && region is Region repeatedNavigationRegion)
@@ -479,12 +482,19 @@ public sealed class RegionManager : IRegionManager
                     .ConfigureAwait(false);
             }
 
+            await RunOnUiThreadAsync(() => WireNavigationViewModel(content, source))
+                .ConfigureAwait(false);
+            await RunOnUiThreadAsync(() => NotifyBeforeViewLoad(content, navigationContext))
+                .ConfigureAwait(false);
             await RunOnUiThreadAsync(() => InitializeViewAsync(content, navigationContext)).ConfigureAwait(false);
             await RunOnUiThreadAsync(() =>
                     AddRegionView(regionName, regionTarget, content, activate: true, oldContent, navigationContext))
                 .ConfigureAwait(false);
             await RunOnUiThreadAsync(() =>
-                    NotifyNavigatedToAsync(regionName, regionTarget, region, oldContent, content, navigationContext))
+                    RunNavigationEnterAnimationAsync(regionName, regionTarget, region, oldContent, content,
+                        navigationContext))
+                .ConfigureAwait(false);
+            await RunOnUiThreadAsync(() => NotifyNavigatedTo(content, navigationContext))
                 .ConfigureAwait(false);
             if (recordJournal && region is Region concreteRegion)
             {
@@ -564,6 +574,20 @@ public sealed class RegionManager : IRegionManager
         });
 
         return completion.Task;
+    }
+
+    private void WireNavigationViewModel(object view, string source)
+    {
+        if (view is not StyledElement styledElement || styledElement.DataContext is not null)
+        {
+            return;
+        }
+
+        var vmType = ViewModelLocationProvider.ResolveViewModelTypeForNavigation(view.GetType(), routeName: source);
+        if (vmType is not null)
+        {
+            styledElement.DataContext = _container.Resolve(vmType);
+        }
     }
 
     private static Task<T> RunOnUiThreadAsync<T>(Func<T> action)
@@ -1068,7 +1092,8 @@ public sealed class RegionManager : IRegionManager
 
         if (activate)
         {
-            await ActivateRegionViewAsync(regionName, regionTarget, region, adapter, content, oldContent, navigationContext)
+            await ActivateRegionViewAsync(regionName, regionTarget, region, adapter, content, oldContent,
+                    navigationContext)
                 .ConfigureAwait(false);
         }
     }
@@ -1528,13 +1553,22 @@ public sealed class RegionManager : IRegionManager
         }
     }
 
-    private async Task NotifyNavigatedToAsync(
-        string regionName,
-        Control regionTarget,
-        IRegion region,
-        object? fromView,
-        object view,
-        NavigationContext navigationContext)
+    private void NotifyBeforeViewLoad(object view, NavigationContext navigationContext)
+    {
+        foreach (var target in GetAwareTargets(view).OfType<IRegionViewPreLoad>())
+        {
+            try
+            {
+                target.OnBeforeViewLoad(navigationContext);
+            }
+            catch (Exception ex)
+            {
+                OnNavigationFailed(navigationContext, target, ex);
+            }
+        }
+    }
+
+    private void NotifyNavigatedTo(object view, NavigationContext navigationContext)
     {
         foreach (var target in GetAwareTargets(view).OfType<IInitialize>())
         {
@@ -1559,8 +1593,6 @@ public sealed class RegionManager : IRegionManager
                 OnNavigationFailed(navigationContext, target, ex);
             }
         }
-
-        await RunNavigationEnterAnimationAsync(regionName, regionTarget, region, fromView, view, navigationContext);
     }
 
     private async Task NotifyRepeatedNavigationAsync(object view, NavigationContext navigationContext)

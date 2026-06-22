@@ -14,7 +14,7 @@ using Prism.Navigation.Regions;
 
 namespace Ava.Xioa.Infrastructure.Services.Utils;
 
-public abstract class NavigableChangeWindowSizeViewModel : NavigableViewModelObject
+public abstract class NavigableChangeWindowSizeViewModel : NavigableViewModelObject, IRegionViewPreLoad
 {
     private const double WindowResizeAnimationMilliseconds = 220d;
     private const int WindowResizeFrameDelayMilliseconds = 16;
@@ -31,12 +31,14 @@ public abstract class NavigableChangeWindowSizeViewModel : NavigableViewModelObj
         _mainWindowServices = mainWindowServices;
     }
 
-    protected abstract Size AfterChangeSize { get; }
+    protected abstract Size? AfterChangeSize { get; }
 
     protected virtual Animation? WindowChangeAnimation { get; private set; }
 
     public virtual void ChangeMainWindowSize()
     {
+        if (AfterChangeSize == null) return;
+
         if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
@@ -48,11 +50,14 @@ public abstract class NavigableChangeWindowSizeViewModel : NavigableViewModelObj
             return;
         }
 
+        _mainWindowServices.WindowState = WindowState.Normal;
+        window.WindowState = WindowState.Normal;
+
         var cancellationToken = ResetWindowResizeAnimation();
-        _ = AnimateMainWindowSizeAsync(window, AfterChangeSize, cancellationToken);
+        _ = AnimateMainWindowSizeAsync(window, AfterChangeSize.Value, cancellationToken);
     }
 
-    public override void OnNavigatedTo(NavigationContext navigationContext)
+    public virtual void OnBeforeViewLoad(NavigationContext navigationContext)
     {
         ChangeMainWindowSize();
     }
@@ -120,8 +125,13 @@ public abstract class NavigableChangeWindowSizeViewModel : NavigableViewModelObj
         PixelPoint targetPosition,
         double progress)
     {
-        _mainWindowServices.Width = Lerp(startWidth, targetSize.Width, progress);
-        _mainWindowServices.Height = Lerp(startHeight, targetSize.Height, progress);
+        var width = Lerp(startWidth, targetSize.Width, progress);
+        var height = Lerp(startHeight, targetSize.Height, progress);
+
+        _mainWindowServices.Width = width;
+        _mainWindowServices.Height = height;
+        window.Width = width;
+        window.Height = height;
         window.Position = Lerp(startPosition, targetPosition, progress);
     }
 
@@ -129,6 +139,8 @@ public abstract class NavigableChangeWindowSizeViewModel : NavigableViewModelObj
     {
         _mainWindowServices.Width = targetSize.Width;
         _mainWindowServices.Height = targetSize.Height;
+        window.Width = targetSize.Width;
+        window.Height = targetSize.Height;
         window.Position = targetPosition;
     }
 

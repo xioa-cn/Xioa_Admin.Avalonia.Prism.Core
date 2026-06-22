@@ -193,8 +193,13 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices, IAva
         });
     }
 
-    public void Load()
+    public Task LoadAsync()
     {
-        Task.Factory.StartNew(() => this.LoadingInvokeAsync(InitializedUserInformation));
+        this.LoadingInvokeAsync(InitializedUserInformation);
+        return Task.CompletedTask;
+    }
+
+    public async Task UnloadAsync()
+    {
     }
 }

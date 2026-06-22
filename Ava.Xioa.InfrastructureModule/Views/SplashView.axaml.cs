@@ -9,12 +9,11 @@ using Avalonia.Interactivity;
 
 namespace Ava.Xioa.InfrastructureModule.Views
 {
-    [PrismRegisterForNavigation(navigationName: AvaRouter.SplashView, region: AppRegions.MainRegion, zIndex: 9999)]
+    [PrismRegisterForNavigation(navigationName: AvaRouter.SplashView, region: AppRegions.MainRegion, typeof(ISplashServices),zIndex: 9999)]
     public partial class SplashView : UserControl
     {
-        public SplashView(ISplashServices splashServices)
+        public SplashView()
         {
-            this.DataContext = splashServices;
             InitializeComponent();
             Loaded += OnLoaded;
             this.sText.Text =

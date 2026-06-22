@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
+using Prism.Core.Mvvm;
 
 namespace Ava.Xioa.Infrastructure.Services.Services.LoginServices;
 
-public interface ILoginServices
+public interface ILoginServices : IVmLoadedAsync
 {
     string Account { get; set; }
 
@@ -17,6 +18,4 @@ public interface ILoginServices
     ICommand LoginCommand { get; }
 
     ICommand ExitCommand { get; }
-
-    void Loaded();
 }

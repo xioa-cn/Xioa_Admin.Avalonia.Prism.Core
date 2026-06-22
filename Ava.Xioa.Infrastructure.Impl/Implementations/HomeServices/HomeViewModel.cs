@@ -1,4 +1,5 @@
 ﻿using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Const;
 using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Connectlayer.Global;
@@ -7,6 +8,7 @@ using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Ava.Xioa.Infrastructure.Services.Utils;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Core.Mvvm;
@@ -60,13 +62,18 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices, 
 
         _onLoaded.SetOnLoaded(() =>
         {
+            toastsService.ShowToast(
+                NotificationType.Success, 
+                "Hello",
+                GetDayText.ApplicationSayHello(GlobalUserInformation.Instance.UserName!)
+            );
             ExecuteNavigate(
-                NavigationParametersHelper.TargetNavigationParameters(AvaRouter.HomeWelcome,
+                NavigationParametersHelper.TargetNavigationParameters(AvaRouter.UserManager,
                     AppRegions.HomeRegion));
         });
     }
 
-    protected override Size AfterChangeSize { get; } = new Size(1536, 808);
+    protected override Size? AfterChangeSize { get; } = new Size(1536, 808);
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {

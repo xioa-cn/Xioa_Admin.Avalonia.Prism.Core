@@ -7,14 +7,12 @@ using Avalonia.Controls;
 
 namespace Ava.Xioa.InfrastructureModule.Views;
 
-[PrismRegisterForNavigation(navigationName: AvaRouter.LoginView, region: AppRegions.MainRegion)]
+[PrismRegisterForNavigation(navigationName: AvaRouter.LoginView, region: AppRegions.MainRegion,typeof(ILoginServices))]
 public partial class LoginView : UserControl
 {
-    public LoginView(ILoginServices loginServices)
+    public LoginView()
     {
-        this.DataContext = loginServices;
         InitializeComponent();
         
-        this.OnceExecutedLoaded(loginServices.Loaded);
     }
 }

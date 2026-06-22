@@ -1028,7 +1028,7 @@ public static class ViewModelLocationProvider
     {
         ArgumentNullException.ThrowIfNull(viewModelType);
         EnsureCanWrite();
-        if (!viewModelType.IsClass || viewModelType.IsAbstract)
+        if ((!viewModelType.IsClass || viewModelType.IsAbstract) && !viewModelType.IsInterface)
         {
             throw new ArgumentException($"ViewModel type must be a concrete class. Type: {viewModelType.FullName}", nameof(viewModelType));
         }

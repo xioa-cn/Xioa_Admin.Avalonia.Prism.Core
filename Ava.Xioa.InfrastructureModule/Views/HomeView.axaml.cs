@@ -9,21 +9,11 @@ using Avalonia.Controls.Notifications;
 
 namespace Ava.Xioa.InfrastructureModule.Views;
 
-[PrismRegisterForNavigation(navigationName: AvaRouter.HomeView, region: AppRegions.MainRegion, zIndex: 9998)]
+[PrismRegisterForNavigation(navigationName: AvaRouter.HomeView, region: AppRegions.MainRegion, typeof(IHomeServices),zIndex: 9998)]
 public partial class HomeView : UserControl
 {
-    public HomeView(IHomeServices homeServices, IToastsService toastsService)
+    public HomeView(IToastsService toastsService)
     {
-        this.DataContext = homeServices;
         InitializeComponent();
-        // 注册一次性Loaded事件（执行后自动移除）
-        this.OnceExecutedLoaded(() =>
-        {
-            toastsService.ShowToast(
-                NotificationType.Success, 
-                "Hello",
-                GetDayText.ApplicationSayHello(GlobalUserInformation.Instance.UserName!)
-            );
-        });
     }
 }

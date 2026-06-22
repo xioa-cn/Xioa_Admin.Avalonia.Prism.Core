@@ -12,7 +12,8 @@ public static class RegisterForNavigationExtensions
         Assembly assembly)
     {
         var types = assembly.GetTypes().Where(t => t.GetCustomAttribute<PrismRegisterForNavigationAttribute>() != null)
-            .OrderByDescending(item => item.GetCustomAttribute<PrismRegisterForNavigationAttribute>()?.ZIndex ?? -1).ToList();
+            .OrderByDescending(item => item.GetCustomAttribute<PrismRegisterForNavigationAttribute>()?.ZIndex ?? -1)
+            .ToList();
 
         if (types.Count <= 0) return containerRegistry;
 
@@ -20,13 +21,20 @@ public static class RegisterForNavigationExtensions
         {
             var attr = type.GetCustomAttribute<PrismRegisterForNavigationAttribute>();
             if (attr == null) continue;
-            
+
             if (attr.Version == ProgrammingVersion.Obsolete)
             {
                 continue;
             }
 
-            containerRegistry.RegisterForNavigation(type, attr.NavigationName);
+            if (attr.ViewModelType is not null)
+            {
+                containerRegistry.RegisterForNavigation(type, attr.ViewModelType, attr.NavigationName);
+            }
+            else
+            {
+                containerRegistry.RegisterForNavigation(type, attr.NavigationName);
+            }
         }
 
         return containerRegistry;

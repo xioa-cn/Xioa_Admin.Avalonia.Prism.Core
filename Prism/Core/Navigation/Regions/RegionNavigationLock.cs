@@ -32,9 +32,9 @@ internal sealed class RegionNavigationLock
         }
     }
 
-    public Task<bool> WaitAsync()
+    public Task<bool> WaitAsync(TimeSpan timeout)
     {
-        return _semaphore.WaitAsync(0);
+        return _semaphore.WaitAsync(timeout);
     }
 
     public void ReleaseRent(bool releaseSemaphore)

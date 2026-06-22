@@ -144,6 +144,19 @@ public static class IContainerRegistryExtensions
         return registry.RegisterForNavigationWithViewModel<TViewModel>(typeof(TView), name);
     }
 
+    public static IContainerRegistry RegisterForNavigation(this IContainerRegistry registry, Type viewType, Type viewModelType,
+        string? name = null)
+    {
+        var registrationName = string.IsNullOrWhiteSpace(name) ? viewType.Name : name;
+        Prism.Mvvm.ViewModelLocationProvider.Register(viewType.ToString(), viewModelType);
+        if (viewModelType is { IsInterface: false, IsAbstract: false })
+        {
+            registry.Register(viewModelType);
+        }
+
+        return registry.RegisterForNavigation(viewType, registrationName);
+    }
+
     private static IContainerRegistry RegisterForNavigationWithViewModel<TViewModel>(this IContainerRegistry registry,
         Type viewType, string? name)
     {
