@@ -5,9 +5,8 @@ namespace Ava.Xioa.Common.Themes.Dialogs;
 
 public partial class CloseDialog : UserControl
 {
-    public CloseDialog(ICloseDialogService closeDialogService)
+    public CloseDialog()
     {
-        this.DataContext = closeDialogService;
         InitializeComponent();
     }
 }

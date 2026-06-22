@@ -139,13 +139,7 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
                         AppRegions.MainRegion));
                 AutoMethodVm();
                 
-                await _sukiDialogManager.CreateDialog()
-                    .WithTitle("Application Settings")
-                    .WithContent("Whether to initialize the DB related configuration")
-                    .WithActionButton("Yes", async (_) =>
-                        await _systemDbContext.DbFileExistOrCreateAsync(), true)
-                    .WithActionButton("No", _ => { }, true)
-                    .TryShowAsync();
+             
 
                 return;
             }
@@ -208,7 +202,13 @@ public partial class LoginViewModel : NavigableChangeWindowSizeViewModel, ILogin
     {
         if (account != "xioa" || password != "xioa") return false;
 
-       
+        await _sukiDialogManager.CreateDialog()
+            .WithTitle("Application Settings")
+            .WithContent("Whether to initialize the DB related configuration")
+            .WithActionButton("Yes", async (_) =>
+                await _systemDbContext.DbFileExistOrCreateAsync(), true)
+            .WithActionButton("No", _ => { }, true)
+            .TryShowAsync();
         return true;
     }
 

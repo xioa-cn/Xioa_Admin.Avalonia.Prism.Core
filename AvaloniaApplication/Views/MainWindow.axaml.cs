@@ -115,7 +115,8 @@ public partial class MainWindow : SukiWindow
                 {
                     _mainWindowViewModel.DialogManager.DismissDialog();
                     _dialog = _mainWindowViewModel.DialogManager.CreateVmDialog(_closeDialogService);
-                    _view ??= new CloseDialog(_closeDialogService);
+                    _view ??= new CloseDialog();
+                    _view.DataContext = _closeDialogService;
                     await _dialog.WithTitle("关闭面板")
                         .WithContent(_view).OfType(NotificationType.Warning)
                         .Dismiss().ByClickingBackground().WithAsync().TryShowAsync();

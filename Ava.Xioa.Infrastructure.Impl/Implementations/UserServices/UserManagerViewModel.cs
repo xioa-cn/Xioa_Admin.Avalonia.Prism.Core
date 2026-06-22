@@ -100,7 +100,8 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices, IAva
 
         var dialog = _sukiDialogManager.CreateVmDialog(textInstructionService);
 
-        TextInstructionDialog textInstructionDialog = new TextInstructionDialog(textInstructionService);
+        TextInstructionDialog textInstructionDialog = new TextInstructionDialog();
+        textInstructionDialog.DataContext = textInstructionService;
 
         await dialog.WithTitle(this.Tr("deleteUserInformation", "删除用户信息"))
             .WithContent(textInstructionDialog).OfType(NotificationType.Error)
@@ -140,7 +141,8 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices, IAva
 
         _userUpdateDialogServices.SetUserInformation(
             DeepCopyHelper.JsonClone(arg) ?? throw new SerializationException());
-        _userUpdateDialog ??= new UserUpdateDialog(_userUpdateDialogServices);
+        _userUpdateDialog ??= new UserUpdateDialog();
+        _userUpdateDialog.DataContext = _userUpdateDialogServices;
         var dialogResult = await dialog.WithTitle(this.Tr("updateUserInformation", "修改用户信息"))
             .WithContent(_userUpdateDialog).OfType(NotificationType.Information)
             .Dismiss().ByClickingBackground().WithAsync().TryShowAsync();

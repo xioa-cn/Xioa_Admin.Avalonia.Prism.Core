@@ -8,9 +8,8 @@ namespace Ava.Xioa.Connectlayer.Dialogs;
 
 public partial class TextInstructionDialog : UserControl
 {
-    public TextInstructionDialog(ITextInstructionService textInstructionImpl)
+    public TextInstructionDialog()
     {
-        this.DataContext = textInstructionImpl;
         InitializeComponent();
     }
 }
