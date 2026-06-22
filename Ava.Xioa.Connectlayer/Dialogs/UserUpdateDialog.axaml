@@ -53,7 +53,7 @@
                     Text="{i18N:LocalizeExtension UserName}" />
                 <TextBox
                     Width="200" HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Center" Margin="0,5,0,0"
                     Text="{Binding View.UserName}" />
             </StackPanel>
 
@@ -64,7 +64,7 @@
                     Text="{i18N:LocalizeExtension Password}" />
                 <TextBox
                     Width="200" HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Center" Margin="0,5,0,0"
                     Text="{Binding View.Password}" />
             </StackPanel>
 
@@ -74,7 +74,7 @@
                     VerticalAlignment="Center"
                     Text="{i18N:LocalizeExtension Auth}" />
                 <ComboBox
-                    Width="210" Margin="-5,0,0,0"
+                    Width="210" Margin="-6,0,0,0"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
                     ItemsSource="{StaticResource AuthList}"

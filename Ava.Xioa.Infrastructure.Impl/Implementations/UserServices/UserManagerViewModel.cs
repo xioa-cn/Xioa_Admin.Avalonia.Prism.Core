@@ -144,7 +144,7 @@ public partial class UserManagerViewModel : ReactiveLoading, IUserServices, IAva
         _userUpdateDialog ??= new UserUpdateDialog();
         _userUpdateDialog.DataContext = _userUpdateDialogServices;
         var dialogResult = await dialog.WithTitle(this.Tr("updateUserInformation", "修改用户信息"))
-            .WithContent(_userUpdateDialog).OfType(NotificationType.Information)
+            .WithContent(_userUpdateDialog)
             .Dismiss().ByClickingBackground().WithAsync().TryShowAsync();
 
         _userUpdateDialogServices.CopyUserInformationToView(arg);
