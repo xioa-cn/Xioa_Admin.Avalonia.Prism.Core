@@ -1,5 +1,5 @@
 <Project>
-  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Ava.Xioa.Common' and '$(MSBuildProjectName)' != 'ObservableBind.Generator'">
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Ava.Xioa.Common' and '$(MSBuildProjectName)' != 'ObservableBind.Generator' and '$(MSBuildProjectName)' != 'Constructor.Generator' and '$(MSBuildProjectName)' != 'Module.CreateAssistant'">
     <PackageReference Include="Fody" Version="6.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

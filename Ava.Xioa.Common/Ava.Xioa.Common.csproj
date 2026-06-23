@@ -57,6 +57,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Prism\Prism.csproj" />
+      <ProjectReference Include="..\Constructor.Generator\Constructor.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>
