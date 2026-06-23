@@ -26,7 +26,7 @@ public class SplashViewModel : NavigableChangeWindowSizeViewModel, ISplashServic
         _mainWindowServices = mainWindowServices;
     }
 
-    protected override Size? AfterChangeSize { get; } 
+    protected override Size? AfterChangeSize { get; }  = new Size(444, 550);
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {

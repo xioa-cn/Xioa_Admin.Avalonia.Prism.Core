@@ -52,10 +52,27 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
         regionManager)
     {
         _eventAggregator = eventAggregator;
-        this.Width = 444;
-        this.Height = 550;
+        // this.Width = 444;
+        // this.Height = 550;
+        this.Width = 0;
+        this.Height = 0;
         // this.IsVisible = true;
         this.Opacity = 1;
+        
+        
+        IsTitleBarVisible = false;
+        ShowTitlebarBackground = false;
+        CanMove = true;
+        ShowInTaskbar = true;
+        CanFullScreen = false;
+        CanMinimize = false; 
+        CanMaximize = false;
+        CanPin = false;
+        CanResize = false;
+        ShowBottomBorder = false;
+        IsMenuVisible = false;
+        TitleBarVisibilityOnFullScreen = SukiWindow.TitleBarVisibilityMode.Hidden;
+        
         this.WindowState = WindowState.Normal;
 
         _eventAggregator.GetEvent<WindowIconEvent>().Subscribe(IconChanged, ThreadOption.UIThread, true,
