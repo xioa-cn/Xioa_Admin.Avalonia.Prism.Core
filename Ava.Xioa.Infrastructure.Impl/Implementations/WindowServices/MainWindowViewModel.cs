@@ -76,7 +76,10 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
 
         if (find is not null)
         {
-            find.IsCheck = true;
+            foreach (var item in NavigableBarInfos)
+            {
+                item.IsCheck = ReferenceEquals(item, find);
+            }
 
             return;
         }

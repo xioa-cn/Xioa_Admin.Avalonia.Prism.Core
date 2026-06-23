@@ -84,7 +84,7 @@ public partial class NavigableMenuViewModel : NavigableViewModelObject, INavigab
         if (findPage is null || findPage.HasChildren) return;
         var navigationParameters = NavigationParametersHelper.TargetNavigationParametersWithHeader(
             findPage.NavigationName,
-            findPage.Region, findPage.Header);
+            findPage.Region, findPage.Header, findPage.Key);
         ExecuteNavigate(navigationParameters);
     }
 

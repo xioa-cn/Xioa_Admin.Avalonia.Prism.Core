@@ -177,9 +177,15 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
 
     private string? _backgroundEffectKey;
 
+    public string? BackgroundEffectKey
+    {
+        get => _backgroundEffectKey;
+        private set => SetProperty(ref _backgroundEffectKey, value);
+    }
+
     public void SetPrivateBackgroundEffectKey(string key)
     {
-        this._backgroundEffectKey = key;
+        BackgroundEffectKey = key;
     }
 
     private async Task ChangeBackgroundEffect()
@@ -201,8 +207,8 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             BackgroundAnimations = true;
         }
 
-        _backgroundEffectKey = _backgroundEffectKey == null ? "Space" : null;
-        CustomBackgroundStyleChanged?.Invoke(_backgroundEffectKey);
+        BackgroundEffectKey = BackgroundEffectKey == null ? "Space" : null;
+        CustomBackgroundStyleChanged?.Invoke(BackgroundEffectKey);
         _backgroundEffect = !_backgroundEffect;
         _debouncer.DebounceAsync(async () => { await SaveThemeInformation(); });
     }
@@ -220,7 +226,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             _backgroundEffectChangeAnimations = false;
         }
 
-        _backgroundEffectKey = effectKey;
+        BackgroundEffectKey = effectKey;
         _backgroundEffect = true;
         CustomBackgroundStyleChanged?.Invoke(effectKey);
         _debouncer.DebounceAsync(async () => { await SaveThemeInformation(); });
@@ -273,7 +279,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             findThemeInfo.IsLightTheme = this.IsLightTheme;
             findThemeInfo.Animation = this.BackgroundAnimations;
             findThemeInfo.ColorThemeDisplayName = _colorThemeDisplayName ?? "Orange";
-            findThemeInfo.BackgroundEffectKey = _backgroundEffectKey;
+            findThemeInfo.BackgroundEffectKey = BackgroundEffectKey;
             findThemeInfo.FontFamily = FontFamily;
 
 
@@ -285,7 +291,7 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
             findThemeInfo.IsLightTheme = this.IsLightTheme;
             findThemeInfo.Animation = this.BackgroundAnimations;
             findThemeInfo.ColorThemeDisplayName = _colorThemeDisplayName ?? "Orange";
-            findThemeInfo.BackgroundEffectKey = _backgroundEffectKey;
+            findThemeInfo.BackgroundEffectKey = BackgroundEffectKey;
             findThemeInfo.FontFamily = FontFamily;
         }
 

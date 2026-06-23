@@ -34,6 +34,8 @@ public interface IThemesServices
 
     bool BackgroundTransitions { get; set; }
 
+    string? BackgroundEffectKey { get; }
+
     /// <summary>
     /// 明亮主题
     /// </summary>

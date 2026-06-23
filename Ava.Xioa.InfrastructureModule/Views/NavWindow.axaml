@@ -1,10 +1,32 @@
-﻿<suki:SukiWindow xmlns="https://github.com/avaloniaui"
+<suki:SukiWindow xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:themeServices="clr-namespace:Ava.Xioa.Infrastructure.Services.Services.ThemesServices;assembly=Ava.Xioa.Infrastructure.Services"
                  xmlns:suki="https://github.com/kikipoulet/SukiUI"
-                 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                 mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="620"
                  x:Class="Ava.Xioa.InfrastructureModule.Views.NavWindow"
+                 x:DataType="themeServices:IThemesServices"
+                 Width="900"
+                 Height="620"
+                 BackgroundStyle="{Binding BackgroundStyle.SukiBackgroundStyle}"
+                 BackgroundShaderFile="{Binding BackgroundEffectKey}"
+                 BackgroundTransitionsEnabled="{Binding BackgroundTransitions}"
+                 BackgroundAnimationEnabled="{Binding BackgroundAnimations}"
                  Title="NavWindow">
-   <ContentControl Name="ContentControl"/>
+    <suki:SukiWindow.RightWindowTitleBarControls>
+        <Button Width="{Binding RelativeSource={RelativeSource AncestorType=suki:SukiWindow}, Path=TitleBarControlSize}"
+                Height="{Binding RelativeSource={RelativeSource AncestorType=suki:SukiWindow}, Path=TitleBarControlSize}"
+                Classes="WindowTitleBarAction"
+                Click="RestoreToMainClick"
+                ToolTip.Tip="弹回主界面">
+            <Path Width="10"
+                  Height="10"
+                  Stretch="Uniform"
+                  IsHitTestVisible="False"
+                  Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
+                  Data="{x:Static suki:Icons.KeyboardCaps}" />
+        </Button>
+    </suki:SukiWindow.RightWindowTitleBarControls>
+    <ContentControl Name="ContentHost" />
 </suki:SukiWindow>

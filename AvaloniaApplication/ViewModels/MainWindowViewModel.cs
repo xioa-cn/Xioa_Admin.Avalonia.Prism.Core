@@ -6,7 +6,6 @@ using Ava.Xioa.Common;
 using Ava.Xioa.Common.Services;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
-using Ava.Xioa.Infrastructure.Models.Models.ThemesModels;
 using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
 using Microsoft.EntityFrameworkCore;
@@ -21,17 +20,9 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
 {
     public ISukiDialogManager DialogManager { get; }
 
-    [ObservableBindProperty] private SukiBackgroundStyleDesc _backgroundStyle;
-
-    [ObservableBindProperty] private bool _transitionsEnabled = true;
-
-    [ObservableBindProperty] private string _customShaderFile = null;
-
-    [ObservableBindProperty] private bool _animationsEnabled = false;
-
-    private readonly IThemesServices _themesServices;
-
     private readonly ISystemThemesInformationRepository _systemThemesInformationRepository;
+
+    public IThemesServices ThemesServices { get; }
 
     public IMainWindowServices MainWindowServices { get; }
 
@@ -43,51 +34,36 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository,
         IMainWindowServices mainWindowServices, IRegionManager regionManager, IEventAggregator eventAggregator, ISukiDialogManager dialogManager)
     {
-        _themesServices = themesServices;
+        ThemesServices = themesServices;
         _systemThemesInformationRepository = systemThemesInformationRepository;
         MainWindowServices = mainWindowServices;
         RegionManager = regionManager;
         EventAggregator = eventAggregator;
         DialogManager = dialogManager;
-        _themesServices.CustomBackgroundStyleChanged += value => CustomShaderFile = value;
-        _themesServices.AnimationsEnabledChanged += value => AnimationsEnabled = (bool)value!;
-        _themesServices.BackgroundTransitionsChanged += value => TransitionsEnabled = (bool)value!;
-        _themesServices.BackgroundStyleChanged += value => BackgroundStyle = (SukiBackgroundStyleDesc)value!;
-    }
-
-    partial void OnAnimationsEnabledChanged(bool value)
-    {
-        _themesServices.BackgroundAnimations = value;
     }
 
     public bool ApplicationLifetime => OperatingSystemUtil.IsDesktopPlatform();
-
-    partial void OnBackgroundStyleChanged(SukiBackgroundStyleDesc value)
-    {
-        _themesServices.BackgroundStyle = value;
-    }
 
     public async void Initialized()
     {
         try
         {
             var findLastUseThemeInfo = await this._systemThemesInformationRepository.DbSet.FirstOrDefaultAsync();
-            _themesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
+            ThemesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
             if (findLastUseThemeInfo == null) return;
            
-            BackgroundStyle = SukiBackgroundStyleDesc.SukiBackgroundStyleDescs[findLastUseThemeInfo.BackgroundStyleKey];
-            AnimationsEnabled = true;
-            _themesServices.BackgroundAnimations = true;
-            _themesServices.IsLightTheme = findLastUseThemeInfo.IsLightTheme;
-            _themesServices.ChangeColorTheme(findLastUseThemeInfo.ColorThemeDisplayName);
-            _themesServices.FontFamily = findLastUseThemeInfo.FontFamily;
+            ThemesServices.BackgroundStyle = ThemesServices.AvailableBackgroundStyles[findLastUseThemeInfo.BackgroundStyleKey];
+            ThemesServices.BackgroundAnimations = true;
+            ThemesServices.IsLightTheme = findLastUseThemeInfo.IsLightTheme;
+            ThemesServices.ChangeColorTheme(findLastUseThemeInfo.ColorThemeDisplayName);
+            ThemesServices.FontFamily = findLastUseThemeInfo.FontFamily;
         
             if (!string.IsNullOrEmpty(findLastUseThemeInfo.BackgroundEffectKey))
             {
-                _themesServices.ChangeBackgroundEffect(findLastUseThemeInfo.BackgroundEffectKey);
+                ThemesServices.ChangeBackgroundEffect(findLastUseThemeInfo.BackgroundEffectKey);
             }
         }
-        catch (Exception e)
+        catch
         {
             // ignored
         }

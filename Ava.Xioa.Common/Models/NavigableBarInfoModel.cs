@@ -23,6 +23,11 @@ public partial class NavigableBarInfoModel : ReactiveObject
     public string RegionName { get; set; }
 
     /// <summary>
+    /// 左侧导航菜单选中使用的Key
+    /// </summary>
+    public string SelectionKey { get; set; } = string.Empty;
+
+    /// <summary>
     /// 私有字段，表示导航栏项是否被选中
     /// 使用[ObservableBindProperty]特性可以自动生成对应的响应式属性绑定
     /// </summary>

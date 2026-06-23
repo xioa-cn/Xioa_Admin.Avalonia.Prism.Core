@@ -15,12 +15,13 @@ public static class NavigationParametersHelper
     }
 
     public static NavigationParameters TargetNavigationParametersWithHeader(
-        string targetNavigateView, string regionName, string header)
+        string targetNavigateView, string regionName, string header, string? selectionKey = null)
     {
         var navigationParameters = new NavigationParameters();
         navigationParameters.Add("TargetView", targetNavigateView);
         navigationParameters.Add("RegionName", regionName);
         navigationParameters.Add("Header", header);
+        navigationParameters.Add("SelectionKey", selectionKey ?? header);
 
         return navigationParameters;
     }

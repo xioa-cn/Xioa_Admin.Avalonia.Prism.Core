@@ -103,12 +103,17 @@ public abstract class NavigableViewModelObject : EventEnabledViewModelObject,
             if (this.EventAggregator is not null && parameters.ContainsKey("Header"))
             {
                 var header = parameters["Header"]!.ToString() ?? "";
+                var selectionKey = parameters.ContainsKey("SelectionKey")
+                    ? parameters["SelectionKey"]!.ToString() ?? header
+                    : header;
+
                 EventAggregator?.GetEvent<NavigableBarEvent>()
                     .Publish(new TokenKeyPubSubEvent<NavigableBarInfoModel>("NavigableBar", new NavigableBarInfoModel
                     {
                         Name = header,
                         TargetView = targetView,
                         RegionName = regionName,
+                        SelectionKey = selectionKey,
                     }));
             }
         }
