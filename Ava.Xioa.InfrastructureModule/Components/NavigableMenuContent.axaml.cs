@@ -2,6 +2,7 @@
 using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Impl.Implementations.WindowServices;
+using Ava.Xioa.InfrastructureModule.Views;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
@@ -12,6 +13,24 @@ public partial class NavigableMenuContent : UserControl
     public NavigableMenuContent()
     {
         InitializeComponent();
+    }
+
+    private void NavToWindowClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button btn)
+        {
+            return;
+        }
+
+        if (btn.Tag is not NavigableBarInfoModel navigationParameters)
+        {
+            return;
+        }
+        
+        NavWindow navWindow = new NavWindow();
+
+        
+        navWindow.Show();
     }
 
     private void NavigationBarInfoModel_OnClick(object? sender, RoutedEventArgs e)

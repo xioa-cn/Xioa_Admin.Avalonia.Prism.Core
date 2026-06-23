@@ -81,27 +81,44 @@
                             </ControlTemplate>
                         </Setter>
                     </Style>
+                    <Style Selector="RadioButton.GigaChips Button.NavClose">
+                        <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Opacity" Value="1" />
+                    </Style>
                     <Style Selector="Button.NavClose:pointerover">
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Background" Value="{DynamicResource SukiPrimaryColor}" />
                         <Setter Property="Opacity" Value="1" />
                     </Style>
-                    <Style Selector="Button.NavClose PathIcon">
-                        <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
-                    </Style>
-                    <Style Selector="Button.NavClose:pointerover PathIcon">
+                    <Style Selector="RadioButton.GigaChips Button.NavClose:pointerover">
                         <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="{DynamicResource SukiPrimaryColor}" />
+                        <Setter Property="Opacity" Value="1" />
                     </Style>
                     <Style Selector="Button.NavClose:pressed">
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Background" Value="{DynamicResource SukiPrimaryDarkColor}" />
                         <Setter Property="Opacity" Value="1" />
                     </Style>
-                    <Style Selector="Button.NavClose:pressed PathIcon">
+                    <Style Selector="RadioButton.GigaChips Button.NavClose:pressed">
                         <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="{DynamicResource SukiPrimaryDarkColor}" />
+                        <Setter Property="Opacity" Value="1" />
                     </Style>
                     <Style Selector="RadioButton.GigaChips:checked Button.NavClose">
                         <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Opacity" Value="1" />
+                    </Style>
+                    <Style Selector="RadioButton.GigaChips:checked Button.NavClose:pointerover">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="{DynamicResource SukiPrimaryColor}" />
+                        <Setter Property="Opacity" Value="1" />
+                    </Style>
+                    <Style Selector="RadioButton.GigaChips:checked Button.NavClose:pressed">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="{DynamicResource SukiPrimaryDarkColor}" />
                         <Setter Property="Opacity" Value="1" />
                     </Style>
                 </WrapPanel.Styles>
@@ -138,12 +155,32 @@
                                                        Text="{Binding Name}" />
                                           
                                         </StackPanel>
-                                        <Button Grid.Column="2" HorizontalAlignment="Right" Height="18" Width="18"
-                                                VerticalAlignment="Center" Margin="10,0" Classes="NavClose">
-                                            <PathIcon Height="10"  
-                                                      Width="10"
+                                        <StackPanel Grid.Column="2"
+                                                    Orientation="Horizontal"
+                                                    VerticalAlignment="Center"
+                                                    IsVisible="{Binding IsCheck}">
+                                            <Button  HorizontalAlignment="Right"  Height="12" Width="12"
+                                                     Tag="{Binding}"
+                                                     Click="NavToWindowClick"
+                                                     VerticalAlignment="Center" Margin="0" Classes="NavClose">
+                                                <Path Height="8"
+                                                      Width="8"
+                                                      Stretch="Uniform"
+                                                      IsHitTestVisible="False"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
+                                                      Data="{x:Static suki:Icons.KeyboardCaps}" />
+                                            </Button>
+                                            <Button  HorizontalAlignment="Right"  Height="12" Width="12"
+                                                     VerticalAlignment="Center" Margin="5,0,10,0" Classes="NavClose">
+                                                <Path Height="8"
+                                                      Width="8"
+                                                      Stretch="Uniform"
+                                                      IsHitTestVisible="False"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"
                                                       Data="{x:Static suki:Icons.WindowClose}" />
-                                        </Button>
+                                            </Button>
+                                        </StackPanel>
+                                        
                                     </Grid>
                                 </RadioButton>
                             </DataTemplate>
