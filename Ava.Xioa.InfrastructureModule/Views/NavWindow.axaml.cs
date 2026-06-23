@@ -41,6 +41,21 @@ public partial class NavWindow : SukiWindow
 
     public string RegionName { get; }
 
+    public void BringToFront()
+    {
+        if (WindowState == WindowState.Minimized)
+        {
+            WindowState = WindowState.Normal;
+        }
+
+        if (!IsVisible)
+        {
+            Show();
+        }
+
+        Activate();
+    }
+
     private void RestoreToMainClick(object? sender, RoutedEventArgs e)
     {
         RestoreToMain();

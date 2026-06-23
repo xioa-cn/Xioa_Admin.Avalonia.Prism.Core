@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Ava.Xioa.Common.Attributes;
+using Ava.Xioa.Common.Events;
 using Ava.Xioa.Common.Extensions;
+using Ava.Xioa.Common.Models;
 using Ava.Xioa.Common.Themes.Converter;
 using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Infrastructure.Services.Services.HomeServices;
@@ -11,6 +13,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Prism.Events;
 using SukiUI.Controls;
 
 namespace Ava.Xioa.InfrastructureModule.Components;
@@ -41,6 +44,8 @@ public partial class NavigableMenu : UserControl, INotifyPropertyChanged, INotif
     }
 
     private SukiSideMenu? _sukiSideMenu;
+    private SukiSideMenuItem? _lastSelectedLeafItem;
+    private bool _isRestoringSelection;
 
     private void OnLoaded()
     {
@@ -76,11 +81,29 @@ public partial class NavigableMenu : UserControl, INotifyPropertyChanged, INotif
 
         sukiSideMenu.SelectionChanged += SukiSideMenuOnSelectionChanged;
         _sukiSideMenu = sukiSideMenu;
+        GlobalEventAggregator.EventAggregator?.GetEvent<NavigableReverseSelectionEvent>()
+            .Subscribe(OnReverseSelection, ThreadOption.UIThread, true,
+                filter => filter.TokenKey == "ReverseSelection");
         this.ContentControl.Content = sukiSideMenu;
+    }
+
+    private void OnReverseSelection(TokenKeyPubSubEvent<ReverseSelectionPub> obj)
+    {
+        if (_sukiSideMenu is null)
+        {
+            return;
+        }
+
+        _lastSelectedLeafItem = FindMenuItemByTag(_sukiSideMenu.Items, obj.Value.Key);
     }
 
     private void SukiSideMenuOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (_isRestoringSelection)
+        {
+            return;
+        }
+
         if (sender is SukiSideMenu sukiSideMenu && sukiSideMenu.SelectedItem is SukiSideMenuItem item)
         {
             if (item.ItemCount > 0)
@@ -96,9 +119,58 @@ public partial class NavigableMenu : UserControl, INotifyPropertyChanged, INotif
 
             if (this.DataContext is IHomeServices homeServices && item.ItemCount == 0)
             {
-                homeServices.NavigableMenuServices.SelectedView = item.Tag as string;
+                if (item.Tag is not string key)
+                {
+                    return;
+                }
+
+                if (PoppedNavigationWindowRegistry.TryActivate(key))
+                {
+                    RestoreLastSelectedItem(sukiSideMenu);
+                    return;
+                }
+
+                _lastSelectedLeafItem = item;
+                homeServices.NavigableMenuServices.SelectedView = key;
             }
         }
+    }
+
+    private void RestoreLastSelectedItem(SukiSideMenu sukiSideMenu)
+    {
+        if (_lastSelectedLeafItem is null)
+        {
+            return;
+        }
+
+        _isRestoringSelection = true;
+        sukiSideMenu.SelectedItem = _lastSelectedLeafItem;
+        _lastSelectedLeafItem.IsSelected = true;
+        _isRestoringSelection = false;
+    }
+
+    private static SukiSideMenuItem? FindMenuItemByTag(IEnumerable<object?> items, string key)
+    {
+        foreach (var sourceItem in items)
+        {
+            if (sourceItem is not SukiSideMenuItem item)
+            {
+                continue;
+            }
+
+            if (item.ItemCount == 0 && item.Tag is string tag && tag == key)
+            {
+                return item;
+            }
+
+            var child = FindMenuItemByTag(item.Items, key);
+            if (child is not null)
+            {
+                return child;
+            }
+        }
+
+        return null;
     }
 
 

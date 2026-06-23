@@ -45,8 +45,17 @@ public partial class NavigableMenuContent : UserControl
             return;
         }
 
+        var selectionKey = GetSelectionKey(navigationInfo);
+        if (PoppedNavigationWindowRegistry.TryActivate(selectionKey))
+        {
+            return;
+        }
+
         var themesServices = ContainerLocatorUtils.GetService<IThemesServices>();
         var navWindow = new NavWindow(regionManager, themesServices, navigationInfo, content, RestoreWindowContentToMain);
+        PoppedNavigationWindowRegistry.Register(selectionKey, navWindow.BringToFront);
+        navWindow.Closed += (_, _) => PoppedNavigationWindowRegistry.Unregister(selectionKey);
+
         regionManager.AddToRegion(navWindow.RegionName, content);
         ActivateSingle(regionManager.Regions[navWindow.RegionName], content);
 
@@ -97,6 +106,8 @@ public partial class NavigableMenuContent : UserControl
 
     private void RestoreWindowContentToMain(NavigableBarInfoModel navigationInfo, object content)
     {
+        PoppedNavigationWindowRegistry.Unregister(GetSelectionKey(navigationInfo));
+
         var regionManager = ContainerLocatorUtils.GetService<IRegionManager>();
         if (!regionManager.Regions.ContainsRegionWithName(navigationInfo.RegionName))
         {
@@ -137,7 +148,12 @@ public partial class NavigableMenuContent : UserControl
 
     private void PublishReverseSelection(NavigableBarInfoModel model)
     {
-        PublishReverseSelection(string.IsNullOrWhiteSpace(model.SelectionKey) ? model.Name : model.SelectionKey);
+        PublishReverseSelection(GetSelectionKey(model));
+    }
+
+    private static string GetSelectionKey(NavigableBarInfoModel model)
+    {
+        return string.IsNullOrWhiteSpace(model.SelectionKey) ? model.Name : model.SelectionKey;
     }
 
     private void PublishReverseSelection(string key)
