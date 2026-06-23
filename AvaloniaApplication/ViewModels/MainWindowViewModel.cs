@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Ava.Xioa.Common.Attributes;
 using Ava.Xioa.Common;
 using Ava.Xioa.Common.Services;
@@ -8,7 +7,6 @@ using Ava.Xioa.Common.Utils;
 using Ava.Xioa.Entities.SystemDbset.SystemThemesInformation;
 using Ava.Xioa.Infrastructure.Services.Services.ThemesServices;
 using Ava.Xioa.Infrastructure.Services.Services.WindowServices;
-using Microsoft.EntityFrameworkCore;
 using Prism.Events;
 using Prism.Navigation.Regions;
 using SukiUI.Dialogs;
@@ -29,6 +27,8 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
     public IRegionManager RegionManager { get; set; }
     
     public IEventAggregator? EventAggregator { get; set; }
+
+    private bool _themeInitialized;
     
     public MainWindowViewModel(
         IThemesServices themesServices, ISystemThemesInformationRepository systemThemesInformationRepository,
@@ -44,16 +44,31 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
 
     public bool ApplicationLifetime => OperatingSystemUtil.IsDesktopPlatform();
 
-    public async void Initialized()
+    public void Initialized()
     {
+        InitializeTheme();
+    }
+
+    public void InitializeTheme()
+    {
+        if (_themeInitialized)
+        {
+            return;
+        }
+
         try
         {
-            var findLastUseThemeInfo = await this._systemThemesInformationRepository.DbSet.FirstOrDefaultAsync();
-            ThemesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
+            var findLastUseThemeInfo = _systemThemesInformationRepository.DbSet.FirstOrDefault();
             if (findLastUseThemeInfo == null) return;
-           
-            ThemesServices.BackgroundStyle = ThemesServices.AvailableBackgroundStyles[findLastUseThemeInfo.BackgroundStyleKey];
-            ThemesServices.BackgroundAnimations = true;
+
+            if (findLastUseThemeInfo.BackgroundStyleKey >= 0 &&
+                findLastUseThemeInfo.BackgroundStyleKey < ThemesServices.AvailableBackgroundStyles.Count)
+            {
+                ThemesServices.BackgroundStyle =
+                    ThemesServices.AvailableBackgroundStyles[findLastUseThemeInfo.BackgroundStyleKey];
+            }
+
+            ThemesServices.BackgroundAnimations = findLastUseThemeInfo.Animation;
             ThemesServices.IsLightTheme = findLastUseThemeInfo.IsLightTheme;
             ThemesServices.ChangeColorTheme(findLastUseThemeInfo.ColorThemeDisplayName);
             ThemesServices.FontFamily = findLastUseThemeInfo.FontFamily;
@@ -66,6 +81,11 @@ public partial class MainWindowViewModel : ReactiveObject, IInitializedable
         catch
         {
             // ignored
+        }
+        finally
+        {
+            ThemesServices.SetThemesInformationRepository(_systemThemesInformationRepository);
+            _themeInitialized = true;
         }
     }
 }

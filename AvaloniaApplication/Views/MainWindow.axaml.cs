@@ -57,43 +57,36 @@ public partial class MainWindow : SukiWindow
         _closeDialogService.LogoutAction += () =>
         {
             GlobalUserInformation.Instance.UserAuthEnum = UserAuthEnum.None;
-            mainWindowViewModel.RegionManager.RequestNavigate(AppRegions.MainRegion, AvaRouter.LoginView, NavigationCompleted);
+            mainWindowViewModel.RegionManager.RequestNavigate(AppRegions.MainRegion, AvaRouter.LoginView,
+                NavigationCompleted);
         };
         _closeDialogService.MiniSizeAction += () => { this.Hide(); };
 
         this.DataContext = mainWindowViewModel;
         this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-        this.WindowState = WindowState.Normal;
-        this.Width = 444;
-        this.Height = 550;
-        this.Loaded += OnLoaded;
+        // this.WindowState = WindowState.Normal;
         InitializeComponent();
         this.WindowContentControl.Content = userControl;
 
-        this.OnceExecutedLoaded(() =>
+        // this.OnceExecutedLoaded(() =>
+        // {
+        var langs = LangUtils.ApplicationLanguages();
+
+        foreach (var lang in langs)
         {
-            var langs = LangUtils.ApplicationLanguages();
-
-            foreach (var lang in langs)
+            var menuItem = new MenuItem()
             {
-                var menuItem = new MenuItem()
-                {
-                    Header = lang.Name,
-                    Tag = lang.SourceKey
-                };
-                menuItem.Icon = new MaterialIcon()
-                {
-                    Kind = MaterialIconKind.Language
-                };
-                menuItem.Click += (sender, e) => { I18nManager.Instance.ChangeLanguage(lang.Name, lang.SourceKey); };
-                this.LangItem.Items.Add(menuItem);
-            }
-        });
-    }
-
-    private void OnLoaded(object? sender, RoutedEventArgs e)
-    {
-        _mainWindowViewModel.Initialized();
+                Header = lang.Name,
+                Tag = lang.SourceKey
+            };
+            menuItem.Icon = new MaterialIcon()
+            {
+                Kind = MaterialIconKind.Language
+            };
+            menuItem.Click += (sender, e) => { I18nManager.Instance.ChangeLanguage(lang.Name, lang.SourceKey); };
+            this.LangItem.Items.Add(menuItem);
+        }
+        // });
     }
 
     private CloseDialog? _view;
@@ -109,20 +102,18 @@ public partial class MainWindow : SukiWindow
                 return;
             }
 
-            await Task.Run(async () =>
+
+            Dispatcher.UIThread.Invoke(() =>
             {
-                await Dispatcher.UIThread.InvokeAsync(async () =>
-                {
-                    _mainWindowViewModel.DialogManager.DismissDialog();
-                    _dialog = _mainWindowViewModel.DialogManager.CreateVmDialog(_closeDialogService);
-                    _view ??= new CloseDialog();
-                    _view.DataContext = _closeDialogService;
-                    await _dialog.WithTitle("关闭面板")
-                        .WithContent(_view).OfType(NotificationType.Warning)
-                        .Dismiss().ByClickingBackground().WithAsync().TryShowAsync();
-                    await Task.Delay(500);
-                    _dialog = null;
-                });
+                _mainWindowViewModel.DialogManager.DismissDialog();
+                _dialog = _mainWindowViewModel.DialogManager.CreateVmDialog(_closeDialogService);
+                _view ??= new CloseDialog();
+                _view.DataContext = _closeDialogService;
+                _dialog.WithTitle("关闭面板")
+                    .WithContent(_view).OfType(NotificationType.Warning)
+                    .Dismiss().ByClickingBackground().WithAsync().TryShow();
+
+                _dialog = null;
             });
         }
         else

@@ -15,7 +15,8 @@ public interface IMainWindowServices
     public double Opacity { get; set; }
 
     public SukiWindow.TitleBarVisibilityMode TitleBarVisibilityOnFullScreen { get; set; }
-    public PixelPoint Position { get; set; }
+
+    // public PixelPoint Position { get; set; }
     public WindowState WindowState { get; set; }
 
     public bool CanFullScreen { get; set; }

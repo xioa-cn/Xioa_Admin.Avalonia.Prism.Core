@@ -102,19 +102,20 @@ public partial class App : PrismApplicationBase
 
     protected override AvaloniaObject CreateShell()
     {
-        var mainView = Container.Resolve<MainView>();
-
         GlobalEventAggregator.EventAggregator = Container.Resolve<IEventAggregator>();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var mainWindowViewModel = Container.Resolve<MainWindowViewModel>();
+            mainWindowViewModel.InitializeTheme();
+            var mainView = Container.Resolve<MainView>();
             var closeDialogService = Container.Resolve<ICloseDialogService>();
             desktop.MainWindow = new MainWindow(mainView, mainWindowViewModel, closeDialogService);
             return desktop.MainWindow;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
         {
+            var mainView = Container.Resolve<MainView>();
             singleView.MainView = mainView;
             return singleView.MainView;
         }
@@ -126,7 +127,7 @@ public partial class App : PrismApplicationBase
     {
         DisableAvaloniaDataAnnotationValidation();
         base.OnInitialized();
-        
+
         this.UseHotReload();
         
         // var regionManager = Container.Resolve<IRegionManager>();
@@ -150,7 +151,7 @@ public partial class App : PrismApplicationBase
 
         base.OnFrameworkInitializationCompleted();
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime)
         {
             // 初始化托盘图标
             InitializeTrayIcon();

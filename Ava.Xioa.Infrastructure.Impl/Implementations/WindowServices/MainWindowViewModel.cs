@@ -36,7 +36,7 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
     [ObservableBindProperty] private SukiWindow.TitleBarVisibilityMode _TitleBarVisibilityOnFullScreen;
     [ObservableBindProperty] private bool _ShowTitlebarBackground;
     [ObservableBindProperty] private bool _ShowBottomBorder;
-    [ObservableBindProperty] private PixelPoint _Position;
+    // [ObservableBindProperty] private PixelPoint _Position;
     [ObservableBindProperty] private bool _CanMove = false;
     [ObservableBindProperty] private bool _IsVisible;
     [ObservableBindProperty] private double _Opacity;
@@ -52,10 +52,9 @@ public partial class MainWindowViewModel : NavigableViewModelObject, IMainWindow
         regionManager)
     {
         _eventAggregator = eventAggregator;
-        this.Width = 404;
-        this.Height = 384;
-        this.Opacity = 0;
-        this.IsVisible = true;
+        this.Width = 444;
+        this.Height = 550;
+        // this.IsVisible = true;
         this.Opacity = 1;
         this.WindowState = WindowState.Normal;
 

@@ -124,28 +124,9 @@ public partial class ThemesViewModel : EventEnabledViewModelObject, IThemesServi
     {
         if (obj is null) return;
 
-        Dispatcher.UIThread.Invoke(async () =>
+        Dispatcher.UIThread.Invoke(() =>
         {
-            // 先强制刷新当前主题状态
-            //_theme.InvalidateVisual();
-            await Task.Delay(50);
-
-            // 应用新主题
             _theme.ChangeColorTheme(obj);
-
-            // 全面刷新窗口UI
-            // if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            // {
-            //     var window = desktop.MainWindow;
-            //     if (window != null)
-            //     {
-            //         window.InvalidateVisual();
-            //         window.InvalidateArrange();
-            //         window.InvalidateMeasure();
-            //         await Task.Delay(50);
-            //         window.InvalidateVisual();
-            //     }
-            // }
         });
 
         var color = obj.PrimaryBrush.ToString()?.Replace("ff", "");

@@ -107,10 +107,7 @@ public abstract class PrismApplicationBase : Application
 
     protected virtual void OnInitialized()
     {
-        if (MainWindow is Window window)
-        {
-            window.Show();
-        }
+      
     }
 
     protected virtual void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

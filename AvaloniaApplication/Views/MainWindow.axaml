@@ -7,19 +7,15 @@
     xmlns:converter="clr-namespace:Ava.Xioa.Common.Themes.Converter;assembly=Ava.Xioa.Common.Themes"
     xmlns:vm="using:AvaloniaApplication.ViewModels"
     Name="MainDeskTopWindow"
-    xmlns:icons="clr-namespace:SukiUI.Content"
-    ShowInTaskbar="{Binding MainWindowServices.ShowInTaskbar}"
-    IsVisible="{Binding MainWindowServices.IsVisible}"
-    xmlns:const="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Common"
+    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:i18N="clr-namespace:Ava.Xioa.Common.Themes.I18n;assembly=Ava.Xioa.Common.Themes"
     xmlns:suki="https://github.com/kikipoulet/SukiUI"
     BackgroundStyle="{Binding ThemesServices.BackgroundStyle.SukiBackgroundStyle}"
     BackgroundShaderFile="{Binding ThemesServices.BackgroundEffectKey}"
     BackgroundTransitionsEnabled="{Binding ThemesServices.BackgroundTransitions}"
     BackgroundAnimationEnabled="{Binding ThemesServices.BackgroundAnimations}"
     ShowBottomBorder="{Binding MainWindowServices.ShowBottomBorder}"
-    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-    xmlns:i18N="clr-namespace:Ava.Xioa.Common.Themes.I18n;assembly=Ava.Xioa.Common.Themes"
-    xmlns:const1="clr-namespace:Ava.Xioa.Common.Const;assembly=Ava.Xioa.Connectlayer"
+    ShowInTaskbar="{Binding MainWindowServices.ShowInTaskbar}"
     xmlns:global="clr-namespace:Ava.Xioa.Connectlayer.Global;assembly=Ava.Xioa.Connectlayer"
     Title="{Binding Source={x:Static global:AppInformation.Instance}, Path=ApplicationName}"
     CanResize="{Binding MainWindowServices.CanResize}"
@@ -34,6 +30,7 @@
     WindowStartupLocation="CenterScreen"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    IsVisible="{Binding MainWindowServices.IsVisible}"
     IsMenuVisible="{Binding MainWindowServices.IsMenuVisible}"
     Icon="{Binding MainWindowServices.Icon}"
     Opacity="{Binding MainWindowServices.Opacity}"
@@ -44,7 +41,6 @@
     mc:Ignorable="d">
     <suki:SukiWindow.Resources>
         <converter:WindowIconToImageSourceConverter x:Key="IconConverter" />
-
     </suki:SukiWindow.Resources>
 
     <suki:SukiWindow.MenuItems>
@@ -93,5 +89,7 @@
                Converter={StaticResource IconConverter}}">
         </Image>
     </suki:SukiWindow.LogoContent>
-    <ContentControl Name="WindowContentControl" Background="Transparent" />
+    <Border>
+        <ContentControl Name="WindowContentControl" Background="Transparent" />
+    </Border>
 </suki:SukiWindow>
