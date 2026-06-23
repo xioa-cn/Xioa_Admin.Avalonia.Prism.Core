@@ -68,7 +68,7 @@ public class HomeViewModel : NavigableChangeWindowSizeViewModel, IHomeServices, 
                 GetDayText.ApplicationSayHello(GlobalUserInformation.Instance.UserName!)
             );
             ExecuteNavigate(
-                NavigationParametersHelper.TargetNavigationParameters(AvaRouter.UserManager,
+                NavigationParametersHelper.TargetNavigationParameters(AvaRouter.HomeWelcome,
                     AppRegions.HomeRegion));
         });
     }

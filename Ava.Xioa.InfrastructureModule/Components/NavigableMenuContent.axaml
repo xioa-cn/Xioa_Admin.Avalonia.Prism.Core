@@ -42,10 +42,10 @@
                                     <Border Name="SelectedBorder"
                                             Height="2"
                                             VerticalAlignment="Bottom"
-                                            Margin="1"
+                                            Margin="0"
                                             BorderBrush="{DynamicResource SukiPrimaryColor50}"
-                                            Background="{DynamicResource SukiPrimaryColor500}"
-                                            BorderThickness="1.5"
+                                            Background="{DynamicResource SukiPrimaryColor}"
+                                            BorderThickness="1.25"
                                             CornerRadius="{TemplateBinding CornerRadius}"
                                             Opacity="0">
                                         <Border.Transitions>
@@ -59,18 +59,54 @@
                             </ControlTemplate>
                         </Setter>
                     </Style>
-                    <Style Selector="Button.Icon">
-                        <Setter Property="Content">
-                            <Template>
-                                <PathIcon Height="{TemplateBinding Height}"
-                                          Width="{TemplateBinding Width}"
-                                          Data="{x:Static suki:Icons.CircleOutlineClose}"
-                                          Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}" />
-                            </Template>
+                    <Style Selector="Button.NavClose">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="MinWidth" Value="0" />
+                        <Setter Property="MinHeight" Value="0" />
+                        <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
+                        <Setter Property="Opacity" Value="1" />
+                        <Setter Property="Template">
+                            <ControlTemplate>
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="4">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding Content}" />
+                                </Border>
+                            </ControlTemplate>
                         </Setter>
                     </Style>
+                    <Style Selector="Button.NavClose:pointerover">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="{DynamicResource SukiPrimaryColor}" />
+                        <Setter Property="Opacity" Value="1" />
+                    </Style>
+                    <Style Selector="Button.NavClose PathIcon">
+                        <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
+                    </Style>
+                    <Style Selector="Button.NavClose:pointerover PathIcon">
+                        <Setter Property="Foreground" Value="White" />
+                    </Style>
+                    <Style Selector="Button.NavClose:pressed">
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="{DynamicResource SukiPrimaryDarkColor}" />
+                        <Setter Property="Opacity" Value="1" />
+                    </Style>
+                    <Style Selector="Button.NavClose:pressed PathIcon">
+                        <Setter Property="Foreground" Value="White" />
+                    </Style>
+                    <Style Selector="RadioButton.GigaChips:checked Button.NavClose">
+                        <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
+                        <Setter Property="Opacity" Value="1" />
+                    </Style>
                 </WrapPanel.Styles>
-                <ScrollViewer IsVisible="{Binding IsMenuVisible}" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
+                <ScrollViewer IsVisible="{Binding IsMenuVisible}" VerticalScrollBarVisibility="Hidden"
+                              HorizontalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding NavigableBarInfos}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -79,7 +115,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.DataTemplates>
                             <DataTemplate DataType="models:NavigableBarInfoModel">
-                                <RadioButton MinWidth="100" Height="30"
+                                <RadioButton MinWidth="150" Height="30"
                                              Tag="{Binding}"
                                              Click="NavigationBarInfoModel_OnClick"
                                              CornerRadius="0"
@@ -87,16 +123,28 @@
                                              Margin="1,0"
                                              GroupName="NavigableGroup"
                                              IsChecked="{Binding IsCheck}">
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
-                                                VerticalAlignment="Center">
-                                        <TextBlock FontSize="10"
-                                                   MinWidth="80"
-                                                   Margin="5,0,0,0"
-                                                   Foreground="{DynamicResource SukiLowText}"
-                                                   Text="{Binding Name}" />
-                                        <Button HorizontalAlignment="Right" Height="10" Width="10"
-                                                VerticalAlignment="Center" Margin="5,0" Classes="Basic Icon" />
-                                    </StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock FontSize="10"
+                                                       MinWidth="80"
+                                                       Margin="5,0,0,0"
+                                                       Foreground="{DynamicResource SukiLowText}"
+                                                       Text="{Binding Name}" />
+                                          
+                                        </StackPanel>
+                                        <Button Grid.Column="2" HorizontalAlignment="Right" Height="18" Width="18"
+                                                VerticalAlignment="Center" Margin="10,0" Classes="NavClose">
+                                            <PathIcon Height="10"  
+                                                      Width="10"
+                                                      Data="{x:Static suki:Icons.WindowClose}" />
+                                        </Button>
+                                    </Grid>
                                 </RadioButton>
                             </DataTemplate>
                         </ItemsControl.DataTemplates>
@@ -106,8 +154,8 @@
             <suki:BusyArea Grid.Row="1" Name="BusySignIn"
                            BusyText="{i18N:LocalizeExtension Loading}"
                            IsBusy="{Binding HomeRegionLoading}">
-                <ContentControl 
-                                regions1:RegionManager.RegionName="{Binding Source={x:Static global:AppRegions.Instance},Path=Home}" />
+                <ContentControl
+                    regions1:RegionManager.RegionName="{Binding Source={x:Static global:AppRegions.Instance},Path=Home}" />
             </suki:BusyArea>
         </Grid>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
